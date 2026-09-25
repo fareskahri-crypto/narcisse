@@ -1,0 +1,1060 @@
+<!DOCTYPE html>
+<!--
+  ============================================================================
+  ARCHITECTURAL / INTERIOR DESIGN CLIENT PRESENTATION — SINGLE FILE BUILD
+  ============================================================================
+  HOW THIS FILE WORKS
+  --------------------
+  This file does NOT hard-code a list of assets. Instead, for each option it
+  PROBES for files at fixed, predictable filenames (trying to load each one
+  in the browser) and silently uses whichever ones actually exist. Nothing
+  needs to be registered anywhere else — drop a correctly-named file next to
+  this HTML file in your GitHub repo and it appears; leave it out and that
+  slot / card / section is skipped automatically.
+
+  FILE NAMING RULES (all lowercase, all .png except PDFs which are .pdf)
+  -----------------------------------------------------------------------
+    Cover (carousel card)     o{n}.png                e.g. o1.png
+    Design direction images   o{n}-d{i}.png            o1-d1.png, o1-d2.png  (i = 1..4)
+    Mood board image          o{n}-m1.png              (one image only)
+    Layout plan               o{n}-l{L}.png            o1-l1.png            (L = 1..3)
+    Elevation / detail shots  o{n}-l{L}-e{k}.png       o1-l1-e1.png ... up to e20
+    Renders                   o{n}-r{k}-morning.png    o1-r1-morning.png
+                               o{n}-r{k}-night.png      o1-r1-night.png       (k = 1..20,
+                                                                               either or both)
+    Panoramas                 o{n}-p{k}-morning.png    o1-p1-morning.png
+                               o{n}-p{k}-night.png      o1-p1-night.png       (k = 1..20)
+    Furniture                 o{n}-f{k}.png            o1-f1.png ... up to f20
+    Materials                 o{n}-ma{k}.png           o1-ma1.png ... up to ma20
+    Documents (PDF)           o{n}-pdf{k}.pdf          o1-pdf1.pdf ... up to pdf20
+
+  n = option number (1, 2, 3...). All files live in the SAME folder as this
+  index.html (edit ASSET_BASE below if you'd rather put them in a subfolder,
+  e.g. "assets/").
+
+  Text content (project name, per-option style description, mood caption,
+  furniture/material labels) is edited in PROJECT_CONFIG below — that part
+  is not file-driven since it's just copy, not an asset.
+
+  Because probing uses real network requests, this works correctly once
+  hosted (e.g. GitHub Pages). Opening the file directly (file://) mostly
+  works for images but PDF detection needs http(s).
+-->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Project Presentation</title>
+<link rel="icon" href="data:,">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,340;9..144,440;9..144,520&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:     #F2F0EA;
+  --paper-2:   #E8E5DD;
+  --ink:       #17181B;
+  --ink-soft:  #46453F;
+  --line:      #D8D3C7;
+  --muted:     #8C8578;
+  --accent:    #7A6337;
+  --accent-2:  #5B4B2A;
+  --white:     #FDFCFA;
+  --black:     #0B0B0A;
+
+  --serif: 'Fraunces', 'Iowan Old Style', 'Palatino Linotype', serif;
+  --sans:  'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+
+  --gutter: clamp(20px, 4vw, 64px);
+  --radius: 2px;
+  --ease: cubic-bezier(.22,.61,.36,1);
+}
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth; scroll-padding-top:76px;}
+body{margin:0; background:var(--paper); color:var(--ink); font-family:var(--sans); font-size:15px; line-height:1.6; -webkit-font-smoothing:antialiased;}
+img{max-width:100%; display:block;}
+button{font-family:inherit; cursor:pointer;}
+a{color:inherit;}
+:focus-visible{outline:2px solid var(--accent); outline-offset:3px;}
+@media (prefers-reduced-motion: reduce){ *{animation-duration:.001ms !important; transition-duration:.001ms !important;} }
+
+.wrap{max-width:1360px; margin:0 auto; padding-left:var(--gutter); padding-right:var(--gutter);}
+.eyebrow{font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:var(--muted); font-weight:500;}
+h1,h2,h3{font-family:var(--serif); font-weight:440; margin:0; letter-spacing:-.01em;}
+
+/* ---- top nav ---- */
+.topnav{position:sticky; top:0; z-index:40; background:rgba(242,240,234,.92); backdrop-filter:blur(10px); border-bottom:1px solid var(--line);}
+.topnav-inner{display:flex; align-items:center; justify-content:space-between; height:60px; gap:24px;}
+.topnav-id{font-family:var(--serif); font-size:16px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:40vw;}
+.topnav-links{display:flex; gap:26px; list-style:none; margin:0; padding:0;}
+.topnav-links a{font-size:12.5px; letter-spacing:.06em; text-transform:uppercase; text-decoration:none; color:var(--ink-soft); padding:4px 0; border-bottom:1px solid transparent;}
+.topnav-links a:hover{color:var(--ink); border-color:var(--line);}
+.option-pill{display:flex; align-items:center; gap:8px; border:1px solid var(--line); border-radius:999px; padding:6px 14px 6px 8px; font-size:12px; white-space:nowrap; background:var(--white);}
+.option-pill .dot{width:6px; height:6px; border-radius:50%; background:var(--accent);}
+.nav-toggle{display:none; background:none; border:1px solid var(--line); padding:8px 10px; border-radius:2px;}
+@media (max-width:860px){
+  .topnav-links{position:fixed; inset:60px 0 auto 0; background:var(--paper); flex-direction:column; padding:18px var(--gutter) 22px; gap:14px; border-bottom:1px solid var(--line); transform:translateY(-8px); opacity:0; pointer-events:none; transition:opacity .2s var(--ease), transform .2s var(--ease);}
+  .topnav-links.open{opacity:1; transform:translateY(0); pointer-events:auto;}
+  .nav-toggle{display:block;}
+}
+
+/* ---- header / identity ---- */
+.header{padding:56px 0 40px; border-bottom:1px solid var(--line);}
+.header-top{display:flex; justify-content:space-between; align-items:flex-end; gap:32px; flex-wrap:wrap; margin-bottom:44px;}
+.project-title{font-size:clamp(34px,5.4vw,58px); line-height:1.02;}
+.project-meta{display:flex; gap:28px; flex-wrap:wrap; margin-top:16px;}
+.project-meta div{font-size:13px; color:var(--ink-soft);}
+.project-meta span{display:block; color:var(--muted); font-size:10.5px; letter-spacing:.12em; text-transform:uppercase; margin-bottom:3px;}
+.version-tag{font-size:12px; color:var(--muted); text-align:right; line-height:1.5;}
+
+/* ---- option carousel ---- */
+.carousel-region{position:relative;}
+.carousel-track{display:flex; align-items:center; justify-content:center; padding:36px 0 18px; position:relative; perspective:1400px; touch-action:pan-y;}
+.opt-card{position:relative; flex:0 0 auto; width:min(300px, 62vw); aspect-ratio:4/3; margin:0 -34px; cursor:pointer; border:1px solid var(--line); background:var(--paper-2); overflow:hidden; border-radius:var(--radius); transform-origin:center; transition:transform .55s var(--ease), filter .55s var(--ease), opacity .55s var(--ease), z-index 0s .2s; filter:saturate(.75) brightness(.86); opacity:.72;}
+.opt-card img{width:100%; height:100%; object-fit:cover;}
+.opt-card .opt-card-label{position:absolute; left:0; right:0; bottom:0; padding:14px 16px; background:linear-gradient(0deg, rgba(11,11,10,.72), rgba(11,11,10,0)); color:var(--white);}
+.opt-card .opt-card-label .n{font-size:10.5px; letter-spacing:.14em; text-transform:uppercase; opacity:.8;}
+.opt-card .opt-card-label .s{font-family:var(--serif); font-size:19px; margin-top:2px;}
+.opt-card.is-active{z-index:5; opacity:1; filter:none; transform:translateZ(0) scale(1.14); box-shadow:0 30px 60px -22px rgba(11,11,10,.35); border-color:var(--ink);}
+.opt-card.is-side-l{transform:translateX(6%) translateZ(-120px) rotateY(10deg) scale(.86); z-index:3;}
+.opt-card.is-side-r{transform:translateX(-6%) translateZ(-120px) rotateY(-10deg) scale(.86); z-index:3;}
+.opt-card.is-far{transform:translateZ(-260px) scale(.72); z-index:1; opacity:.4;}
+.opt-card.is-active::after{content:""; position:absolute; top:10px; right:10px; width:9px; height:9px; border-radius:50%; background:var(--accent); box-shadow:0 0 0 3px rgba(253,252,250,.85);}
+.carousel-nav{display:flex; justify-content:center; gap:10px; margin-top:6px;}
+.carousel-dot{width:22px; height:2px; background:var(--line); border:0; padding:0; transition:background .2s;}
+.carousel-dot.active{background:var(--ink);}
+@media (max-width:640px){ .opt-card{margin:0 -46px;} }
+
+/* ---- section scaffold ---- */
+section{padding:88px 0;}
+section + section{border-top:1px solid var(--line);}
+.section-head{margin-bottom:44px; display:flex; justify-content:space-between; align-items:flex-end; gap:20px; flex-wrap:wrap;}
+.section-title{font-size:clamp(24px,3vw,34px);}
+
+/* ---- style & mood combined slider ---- */
+.sm-head{display:flex; align-items:center; justify-content:space-between; margin-bottom:30px;}
+.sm-tabs{display:flex; gap:8px;}
+.sm-tab{border:1px solid var(--line); background:var(--white); padding:8px 16px; font-size:12px; letter-spacing:.05em; text-transform:uppercase; color:var(--ink-soft);}
+.sm-tab.active{background:var(--ink); color:var(--white); border-color:var(--ink);}
+.sm-arrows{display:flex; gap:8px;}
+.sm-arrow{width:38px; height:38px; border:1px solid var(--line); background:var(--white); font-size:16px; color:var(--ink-soft);}
+.sm-arrow:hover{border-color:var(--ink); color:var(--ink);}
+.sm-viewport{overflow:hidden; position:relative;}
+.sm-track{display:flex; width:200%; transition:transform .5s var(--ease);}
+.sm-slide{width:50%; flex:0 0 auto;}
+
+.direction-grid{display:grid; grid-template-columns:1.1fr .9fr; gap:0 40px; align-items:start;}
+.direction-media{position:relative; min-height:420px;}
+.direction-media .m1{width:78%; position:relative; z-index:2;}
+.direction-media .m2{width:52%; position:absolute; right:0; bottom:-48px; z-index:1; border:6px solid var(--paper);}
+.direction-text{padding-top:26px;}
+.direction-text p{color:var(--ink-soft); font-size:16px; max-width:46ch;}
+@media (max-width:900px){ .direction-grid{grid-template-columns:1fr; gap:64px 0;} .direction-media{min-height:340px;} }
+
+.mood-single{display:grid; grid-template-columns:1.3fr .7fr; gap:40px; align-items:center;}
+.mood-single .mood-img{width:100%;}
+.mood-caption{color:var(--ink-soft); font-size:16px;}
+@media (max-width:900px){ .mood-single{grid-template-columns:1fr;} }
+
+/* ---- placeholder tile ---- */
+.ph{display:flex; align-items:center; justify-content:center; flex-direction:column; gap:6px; width:100%; height:100%; min-height:160px; background:repeating-linear-gradient(135deg, var(--paper-2), var(--paper-2) 10px, #DEDBD1 10px, #DEDBD1 11px); color:var(--muted); text-align:center; padding:8px;}
+.ph span{font-size:10px; letter-spacing:.06em; text-transform:uppercase;}
+.ph small{font-size:9.5px; opacity:.75; word-break:break-all;}
+.direction-media .ph{min-height:420px;}
+#planFrame .ph{min-height:420px;}
+.skeleton-tile{background:linear-gradient(90deg, var(--paper-2) 25%, #EDEAE2 37%, var(--paper-2) 63%); background-size:400% 100%; animation:sk 1.4s ease infinite; min-height:160px; width:100%; height:100%;}
+@keyframes sk{0%{background-position:100% 0;}100%{background-position:0 0;}}
+
+/* ---- layout ---- */
+.layout-tabs{display:flex; gap:10px; flex-wrap:wrap; margin-bottom:32px;}
+.layout-tab{border:1px solid var(--line); background:var(--white); padding:10px 16px; font-size:12.5px; letter-spacing:.03em; border-radius:999px; color:var(--ink-soft); transition:all .2s;}
+.layout-tab.active{background:var(--ink); color:var(--white); border-color:var(--ink);}
+.plan-frame{position:relative; border:1px solid var(--line); background:var(--white);}
+.plan-frame img{width:100%; display:block;}
+.tech-group-title{font-size:13px; letter-spacing:.06em; text-transform:uppercase; color:var(--muted); margin-bottom:14px;}
+.tech-row{display:grid; grid-template-columns:repeat(auto-fill, minmax(190px,1fr)); gap:16px;}
+.tech-card{border:1px solid var(--line); background:var(--white); cursor:pointer;}
+.tech-card .thumb{aspect-ratio:4/3; overflow:hidden; background:var(--paper-2);}
+.tech-card .thumb img{width:100%; height:100%; object-fit:cover;}
+.tech-card .label{padding:10px 12px; font-size:12.5px; border-top:1px solid var(--line);}
+
+/* ---- furniture / materials ---- */
+.grid-4{display:grid; grid-template-columns:repeat(4,1fr); gap:22px;}
+.item-card{border:1px solid var(--line); background:var(--white);}
+.item-card .thumb{aspect-ratio:4/3; overflow:hidden; background:var(--paper-2);}
+.item-card .thumb img{width:100%; height:100%; object-fit:cover;}
+.item-card .body{padding:14px 15px 16px;}
+.item-card .kicker{font-size:10.5px; letter-spacing:.08em; text-transform:uppercase; color:var(--muted);}
+.item-card h4{font-family:var(--serif); font-size:16.5px; font-weight:440; margin:3px 0 8px;}
+.item-card dl{display:grid; grid-template-columns:auto 1fr; gap:3px 10px; margin:0; font-size:12.5px;}
+.item-card dt{color:var(--muted);}
+.item-card dd{margin:0; color:var(--ink-soft); text-align:right;}
+@media (max-width:960px){.grid-4{grid-template-columns:repeat(2,1fr);}}
+@media (max-width:520px){.grid-4{grid-template-columns:1fr;}}
+
+/* ---- visualization ---- */
+.viz-controls{display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:16px; margin-bottom:34px;}
+.viz-toggle{display:inline-flex; border:1px solid var(--ink);}
+.viz-toggle button{padding:10px 22px; background:none; border:0; font-size:12.5px; letter-spacing:.08em; text-transform:uppercase; color:var(--ink-soft);}
+.viz-toggle button.active{background:var(--ink); color:var(--white);}
+.tod-toggle{display:inline-flex; border:1px solid var(--line); border-radius:999px; overflow:hidden;}
+.tod-toggle button{padding:8px 18px; background:var(--white); border:0; font-size:12px; letter-spacing:.04em; color:var(--ink-soft); display:flex; align-items:center; gap:6px;}
+.tod-toggle button.active{background:var(--accent); color:var(--white);}
+.render-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:14px;}
+.render-grid a{position:relative; display:block; aspect-ratio:4/3; overflow:hidden; background:var(--paper-2); cursor:zoom-in;}
+.render-grid img{width:100%; height:100%; object-fit:cover; transition:transform .5s var(--ease), opacity .25s;}
+.render-grid a:hover img{transform:scale(1.035);}
+.render-cap{position:absolute; left:0; right:0; bottom:0; padding:9px 12px; font-size:11.5px; color:var(--white); background:linear-gradient(0deg, rgba(11,11,10,.62), rgba(11,11,10,0));}
+@media (max-width:900px){.render-grid{grid-template-columns:repeat(2,1fr);}}
+@media (max-width:560px){.render-grid{grid-template-columns:1fr;}}
+
+.pano-stage{position:relative; background:var(--black); border:1px solid var(--ink); overflow:hidden; height:min(62vh, 560px); touch-action:none; cursor:grab;}
+.pano-stage:active{cursor:grabbing;}
+.pano-img-track{position:absolute; top:0; left:0; height:100%; display:flex; will-change:transform;}
+.pano-img-track img{height:100%; width:auto; max-width:none; user-select:none; -webkit-user-drag:none;}
+.pano-label{position:absolute; left:20px; top:18px; color:var(--white); z-index:2;}
+.pano-label .eyebrow{color:rgba(255,255,255,.65);}
+.pano-label .name{font-family:var(--serif); font-size:20px; color:var(--white); margin-top:2px;}
+.pano-hint{position:absolute; right:20px; bottom:16px; color:rgba(255,255,255,.55); font-size:11px; z-index:2;}
+.pano-locations{display:flex; gap:10px; margin-top:16px; overflow-x:auto;}
+.pano-loc{flex:0 0 auto; border:1px solid var(--line); background:var(--white); padding:8px 10px 8px 8px; display:flex; align-items:center; gap:8px; font-size:12px;}
+.pano-loc.active{border-color:var(--ink);}
+.pano-loc img{width:44px; height:32px; object-fit:cover;}
+.empty-note{color:var(--muted); font-size:13.5px;}
+
+/* ---- documents ---- */
+.doc-list{border-top:1px solid var(--line);}
+.doc-row{display:flex; justify-content:space-between; align-items:center; gap:18px; padding:18px 0; border-bottom:1px solid var(--line);}
+.doc-row .doc-name{font-size:15px;}
+.doc-row .doc-file{font-size:11.5px; color:var(--muted); margin-top:2px;}
+.doc-open{font-size:12px; letter-spacing:.05em; text-transform:uppercase; border:1px solid var(--ink); padding:8px 14px; text-decoration:none; white-space:nowrap;}
+
+footer{padding:44px 0 60px; color:var(--muted); font-size:12px; display:flex; justify-content:space-between; flex-wrap:wrap; gap:10px;}
+
+/* ---- lightbox ---- */
+.lightbox{position:fixed; inset:0; background:rgba(11,11,10,.94); z-index:100; display:none; flex-direction:column;}
+.lightbox.open{display:flex;}
+.lb-top{display:flex; justify-content:space-between; align-items:center; padding:16px 20px; color:var(--white);}
+.lb-top .lb-title{font-size:13px; letter-spacing:.03em;}
+.lb-top .lb-title .sub{color:rgba(255,255,255,.55); margin-left:8px;}
+.lb-close{background:none; border:1px solid rgba(255,255,255,.35); color:var(--white); width:32px; height:32px; font-size:16px;}
+.lb-body{flex:1; position:relative; overflow:hidden; display:flex; align-items:center; justify-content:center; touch-action:none;}
+.lb-body img{max-width:92%; max-height:88%; will-change:transform; user-select:none; -webkit-user-drag:none;}
+.lb-arrow{position:absolute; top:50%; transform:translateY(-50%); background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.3); color:var(--white); width:42px; height:42px; font-size:18px;}
+.lb-arrow.prev{left:16px;} .lb-arrow.next{right:16px;}
+.lb-thumbs{display:flex; gap:8px; padding:14px 20px 20px; overflow-x:auto;}
+.lb-thumbs img{width:66px; height:48px; object-fit:cover; opacity:.5; cursor:pointer; border:1px solid transparent;}
+.lb-thumbs img.active{opacity:1; border-color:var(--white);}
+.lb-hint{position:absolute; bottom:12px; left:50%; transform:translateX(-50%); color:rgba(255,255,255,.45); font-size:11px;}
+</style>
+</head>
+<body>
+
+<div class="topnav">
+  <div class="wrap topnav-inner">
+    <div class="topnav-id" id="navProjectName">Project</div>
+    <ul class="topnav-links" id="navLinks">
+      <li><a href="#overview">Overview</a></li>
+      <li><a href="#style-mood">Style &amp; Mood</a></li>
+      <li><a href="#layout">Layout</a></li>
+      <li><a href="#visualization">Visualization</a></li>
+      <li><a href="#furniture">Furniture</a></li>
+    </ul>
+    <div style="display:flex; align-items:center; gap:14px;">
+      <div class="option-pill" id="navOptionPill"><span class="dot"></span><span id="navOptionLabel">Option 01</span></div>
+      <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation">☰</button>
+    </div>
+  </div>
+</div>
+
+<header class="header" id="overview">
+  <div class="wrap">
+    <div class="header-top">
+      <div>
+        <div class="eyebrow" id="hdrClient">For —</div>
+        <h1 class="project-title" id="hdrTitle">Project Name</h1>
+        <div class="project-meta">
+          <div><span>Type</span><span id="hdrType" style="text-transform:none;"></span></div>
+          <div><span>Location</span><span id="hdrLocation" style="text-transform:none;"></span></div>
+        </div>
+      </div>
+      <div class="version-tag" id="hdrVersion"></div>
+    </div>
+  </div>
+  <div class="wrap carousel-region">
+    <div class="eyebrow" style="margin-bottom:2px;">Design Options</div>
+    <div class="carousel-track" id="carouselTrack" tabindex="0"></div>
+    <div class="carousel-nav" id="carouselDots"></div>
+  </div>
+</header>
+
+<!-- STYLE + MOOD — combined swipeable section -->
+<section id="style-mood">
+  <div class="wrap">
+    <div class="sm-head">
+      <div>
+        <div class="eyebrow">Design Direction &amp; Atmosphere</div>
+        <h2 class="section-title" id="smTitle">Style</h2>
+      </div>
+      <div style="display:flex; align-items:center; gap:18px;">
+        <div class="sm-tabs">
+          <button class="sm-tab active" id="smTabStyle">Style</button>
+          <button class="sm-tab" id="smTabMood">Mood</button>
+        </div>
+        <div class="sm-arrows">
+          <button class="sm-arrow" id="smPrev" aria-label="Previous">‹</button>
+          <button class="sm-arrow" id="smNext" aria-label="Next">›</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="sm-viewport">
+      <div class="sm-track" id="smTrack">
+        <div class="sm-slide">
+          <div class="direction-grid">
+            <div class="direction-media">
+              <div class="m1" id="dirImg1"></div>
+              <div class="m2" id="dirImg2"></div>
+            </div>
+            <div class="direction-text"><p id="dirText"></p></div>
+          </div>
+        </div>
+        <div class="sm-slide">
+          <div class="mood-single">
+            <div class="mood-img" id="moodImg"></div>
+            <p class="mood-caption" id="moodCaption"></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- LAYOUT -->
+<section id="layout">
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <div class="eyebrow">Spatial Organization</div>
+        <h2 class="section-title">Layout</h2>
+      </div>
+    </div>
+    <div class="layout-tabs" id="layoutTabs"></div>
+    <div class="plan-frame" id="planFrame" style="margin-bottom:40px;"></div>
+    <div id="elevationsWrap">
+      <div class="tech-group-title">Elevations &amp; Details</div>
+      <div class="tech-row" id="elevRow"></div>
+    </div>
+  </div>
+</section>
+
+<!-- VISUALIZATION -->
+<section id="visualization">
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <div class="eyebrow">3D Visualization</div>
+        <h2 class="section-title">Renders &amp; Panorama</h2>
+      </div>
+    </div>
+    <div class="viz-controls">
+      <div class="viz-toggle">
+        <button id="btnRenders" class="active">Renders</button>
+        <button id="btnPanorama">Panorama</button>
+      </div>
+      <div class="tod-toggle" id="todToggle">
+        <button id="todMorning" class="active">☀ Morning</button>
+        <button id="todNight">☾ Night</button>
+      </div>
+    </div>
+
+    <div id="rendersView"><div class="render-grid" id="renderGrid"></div></div>
+
+    <div id="panoramaView" style="display:none;">
+      <div class="pano-stage" id="panoStage">
+        <div class="pano-label"><div class="eyebrow">360° View</div><div class="name" id="panoName">—</div></div>
+        <div class="pano-img-track" id="panoTrack"></div>
+        <div class="pano-hint">Drag to look around</div>
+      </div>
+      <div class="pano-locations" id="panoLocations"></div>
+    </div>
+  </div>
+</section>
+
+<!-- FURNITURE -->
+<section id="furniture">
+  <div class="wrap">
+    <div class="section-head"><div><div class="eyebrow">Furniture</div><h2 class="section-title">Furniture Selection</h2></div></div>
+    <div class="grid-4" id="furnitureGrid"></div>
+  </div>
+</section>
+
+<!-- MATERIALS -->
+<section id="materials">
+  <div class="wrap">
+    <div class="section-head"><div><div class="eyebrow">Material Specification</div><h2 class="section-title">Materials</h2></div></div>
+    <div class="grid-4" id="materialsGrid"></div>
+  </div>
+</section>
+
+<!-- DOCUMENTS -->
+<section id="documents">
+  <div class="wrap">
+    <div class="section-head"><div><div class="eyebrow">Documentation</div><h2 class="section-title">Project Documents</h2></div></div>
+    <div class="doc-list" id="docList"></div>
+  </div>
+</section>
+
+<footer class="wrap">
+  <div id="footVersion"></div>
+  <div>Prepared for client review</div>
+</footer>
+
+<div class="lightbox" id="lightbox" role="dialog" aria-modal="true">
+  <div class="lb-top">
+    <div class="lb-title"><span id="lbTitle">—</span><span class="sub" id="lbSub"></span></div>
+    <button class="lb-close" id="lbClose" aria-label="Close">✕</button>
+  </div>
+  <div class="lb-body" id="lbBody">
+    <button class="lb-arrow prev" id="lbPrev" aria-label="Previous">‹</button>
+    <img id="lbImg" src="" alt="">
+    <button class="lb-arrow next" id="lbNext" aria-label="Next">›</button>
+    <div class="lb-hint">Scroll or pinch to zoom · drag to pan</div>
+  </div>
+  <div class="lb-thumbs" id="lbThumbs"></div>
+</div>
+
+<!-- =========================================================================
+     TEXT CONTENT — edit this. Images are handled separately by filename
+     probing further down; this object only holds copy and per-item labels.
+     ========================================================================= -->
+<script id="config">
+const PROJECT_CONFIG = {
+  name: "Center of Skin Care",
+  client: "Tom Sahour",
+  type: "Interior Design — Medical Retail",
+  location: "",
+  version: "Design Proposal — Revision 01",
+  date: "24 September 2026",
+
+  // one entry per option, in order: option 1, option 2, ...
+  options: [
+    {
+      styleName: "Warm Minimal",
+      directionText: "A calm, materially honest interior built from natural oak, warm plaster, and soft indirect light. Forms stay simple and continuous so the architecture recedes and the treatment experience comes forward.",
+      moodCaption: "A restrained material palette — oak, limewash plaster, and honed stone — chosen for a sense of warmth, cleanliness, and quiet professionalism.",
+      furniture: { 1:{name:"Reception Desk", category:"Casework", dimensions:"240 × 60 × 105 cm", material:"Oak veneer, matte lacquer"},
+                   2:{name:"Lounge Chair", category:"Seating", dimensions:"68 × 72 × 78 cm", material:"Boucle upholstery, oak legs"} },
+      materials: { 1:{name:"Natural Oak Veneer", finish:"Matte", application:"Wall paneling, casework"},
+                   2:{name:"Honed Limestone", finish:"Honed", application:"Reception counter"} },
+      documents: { 1:{label:"Technical Floor Plan — Revision 01"} }
+    },
+    {
+      styleName: "Contemporary Stone",
+      directionText: "A cooler, more architectural mood built from large-format stone, dark bronze metalwork, and sharply detailed joinery — a more sculptural, gallery-like read.",
+      moodCaption: "Stone and bronze establish a more contemporary, gallery-like identity while keeping the plan's clinical clarity.",
+      furniture: { 1:{name:"Reception Desk", category:"Casework", dimensions:"260 × 65 × 105 cm", material:"Bronze-edged stone top"} },
+      materials: { 1:{name:"Grey Travertine", finish:"Honed", application:"Reception cladding"} },
+      documents: {}
+    }
+  ]
+};
+</script>
+
+<script>
+(function(){
+  "use strict";
+
+  /* ==========================================================================
+     ASSET PROBING ENGINE
+     ========================================================================== */
+  const ASSET_BASE = "";      // e.g. "assets/" if you put files in a subfolder
+  const MAX_SLOTS  = 20;      // max numbered items probed per category
+  const MAX_LAYOUTS = 3;
+
+  function url(name){ return ASSET_BASE + name; }
+
+  function probeImage(src){
+    return new Promise(resolve => {
+      const img = new Image();
+      img.onload = () => resolve(true);
+      img.onerror = () => resolve(false);
+      img.src = src;
+    });
+  }
+  async function probeFile(src){
+    try{
+      const res = await fetch(src, { method:"HEAD", cache:"no-store" });
+      return res.ok;
+    }catch(e){ return false; }
+  }
+
+  async function probeNumberedImages(prefix, max){
+    const checks = [];
+    for(let k=1; k<=max; k++){
+      const src = url(prefix + k + ".png");
+      checks.push(probeImage(src).then(ok => ok ? {k, src} : null));
+    }
+    return (await Promise.all(checks)).filter(Boolean);
+  }
+
+  async function probeNumberedFiles(prefix, max, ext){
+    const checks = [];
+    for(let k=1; k<=max; k++){
+      const src = url(prefix + k + "." + ext);
+      checks.push(probeFile(src).then(ok => ok ? {k, src} : null));
+    }
+    return (await Promise.all(checks)).filter(Boolean);
+  }
+
+  async function probeDayNightSeries(prefix, max){
+    const checks = [];
+    for(let k=1; k<=max; k++){
+      checks.push(Promise.all([
+        probeImage(url(prefix + k + "-morning.png")),
+        probeImage(url(prefix + k + "-night.png"))
+      ]).then(([m,n]) => (m||n) ? {
+        k,
+        morning: m ? url(prefix + k + "-morning.png") : null,
+        night:   n ? url(prefix + k + "-night.png")   : null
+      } : null));
+    }
+    return (await Promise.all(checks)).filter(Boolean);
+  }
+
+  /* Resolve every asset for one option (n is 1-based option number). */
+  async function resolveOption(n){
+    const p = "o" + n;
+
+    const [cover, d1, d2] = await Promise.all([
+      probeImage(url(p + ".png")).then(ok => ok ? url(p + ".png") : null),
+      probeImage(url(p + "-d1.png")).then(ok => ok ? url(p + "-d1.png") : null),
+      probeImage(url(p + "-d2.png")).then(ok => ok ? url(p + "-d2.png") : null),
+    ]);
+    const mood = await probeImage(url(p + "-m1.png")).then(ok => ok ? url(p + "-m1.png") : null);
+
+    // layouts: try l1, l2, l3 — each with its own elevation series
+    const layouts = [];
+    for(let L=1; L<=MAX_LAYOUTS; L++){
+      const planUrl = url(p + "-l" + L + ".png");
+      const exists = await probeImage(planUrl);
+      if(!exists) continue;
+      const elevations = await probeNumberedImages(p + "-l" + L + "-e", MAX_SLOTS);
+      layouts.push({ n:L, image:planUrl, elevations });
+    }
+
+    const renders = await probeDayNightSeries(p + "-r", MAX_SLOTS);
+    const panoramas = await probeDayNightSeries(p + "-p", MAX_SLOTS);
+    const furnitureImgs = await probeNumberedImages(p + "-f", MAX_SLOTS);
+    const materialImgs = await probeNumberedImages(p + "-ma", MAX_SLOTS);
+    const docFiles = await probeNumberedFiles(p + "-pdf", MAX_SLOTS, "pdf");
+
+    return { cover, d1, d2, mood, layouts, renders, panoramas, furnitureImgs, materialImgs, docFiles };
+  }
+
+  /* ==========================================================================
+     RENDER HELPERS
+     ========================================================================== */
+  function el(tag, cls, html){
+    const e = document.createElement(tag);
+    if(cls) e.className = cls;
+    if(html != null) e.innerHTML = html;
+    return e;
+  }
+  function clear(node){ while(node.firstChild) node.removeChild(node.firstChild); }
+  function escapeHtml(s){
+    return String(s == null ? "" : s).replace(/[&<>"']/g, c => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;" }[c]));
+  }
+  function skeleton(){ return el("div","skeleton-tile"); }
+  function placeholder(label){
+    const d = el("div","ph");
+    d.innerHTML = '<span>Missing image</span><small>'+escapeHtml(label)+'</small>';
+    return d;
+  }
+  function imageOrPlaceholder(src, label, alt){
+    if(!src) return placeholder(label);
+    const img = document.createElement("img");
+    img.src = src; img.alt = alt || ""; img.loading = "lazy";
+    return img;
+  }
+
+  /* ==========================================================================
+     STATE
+     ========================================================================== */
+  const state = {
+    optionIndex: 0,
+    assetCache: {},          // optionIndex -> resolved assets
+    layoutIndex: 0,
+    smSlide: 0,               // 0 = style, 1 = mood
+    vizMode: "renders",
+    tod: "morning",
+    panoIndex: 0
+  };
+
+  const els = {
+    navProjectName: document.getElementById("navProjectName"),
+    navOptionLabel: document.getElementById("navOptionLabel"),
+    hdrClient: document.getElementById("hdrClient"),
+    hdrTitle: document.getElementById("hdrTitle"),
+    hdrType: document.getElementById("hdrType"),
+    hdrLocation: document.getElementById("hdrLocation"),
+    hdrVersion: document.getElementById("hdrVersion"),
+    footVersion: document.getElementById("footVersion"),
+    carouselTrack: document.getElementById("carouselTrack"),
+    carouselDots: document.getElementById("carouselDots"),
+    smTitle: document.getElementById("smTitle"),
+    smTrack: document.getElementById("smTrack"),
+    smTabStyle: document.getElementById("smTabStyle"),
+    smTabMood: document.getElementById("smTabMood"),
+    dirImg1: document.getElementById("dirImg1"),
+    dirImg2: document.getElementById("dirImg2"),
+    dirText: document.getElementById("dirText"),
+    moodImg: document.getElementById("moodImg"),
+    moodCaption: document.getElementById("moodCaption"),
+    layoutTabs: document.getElementById("layoutTabs"),
+    planFrame: document.getElementById("planFrame"),
+    elevationsWrap: document.getElementById("elevationsWrap"),
+    elevRow: document.getElementById("elevRow"),
+    furnitureGrid: document.getElementById("furnitureGrid"),
+    materialsGrid: document.getElementById("materialsGrid"),
+    renderGrid: document.getElementById("renderGrid"),
+    panoStage: document.getElementById("panoStage"),
+    panoTrack: document.getElementById("panoTrack"),
+    panoName: document.getElementById("panoName"),
+    panoLocations: document.getElementById("panoLocations"),
+    docList: document.getElementById("docList"),
+    section_furniture: document.getElementById("furniture"),
+    section_materials: document.getElementById("materials"),
+    section_documents: document.getElementById("documents"),
+    section_layout: document.getElementById("layout"),
+  };
+
+  function cfg(){ return PROJECT_CONFIG.options[state.optionIndex]; }
+  function assets(){ return state.assetCache[state.optionIndex]; }
+
+  /* ==========================================================================
+     HEADER
+     ========================================================================== */
+  function renderHeader(){
+    els.navProjectName.textContent = PROJECT_CONFIG.name;
+    els.hdrClient.textContent = PROJECT_CONFIG.client ? "For — " + PROJECT_CONFIG.client : "";
+    els.hdrTitle.textContent = PROJECT_CONFIG.name;
+    els.hdrType.textContent = PROJECT_CONFIG.type || "";
+    const locWrap = els.hdrLocation.closest("div");
+    if(PROJECT_CONFIG.location){ els.hdrLocation.textContent = PROJECT_CONFIG.location; locWrap.style.display = ""; }
+    else locWrap.style.display = "none";
+    els.hdrVersion.innerHTML = escapeHtml(PROJECT_CONFIG.version||"") + (PROJECT_CONFIG.date ? "<br>"+escapeHtml(PROJECT_CONFIG.date) : "");
+    els.footVersion.textContent = [PROJECT_CONFIG.version, PROJECT_CONFIG.date].filter(Boolean).join(" — ");
+  }
+
+  /* ==========================================================================
+     OPTION CAROUSEL
+     ========================================================================== */
+  function renderCarouselShell(){
+    clear(els.carouselTrack); clear(els.carouselDots);
+    PROJECT_CONFIG.options.forEach((opt, i) => {
+      const card = el("div","opt-card");
+      card.tabIndex = 0; card.setAttribute("role","button"); card.setAttribute("aria-label","Select option " + (i+1));
+      card.appendChild(skeleton());
+      const label = el("div","opt-card-label", '<div class="n">Option '+String(i+1).padStart(2,"0")+'</div><div class="s">'+escapeHtml(opt.styleName||"")+'</div>');
+      card.appendChild(label);
+      card.addEventListener("click", () => selectOption(i));
+      card.addEventListener("keydown", e => { if(e.key==="Enter"||e.key===" "){ e.preventDefault(); selectOption(i); }});
+      els.carouselTrack.appendChild(card);
+
+      const dot = el("button","carousel-dot");
+      dot.setAttribute("aria-label","Go to option " + (i+1));
+      dot.addEventListener("click", () => selectOption(i));
+      els.carouselDots.appendChild(dot);
+    });
+    positionCarousel();
+  }
+  function fillCarouselCover(i, coverUrl){
+    const card = els.carouselTrack.children[i];
+    if(!card) return;
+    const first = card.firstChild;
+    const replacement = coverUrl ? imageOrPlaceholder(coverUrl) : placeholder("o"+(i+1)+".png");
+    card.replaceChild(replacement, first);
+  }
+  function positionCarousel(){
+    [...els.carouselTrack.children].forEach((card, i) => {
+      card.classList.remove("is-active","is-side-l","is-side-r","is-far");
+      const diff = i - state.optionIndex;
+      if(diff === 0) card.classList.add("is-active");
+      else if(diff === -1) card.classList.add("is-side-l");
+      else if(diff === 1) card.classList.add("is-side-r");
+      else card.classList.add("is-far");
+    });
+    [...els.carouselDots.children].forEach((d,i) => d.classList.toggle("active", i === state.optionIndex));
+  }
+  function selectOption(i){
+    if(i < 0 || i >= PROJECT_CONFIG.options.length) return;
+    state.optionIndex = i;
+    state.layoutIndex = 0;
+    state.smSlide = 0;
+    state.vizMode = "renders";
+    state.tod = "morning";
+    positionCarousel();
+    els.navOptionLabel.textContent = "Option " + String(i+1).padStart(2,"0") + " — " + (cfg().styleName||"");
+    loadAndRenderOption(i);
+  }
+  els.carouselTrack.addEventListener("keydown", e => {
+    if(e.key === "ArrowRight") selectOption(state.optionIndex+1);
+    if(e.key === "ArrowLeft") selectOption(state.optionIndex-1);
+  });
+  (function(){
+    let startX = null;
+    els.carouselTrack.addEventListener("pointerdown", e => { startX = e.clientX; });
+    els.carouselTrack.addEventListener("pointerup", e => {
+      if(startX == null) return;
+      const dx = e.clientX - startX;
+      if(Math.abs(dx) > 40) selectOption(state.optionIndex + (dx < 0 ? 1 : -1));
+      startX = null;
+    });
+  })();
+
+  /* ==========================================================================
+     STYLE + MOOD SLIDER
+     ========================================================================== */
+  function setSmSlide(i){
+    state.smSlide = i;
+    els.smTrack.style.transform = "translateX(-" + (i*50) + "%)";
+    els.smTabStyle.classList.toggle("active", i===0);
+    els.smTabMood.classList.toggle("active", i===1);
+    els.smTitle.textContent = i===0 ? "Style" : "Mood";
+  }
+  document.getElementById("smPrev").addEventListener("click", () => setSmSlide(state.smSlide===0 ? 1 : 0));
+  document.getElementById("smNext").addEventListener("click", () => setSmSlide(state.smSlide===0 ? 1 : 0));
+  els.smTabStyle.addEventListener("click", () => setSmSlide(0));
+  els.smTabMood.addEventListener("click", () => setSmSlide(1));
+
+  function renderStyleAndMood(){
+    const a = assets();
+    clear(els.dirImg1); clear(els.dirImg2); clear(els.moodImg);
+    els.dirImg1.appendChild(imageOrPlaceholder(a.d1, "o"+(state.optionIndex+1)+"-d1.png"));
+    if(a.d2){ els.dirImg2.style.display=""; els.dirImg2.appendChild(imageOrPlaceholder(a.d2)); }
+    else { els.dirImg2.style.display="none"; }
+    els.dirText.textContent = cfg().directionText || "";
+    els.moodImg.appendChild(imageOrPlaceholder(a.mood, "o"+(state.optionIndex+1)+"-m1.png"));
+    els.moodCaption.textContent = cfg().moodCaption || "";
+    setSmSlide(0);
+  }
+
+  /* ==========================================================================
+     LAYOUT
+     ========================================================================== */
+  function renderLayoutTabs(){
+    const a = assets();
+    clear(els.layoutTabs);
+    if(a.layouts.length <= 1){ els.layoutTabs.style.display = "none"; }
+    else {
+      els.layoutTabs.style.display = "";
+      a.layouts.forEach((layout, i) => {
+        const tab = el("button","layout-tab" + (i===state.layoutIndex ? " active" : ""), "Layout " + String(layout.n).padStart(2,"0"));
+        tab.addEventListener("click", () => { state.layoutIndex = i; renderLayoutTabs(); renderPlan(); });
+        els.layoutTabs.appendChild(tab);
+      });
+    }
+    els.section_layout.style.display = a.layouts.length ? "" : "none";
+  }
+  function renderPlan(){
+    const a = assets();
+    if(!a.layouts.length) return;
+    const layout = a.layouts[state.layoutIndex];
+    clear(els.planFrame);
+    els.planFrame.appendChild(imageOrPlaceholder(layout.image, "o"+(state.optionIndex+1)+"-l"+layout.n+".png"));
+
+    clear(els.elevRow);
+    if(!layout.elevations.length){
+      els.elevationsWrap.style.display = "none";
+    } else {
+      els.elevationsWrap.style.display = "";
+      layout.elevations.forEach((ev, idx) => {
+        const card = el("div","tech-card");
+        const thumb = el("div","thumb"); thumb.appendChild(imageOrPlaceholder(ev.src));
+        const label = el("div","label","Elevation " + String(ev.k).padStart(2,"0"));
+        card.appendChild(thumb); card.appendChild(label);
+        card.addEventListener("click", () => openLightbox(
+          layout.elevations.map(e2 => ({ image:e2.src, title:"Elevation " + String(e2.k).padStart(2,"0") })),
+          idx, "Technical Drawing"
+        ));
+        els.elevRow.appendChild(card);
+      });
+    }
+  }
+
+  /* ==========================================================================
+     FURNITURE / MATERIALS
+     ========================================================================== */
+  function renderFurniture(){
+    const a = assets(); const meta = cfg().furniture || {};
+    clear(els.furnitureGrid);
+    a.furnitureImgs.forEach(item => {
+      const m = meta[item.k] || {};
+      const card = el("div","item-card");
+      const thumb = el("div","thumb"); thumb.appendChild(imageOrPlaceholder(item.src));
+      const rows = [["Category",m.category],["Dimensions",m.dimensions],["Material",m.material],["Finish",m.finish],["Quantity",m.quantity]].filter(([,v])=>v);
+      const body = el("div","body",
+        '<h4>'+escapeHtml(m.name || ("Furniture " + String(item.k).padStart(2,"0")))+'</h4>'+
+        '<dl>'+rows.map(([l,v])=>'<dt>'+escapeHtml(l)+'</dt><dd>'+escapeHtml(v)+'</dd>').join("")+'</dl>');
+      card.appendChild(thumb); card.appendChild(body);
+      els.furnitureGrid.appendChild(card);
+    });
+    els.section_furniture.style.display = a.furnitureImgs.length ? "" : "none";
+  }
+  function renderMaterials(){
+    const a = assets(); const meta = cfg().materials || {};
+    clear(els.materialsGrid);
+    a.materialImgs.forEach(item => {
+      const m = meta[item.k] || {};
+      const card = el("div","item-card");
+      const thumb = el("div","thumb"); thumb.appendChild(imageOrPlaceholder(item.src));
+      const rows = [["Finish",m.finish],["Color",m.color],["Application",m.application],["Supplier",m.supplier]].filter(([,v])=>v);
+      const body = el("div","body",
+        '<h4>'+escapeHtml(m.name || ("Material " + String(item.k).padStart(2,"0")))+'</h4>'+
+        '<dl>'+rows.map(([l,v])=>'<dt>'+escapeHtml(l)+'</dt><dd>'+escapeHtml(v)+'</dd>').join("")+'</dl>');
+      card.appendChild(thumb); card.appendChild(body);
+      els.materialsGrid.appendChild(card);
+    });
+    els.section_materials.style.display = a.materialImgs.length ? "" : "none";
+  }
+
+  /* ==========================================================================
+     VISUALIZATION: RENDERS + PANORAMA (with morning / night toggle)
+     ========================================================================== */
+  let flatRenderList = [];
+
+  function bothTodAvailable(){
+    const a = assets();
+    const pool = [...a.renders, ...a.panoramas];
+    return pool.some(x => x.morning) && pool.some(x => x.night);
+  }
+  function pickVariant(item){
+    // prefer the globally selected time of day; gracefully fall back
+    if(state.tod === "morning") return item.morning || item.night;
+    return item.night || item.morning;
+  }
+
+  function renderTodToggle(){
+    const show = bothTodAvailable();
+    document.getElementById("todToggle").style.display = show ? "" : "none";
+    document.getElementById("todMorning").classList.toggle("active", state.tod==="morning");
+    document.getElementById("todNight").classList.toggle("active", state.tod==="night");
+  }
+  document.getElementById("todMorning").addEventListener("click", () => { state.tod="morning"; renderTodToggle(); renderRenders(); refreshPanoramaFrame(); });
+  document.getElementById("todNight").addEventListener("click", () => { state.tod="night"; renderTodToggle(); renderRenders(); refreshPanoramaFrame(); });
+
+  function renderRenders(){
+    const a = assets();
+    clear(els.renderGrid);
+    flatRenderList = a.renders;
+    a.renders.forEach((r, idx) => {
+      const src = pickVariant(r);
+      const label = "Render " + String(r.k).padStart(2,"0") + (r.morning && r.night ? (" — " + (pickVariant(r)===r.morning ? "Morning" : "Night")) : "");
+      const a1 = document.createElement("a");
+      a1.href = "javascript:void(0)";
+      a1.appendChild(imageOrPlaceholder(src));
+      a1.appendChild(el("div","render-cap", escapeHtml(label)));
+      a1.addEventListener("click", () => openLightbox(
+        a.renders.map(r2 => ({ image: pickVariant(r2), title: "Render " + String(r2.k).padStart(2,"0") })),
+        idx, "Render"
+      ));
+      els.renderGrid.appendChild(a1);
+    });
+    document.getElementById("rendersView").style.display = state.vizMode==="renders" ? "" : "none";
+  }
+
+  let panoDrag = { active:false, startX:0, currentOffset:0, singleWidth:0 };
+  function renderPanoramaLocations(){
+    const a = assets();
+    clear(els.panoLocations);
+    document.getElementById("btnPanorama").style.display = a.panoramas.length ? "" : "none";
+    if(!a.panoramas.length){ if(state.vizMode==="panorama") setVizMode("renders"); return; }
+    a.panoramas.forEach((p, i) => {
+      const btn = el("button","pano-loc" + (i===0 ? " active" : ""));
+      btn.appendChild(imageOrPlaceholder(pickVariant(p)));
+      btn.appendChild(el("span",null,"Location " + String(p.k).padStart(2,"0")));
+      btn.addEventListener("click", () => selectPanorama(i));
+      els.panoLocations.appendChild(btn);
+    });
+    selectPanorama(0);
+  }
+  function selectPanorama(i){
+    const a = assets();
+    state.panoIndex = i;
+    const p = a.panoramas[i];
+    els.panoName.textContent = "Location " + String(p.k).padStart(2,"0");
+    clear(els.panoTrack);
+    const src = pickVariant(p);
+    for(let k=0;k<3;k++){ els.panoTrack.appendChild(imageOrPlaceholder(src)); }
+    requestAnimationFrame(() => {
+      const single = els.panoTrack.children[0];
+      panoDrag.singleWidth = single ? single.getBoundingClientRect().width : 0;
+      els.panoTrack.style.transform = "translateX(" + (-panoDrag.singleWidth) + "px)";
+      panoDrag.currentOffset = -panoDrag.singleWidth;
+    });
+    [...els.panoLocations.children].forEach((elx, idx) => elx.classList.toggle("active", idx===i));
+  }
+  function refreshPanoramaFrame(){
+    const a = assets();
+    if(a.panoramas.length) selectPanorama(state.panoIndex);
+  }
+  (function initPanoDrag(){
+    const stage = els.panoStage;
+    stage.addEventListener("pointerdown", e => { panoDrag.active = true; panoDrag.startX = e.clientX; stage.setPointerCapture(e.pointerId); });
+    stage.addEventListener("pointermove", e => {
+      if(!panoDrag.active) return;
+      const dx = e.clientX - panoDrag.startX;
+      let next = panoDrag.currentOffset + dx;
+      const w = panoDrag.singleWidth || 1;
+      if(next > -0.02*w){ next -= w; panoDrag.startX = e.clientX; panoDrag.currentOffset = next; }
+      if(next < -1.98*w){ next += w; panoDrag.startX = e.clientX; panoDrag.currentOffset = next; }
+      els.panoTrack.style.transform = "translateX(" + next + "px)";
+    });
+    function end(e){
+      if(!panoDrag.active) return;
+      panoDrag.active = false;
+      panoDrag.currentOffset = panoDrag.currentOffset + (e.clientX - panoDrag.startX);
+    }
+    stage.addEventListener("pointerup", end);
+    stage.addEventListener("pointerleave", end);
+  })();
+
+  function setVizMode(mode){
+    state.vizMode = mode;
+    document.getElementById("btnRenders").classList.toggle("active", mode==="renders");
+    document.getElementById("btnPanorama").classList.toggle("active", mode==="panorama");
+    document.getElementById("rendersView").style.display = mode==="renders" ? "" : "none";
+    document.getElementById("panoramaView").style.display = mode==="panorama" ? "" : "none";
+  }
+  document.getElementById("btnRenders").addEventListener("click", () => setVizMode("renders"));
+  document.getElementById("btnPanorama").addEventListener("click", () => setVizMode("panorama"));
+
+  /* ==========================================================================
+     DOCUMENTS
+     ========================================================================== */
+  function renderDocuments(){
+    const a = assets(); const meta = cfg().documents || {};
+    clear(els.docList);
+    els.section_documents.style.display = a.docFiles.length ? "" : "none";
+    a.docFiles.forEach(doc => {
+      const m = meta[doc.k] || {};
+      const row = el("div","doc-row");
+      const left = el("div",null,
+        '<div class="doc-name">'+escapeHtml(m.label || ("Document " + String(doc.k).padStart(2,"0")))+'</div>'+
+        '<div class="doc-file">o'+(state.optionIndex+1)+'-pdf'+doc.k+'.pdf</div>');
+      const link = document.createElement("a");
+      link.className = "doc-open"; link.textContent = "Open"; link.href = doc.src; link.target = "_blank"; link.rel = "noopener";
+      row.appendChild(left); row.appendChild(link);
+      els.docList.appendChild(row);
+    });
+  }
+
+  /* ==========================================================================
+     SHARED LIGHTBOX
+     ========================================================================== */
+  const lbEls = {
+    box: document.getElementById("lightbox"), img: document.getElementById("lbImg"),
+    title: document.getElementById("lbTitle"), sub: document.getElementById("lbSub"),
+    thumbs: document.getElementById("lbThumbs")
+  };
+  let lb = { items: [], index: 0, kind: "", zoom:1, panX:0, panY:0, dragging:false, lastX:0, lastY:0 };
+
+  function openLightbox(items, index, kind){
+    lb.items = items; lb.index = index; lb.kind = kind;
+    lbEls.box.classList.add("open"); document.body.style.overflow = "hidden";
+    renderLbFrame(); renderLbThumbs();
+  }
+  function closeLightbox(){ lbEls.box.classList.remove("open"); document.body.style.overflow = ""; }
+  function renderLbFrame(){
+    const item = lb.items[lb.index];
+    lb.zoom=1; lb.panX=0; lb.panY=0;
+    lbEls.img.style.transform = "translate(0px,0px) scale(1)";
+    lbEls.title.textContent = item.title || "";
+    lbEls.sub.textContent = lb.kind + " · " + (lb.index+1) + " / " + lb.items.length;
+    if(item.image){ lbEls.img.style.display=""; lbEls.img.src = item.image; lbEls.img.alt = item.title||""; }
+    else { lbEls.img.style.display="none"; lbEls.img.src=""; }
+  }
+  function renderLbThumbs(){
+    clear(lbEls.thumbs);
+    if(lb.items.length < 2) return;
+    lb.items.forEach((item, i) => {
+      const t = document.createElement("img");
+      t.src = item.image || ""; t.className = i===lb.index ? "active" : "";
+      t.addEventListener("click", () => { lb.index=i; renderLbFrame(); renderLbThumbs(); });
+      lbEls.thumbs.appendChild(t);
+    });
+  }
+  function lbNav(delta){ lb.index = (lb.index + delta + lb.items.length) % lb.items.length; renderLbFrame(); renderLbThumbs(); }
+  document.getElementById("lbClose").addEventListener("click", closeLightbox);
+  document.getElementById("lbPrev").addEventListener("click", () => lbNav(-1));
+  document.getElementById("lbNext").addEventListener("click", () => lbNav(1));
+  lbEls.box.addEventListener("click", e => { if(e.target === lbEls.box) closeLightbox(); });
+  document.addEventListener("keydown", e => {
+    if(!lbEls.box.classList.contains("open")) return;
+    if(e.key === "Escape") closeLightbox();
+    if(e.key === "ArrowRight") lbNav(1);
+    if(e.key === "ArrowLeft") lbNav(-1);
+  });
+  (function(){
+    const body = document.getElementById("lbBody");
+    body.addEventListener("wheel", e => {
+      if(lbEls.img.style.display === "none") return;
+      e.preventDefault();
+      lb.zoom = Math.min(4, Math.max(1, lb.zoom + (e.deltaY < 0 ? 0.18 : -0.18)));
+      lbEls.img.style.transform = "translate("+lb.panX+"px,"+lb.panY+"px) scale("+lb.zoom+")";
+    }, { passive:false });
+    body.addEventListener("pointerdown", e => { if(lbEls.img.style.display!=="none"){ lb.dragging=true; lb.lastX=e.clientX; lb.lastY=e.clientY; } });
+    body.addEventListener("pointermove", e => {
+      if(!lb.dragging) return;
+      lb.panX += e.clientX - lb.lastX; lb.panY += e.clientY - lb.lastY;
+      lb.lastX = e.clientX; lb.lastY = e.clientY;
+      lbEls.img.style.transform = "translate("+lb.panX+"px,"+lb.panY+"px) scale("+lb.zoom+")";
+    });
+    ["pointerup","pointerleave"].forEach(ev => body.addEventListener(ev, () => lb.dragging=false));
+  })();
+
+  /* ==========================================================================
+     NAV TOGGLE (mobile)
+     ========================================================================== */
+  document.getElementById("navToggle").addEventListener("click", () => document.getElementById("navLinks").classList.toggle("open"));
+  document.querySelectorAll("#navLinks a").forEach(a => a.addEventListener("click", () => document.getElementById("navLinks").classList.remove("open")));
+
+  /* ==========================================================================
+     MASTER LOAD / RENDER
+     ========================================================================== */
+  async function loadAndRenderOption(i){
+    if(!state.assetCache[i]){
+      state.assetCache[i] = await resolveOption(i+1);
+    }
+    fillCarouselCover(i, state.assetCache[i].cover);
+    renderStyleAndMood();
+    renderLayoutTabs();
+    renderPlan();
+    renderFurniture();
+    renderMaterials();
+    renderTodToggle();
+    renderRenders();
+    renderPanoramaLocations();
+    setVizMode("renders");
+    renderDocuments();
+  }
+
+  async function init(){
+    renderHeader();
+    renderCarouselShell();
+    els.navOptionLabel.textContent = "Option 01 — " + (cfg().styleName||"");
+    // resolve all option covers in the background so the carousel fills in
+    // as each option's assets are found, without blocking the first render
+    PROJECT_CONFIG.options.forEach((_, i) => {
+      if(i !== state.optionIndex){
+        resolveOption(i+1).then(a => { state.assetCache[i] = a; fillCarouselCover(i, a.cover); });
+      }
+    });
+    await loadAndRenderOption(state.optionIndex);
+  }
+  init();
+})();
+</script>
+</body>
+</html>
