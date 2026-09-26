@@ -37,7 +37,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,340;9..144,440;9..144,520&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <!-- three.js — powers the true 360° panorama viewer -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js></script>
 <style>
 :root{
   --paper:     #F2F0EA;
@@ -186,13 +186,14 @@ section + section{border-top:1px solid var(--line);}
 .viz-toggle{display:inline-flex; border:1px solid var(--ink);}
 .viz-toggle button{padding:10px 22px; background:none; border:0; font-size:12.5px; letter-spacing:.08em; text-transform:uppercase; color:var(--ink-soft);}
 .viz-toggle button.active{background:var(--ink); color:var(--white);}
-.tod-toggle{display:inline-flex; border:1px solid var(--line); border-radius:999px; overflow:hidden;}
-.tod-toggle button{padding:8px 18px; background:var(--white); border:0; font-size:12px; letter-spacing:.04em; color:var(--ink-soft); display:flex; align-items:center; gap:6px;}
-.tod-toggle button.active{background:var(--accent); color:var(--white);}
+.light-switch{display:inline-flex; align-items:center; gap:0; border:1px solid var(--line); border-radius:999px; overflow:hidden; background:var(--white);}
+.light-switch button{padding:8px 15px; background:transparent; border:0; font-size:11.5px; letter-spacing:.06em; text-transform:uppercase; color:var(--ink-soft); transition:background .22s var(--ease),color .22s var(--ease);}
+.light-switch button.active{background:var(--ink); color:var(--white);}
 .render-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:14px;}
 .render-grid a{position:relative; display:block; aspect-ratio:4/3; overflow:hidden; background:var(--paper-2); cursor:zoom-in;}
-.render-grid img{width:100%; height:100%; object-fit:cover; transition:transform .5s var(--ease), opacity .25s;}
-.render-grid a:hover img{transform:scale(1.035);}
+.render-grid .render-layer{position:absolute; inset:0; width:100%; height:100%; object-fit:cover; opacity:0; transition:opacity .75s var(--ease),transform .5s var(--ease);}
+.render-grid .render-layer.is-visible{opacity:1;}
+.render-grid a:hover .render-layer{transform:scale(1.035);}
 .render-cap{position:absolute; left:0; right:0; bottom:0; padding:9px 12px; font-size:11.5px; color:var(--white); background:linear-gradient(0deg, rgba(11,11,10,.62), rgba(11,11,10,0));}
 @media (max-width:900px){.render-grid{grid-template-columns:repeat(2,1fr);}}
 @media (max-width:560px){.render-grid{grid-template-columns:1fr;}}
@@ -206,6 +207,11 @@ section + section{border-top:1px solid var(--line);}
 .pano-label .eyebrow{color:rgba(255,255,255,.65);}
 .pano-label .name{font-family:var(--serif); font-size:20px; color:var(--white); margin-top:2px;}
 .pano-hint{position:absolute; right:20px; bottom:16px; color:rgba(255,255,255,.55); font-size:11px; z-index:2;}
+.pano-tools{position:absolute; right:18px; top:16px; z-index:5; display:flex; gap:8px;}
+.pano-tools button,.lb-tool{border:1px solid rgba(255,255,255,.35); background:rgba(11,11,10,.42); backdrop-filter:blur(8px); color:var(--white); padding:8px 11px; font-size:11px; letter-spacing:.06em; text-transform:uppercase;}
+.pano-tools button.active,.lb-tool.active{background:rgba(253,252,250,.92); color:var(--ink);}
+.pano-stage:fullscreen{height:100vh; border:0;}
+.pano-stage:-webkit-full-screen{height:100vh; border:0;}
 .pano-loading{position:absolute; inset:0; z-index:3; display:flex; align-items:center; justify-content:center; background:rgba(11,11,10,.55); color:rgba(255,255,255,.85); font-size:11px; letter-spacing:.12em; text-transform:uppercase; opacity:0; pointer-events:none; transition:opacity .25s var(--ease);}
 .pano-loading.show{opacity:1;}
 .pano-locations{display:flex; gap:10px; margin-top:16px; overflow-x:auto;}
@@ -226,10 +232,12 @@ footer{padding:44px 0 60px; color:var(--muted); font-size:12px; display:flex; ju
 /* ---- lightbox ---- */
 .lightbox{position:fixed; inset:0; background:rgba(11,11,10,.94); z-index:100; display:none; flex-direction:column;}
 .lightbox.open{display:flex;}
-.lb-top{display:flex; justify-content:space-between; align-items:center; padding:16px 20px; color:var(--white);}
+.lb-top{display:flex; justify-content:space-between; align-items:center; padding:16px 20px; color:var(--white); gap:14px;}
 .lb-top .lb-title{font-size:13px; letter-spacing:.03em;}
+.lb-tools{display:flex; align-items:center; gap:8px; margin-left:auto;}
 .lb-top .lb-title .sub{color:rgba(255,255,255,.55); margin-left:8px;}
 .lb-close{background:none; border:1px solid rgba(255,255,255,.35); color:var(--white); width:32px; height:32px; font-size:16px;}
+.lightbox:fullscreen .lb-body,.lightbox:-webkit-full-screen .lb-body{height:100vh;}
 .lb-body{flex:1; position:relative; overflow:hidden; display:flex; align-items:center; justify-content:center; touch-action:none;}
 .lb-body img{max-width:92%; max-height:88%; will-change:transform; user-select:none; -webkit-user-drag:none;}
 .lb-arrow{position:absolute; top:50%; transform:translateY(-50%); background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.3); color:var(--white); width:42px; height:42px; font-size:18px;}
@@ -354,9 +362,9 @@ footer{padding:44px 0 60px; color:var(--muted); font-size:12px; display:flex; ju
         <button id="btnRenders" class="active">Renders</button>
         <button id="btnPanorama">Panorama</button>
       </div>
-      <div class="tod-toggle" id="todToggle">
-        <button id="todMorning" class="active">☀ Morning</button>
-        <button id="todNight">☾ Night</button>
+      <div class="light-switch" id="lightSwitch" aria-label="Lighting">
+        <button id="lightOn" class="active" type="button">Light On</button>
+        <button id="lightOff" type="button">Light Off</button>
       </div>
     </div>
 
@@ -367,6 +375,13 @@ footer{padding:44px 0 60px; color:var(--muted); font-size:12px; display:flex; ju
         <div class="pano-img-track" id="panoTrack"></div>
         <canvas id="panoCanvas" style="display:none;"></canvas>
         <div class="pano-label"><div class="eyebrow">360° View</div><div class="name" id="panoName">—</div></div>
+        <div class="pano-tools">
+          <div class="light-switch" id="panoLightSwitch">
+            <button id="panoLightOn" class="active" type="button">Light On</button>
+            <button id="panoLightOff" type="button">Light Off</button>
+          </div>
+          <button id="panoFullscreen" type="button" aria-label="Enter fullscreen">Fullscreen</button>
+        </div>
         <div class="pano-loading" id="panoLoading">Loading panorama…</div>
         <div class="pano-hint" id="panoHint">Drag to look around · Scroll to zoom</div>
       </div>
@@ -407,7 +422,14 @@ footer{padding:44px 0 60px; color:var(--muted); font-size:12px; display:flex; ju
 <div class="lightbox" id="lightbox" role="dialog" aria-modal="true">
   <div class="lb-top">
     <div class="lb-title"><span id="lbTitle">—</span><span class="sub" id="lbSub"></span></div>
-    <button class="lb-close" id="lbClose" aria-label="Close">✕</button>
+    <div class="lb-tools">
+      <div class="light-switch" id="lbLightSwitch">
+        <button id="lbLightOn" class="active" type="button">Light On</button>
+        <button id="lbLightOff" type="button">Light Off</button>
+      </div>
+      <button class="lb-tool" id="lbFullscreen" type="button">Fullscreen</button>
+      <button class="lb-close" id="lbClose" aria-label="Close">✕</button>
+    </div>
   </div>
   <div class="lb-body" id="lbBody">
     <button class="lb-arrow prev" id="lbPrev" aria-label="Previous">‹</button>
@@ -478,72 +500,88 @@ const PROJECT_CONFIG = {
   }
   async function probeFile(src){
     try{
-      const res = await fetch(src, { method:"HEAD", cache:"no-store" });
+      const res = await fetch(src, { method:"HEAD", cache:"force-cache" });
       return res.ok;
     }catch(e){ return false; }
   }
 
-  async function probeNumberedImages(prefix, max){
-    const checks = [];
+  // Numbered assets are contiguous by design: once N is missing, N+1 is not probed.
+  async function probeSequentialImages(prefix, max){
+    const out = [];
     for(let k=1; k<=max; k++){
       const src = url(prefix + k + ".png");
-      checks.push(probeImage(src).then(ok => ok ? {k, src} : null));
+      if(!await probeImage(src)) break;
+      out.push({k, src});
     }
-    return (await Promise.all(checks)).filter(Boolean);
+    return out;
   }
 
-  async function probeNumberedFiles(prefix, max, ext){
-    const checks = [];
+  async function probeSequentialFiles(prefix, max, ext){
+    const out = [];
     for(let k=1; k<=max; k++){
       const src = url(prefix + k + "." + ext);
-      checks.push(probeFile(src).then(ok => ok ? {k, src} : null));
+      if(!await probeFile(src)) break;
+      out.push({k, src});
     }
-    return (await Promise.all(checks)).filter(Boolean);
+    return out;
   }
 
-  async function probeDayNightSeries(prefix, max){
-    const checks = [];
+  async function probeSequentialDayNightSeries(prefix, max){
+    const out = [];
     for(let k=1; k<=max; k++){
-      checks.push(Promise.all([
+      const [m,n] = await Promise.all([
         probeImage(url(prefix + k + "-morning.png")),
         probeImage(url(prefix + k + "-night.png"))
-      ]).then(([m,n]) => (m||n) ? {
+      ]);
+      // If neither side of this numbered pair exists, stop immediately.
+      if(!m && !n) break;
+      out.push({
         k,
         morning: m ? url(prefix + k + "-morning.png") : null,
-        night:   n ? url(prefix + k + "-night.png")   : null
-      } : null));
+        night:   n ? url(prefix + k + "-night.png") : null
+      });
     }
-    return (await Promise.all(checks)).filter(Boolean);
+    return out;
   }
 
-  /* Resolve every asset for one option (n is 1-based option number). */
-  async function resolveOption(n){
+  async function resolveOptionCore(n){
     const p = "o" + n;
-
-    const [cover, d1, d2] = await Promise.all([
+    const [cover, d1, d2, mood] = await Promise.all([
       probeImage(url(p + ".png")).then(ok => ok ? url(p + ".png") : null),
       probeImage(url(p + "-d1.png")).then(ok => ok ? url(p + "-d1.png") : null),
       probeImage(url(p + "-d2.png")).then(ok => ok ? url(p + "-d2.png") : null),
+      probeImage(url(p + "-m1.png")).then(ok => ok ? url(p + "-m1.png") : null)
     ]);
-    const mood = await probeImage(url(p + "-m1.png")).then(ok => ok ? url(p + "-m1.png") : null);
+    return {
+      cover, d1, d2, mood,
+      layouts: [], renders: [], panoramas: [],
+      furnitureImgs: [], materialImgs: [], docFiles: []
+    };
+  }
 
-    // layouts: try l1, l2, l3 — each with its own elevation series
+  async function resolveOptionSecondary(n, a){
+    const p = "o" + n;
     const layouts = [];
     for(let L=1; L<=MAX_LAYOUTS; L++){
       const planUrl = url(p + "-l" + L + ".png");
-      const exists = await probeImage(planUrl);
-      if(!exists) continue;
-      const elevations = await probeNumberedImages(p + "-l" + L + "-e", MAX_SLOTS);
+      if(!await probeImage(planUrl)) break;
+      const elevations = await probeSequentialImages(p + "-l" + L + "-e", MAX_SLOTS);
       layouts.push({ n:L, image:planUrl, elevations });
     }
+    a.layouts = layouts;
 
-    const renders = await probeDayNightSeries(p + "-r", MAX_SLOTS);
-    const panoramas = await probeDayNightSeries(p + "-p", MAX_SLOTS);
-    const furnitureImgs = await probeNumberedImages(p + "-f", MAX_SLOTS);
-    const materialImgs = await probeNumberedImages(p + "-ma", MAX_SLOTS);
-    const docFiles = await probeNumberedFiles(p + "-pdf", MAX_SLOTS, "pdf");
+    // Keep non-visual supporting content after the primary design direction is visible.
+    a.furnitureImgs = await probeSequentialImages(p + "-f", MAX_SLOTS);
+    a.materialImgs = await probeSequentialImages(p + "-ma", MAX_SLOTS);
+    a.docFiles = await probeSequentialFiles(p + "-pdf", MAX_SLOTS, "pdf");
+    return a;
+  }
 
-    return { cover, d1, d2, mood, layouts, renders, panoramas, furnitureImgs, materialImgs, docFiles };
+  async function resolveOptionVisualization(n, a){
+    const p = "o" + n;
+    a.renders = await probeSequentialDayNightSeries(p + "-r", MAX_SLOTS);
+    a.panoramas = await probeSequentialDayNightSeries(p + "-p", MAX_SLOTS);
+    return a;
   }
 
   /* ==========================================================================
@@ -568,7 +606,7 @@ const PROJECT_CONFIG = {
   function imageOrPlaceholder(src, label, alt){
     if(!src) return placeholder(label);
     const img = document.createElement("img");
-    img.src = src; img.alt = alt || ""; img.loading = "lazy";
+    img.src = src; img.alt = alt || ""; img.loading = "lazy"; img.decoding = "async";
     return img;
   }
 
@@ -582,8 +620,11 @@ const PROJECT_CONFIG = {
     layoutIndex: 0,
     smSlide: 0,               // 0 = style, 1 = mood
     vizMode: "renders",
+    lightMode: "on",
     tod: "morning",
-    panoIndex: 0
+    panoIndex: 0,
+    secondaryReady: false,
+    visualizationReady: false
   };
 
   const els = {
@@ -688,7 +729,10 @@ const PROJECT_CONFIG = {
     state.layoutIndex = 0;
     state.smSlide = 0;
     state.panoIndex = 0;
+    state.lightMode = "on";
     state.tod = "morning";
+    state.secondaryReady = false;
+    state.visualizationReady = false;
     setVizMode("renders");
     positionCarousel();
     els.navOptionLabel.textContent = "Option " + String(i+1).padStart(2,"0") + " — " + (cfg().styleName||"");
@@ -816,62 +860,111 @@ const PROJECT_CONFIG = {
   }
 
   /* ==========================================================================
-     VISUALIZATION: RENDERS + PANORAMA (with morning / night toggle)
+     VISUALIZATION: RENDERS + PANORAMA
+     Light On = morning, Light Off = night. Variants crossfade instead of swap.
      ========================================================================== */
   let flatRenderList = [];
 
+  function currentTimeKey(){ return state.lightMode === "on" ? "morning" : "night"; }
   function bothTodAvailable(){
     const a = assets(); if(!a) return false;
     const pool = [...a.renders, ...a.panoramas];
     return pool.some(x => x.morning) && pool.some(x => x.night);
   }
   function pickVariant(item){
-    // prefer the globally selected time of day; gracefully fall back
-    if(state.tod === "morning") return item.morning || item.night;
-    return item.night || item.morning;
+    return state.lightMode === "on" ? (item.morning || item.night) : (item.night || item.morning);
+  }
+  function renderLightSwitch(){
+    const a=assets();
+    const activeRender = a && a.renders.some(r => r.morning && r.night);
+    const activePano = a && a.panoramas[state.panoIndex] && a.panoramas[state.panoIndex].morning && a.panoramas[state.panoIndex].night;
+    const show = !!(activeRender || activePano);
+    document.getElementById("lightSwitch").style.display = show ? "" : "none";
+    ["lightOn","lightOff"].forEach(id => document.getElementById(id).classList.remove("active"));
+    document.getElementById(state.lightMode==="on" ? "lightOn" : "lightOff").classList.add("active");
   }
 
-  function renderTodToggle(){
-    const show = bothTodAvailable();
-    document.getElementById("todToggle").style.display = show ? "" : "none";
-    document.getElementById("todMorning").classList.toggle("active", state.tod==="morning");
-    document.getElementById("todNight").classList.toggle("active", state.tod==="night");
+  function crossfadeImage(container, src, alt){
+    if(!src) return;
+    const current=container.querySelector(".render-layer.is-visible");
+    if(current && current.dataset.src===src) return;
+    const next=document.createElement("img");
+    next.className="render-layer";
+    next.alt=alt||"";
+    next.decoding="async";
+    next.src=src;
+    next.onload=()=>{
+      next.classList.add("is-visible");
+      if(current){
+        current.classList.remove("is-visible");
+        setTimeout(()=>current.remove(), 800);
+      }
+    };
+    if(!current) next.classList.add("is-visible");
+    container.appendChild(next);
   }
-  document.getElementById("todMorning").addEventListener("click", () => { state.tod="morning"; renderTodToggle(); renderRenders(); refreshPanoramaFrame(); });
-  document.getElementById("todNight").addEventListener("click", () => { state.tod="night"; renderTodToggle(); renderRenders(); refreshPanoramaFrame(); });
+
+  function setLightMode(mode, animate=true){
+    if(mode===state.lightMode && !animate) return;
+    state.lightMode=mode;
+    state.tod=mode==="on" ? "morning" : "night";
+    renderLightSwitch();
+    const a=assets();
+    if(!a) return;
+
+    // Renders: load the target image first, then crossfade.
+    a.renders.forEach((r,idx)=>{
+      const tile=els.renderGrid.children[idx];
+      if(!tile) return;
+      crossfadeImage(tile, pickVariant(r), "Render " + String(r.k).padStart(2,"0"));
+    });
+
+    // Panorama: keep the current texture until the next one is ready, then fade.
+    refreshPanoramaFrame(animate);
+  }
+
+  document.getElementById("lightOn").addEventListener("click",()=>setLightMode("on",true));
+  document.getElementById("lightOff").addEventListener("click",()=>setLightMode("off",true));
 
   function renderRenders(){
     const a = assets();
     clear(els.renderGrid);
     flatRenderList = a.renders;
     a.renders.forEach((r, idx) => {
-      const src = pickVariant(r);
-      const label = "Render " + String(r.k).padStart(2,"0") + (r.morning && r.night ? (" — " + (pickVariant(r)===r.morning ? "Morning" : "Night")) : "");
       const a1 = document.createElement("a");
       a1.href = "javascript:void(0)";
-      a1.appendChild(imageOrPlaceholder(src));
-      a1.appendChild(el("div","render-cap", escapeHtml(label)));
+      const layer=document.createElement("img");
+      layer.className="render-layer is-visible";
+      layer.src=pickVariant(r)||"";
+      layer.alt="Render "+String(r.k).padStart(2,"0");
+      layer.decoding="async";
+      a1.appendChild(layer);
+      a1.appendChild(el("div","render-cap", "Render " + String(r.k).padStart(2,"0")));
       a1.addEventListener("click", () => openLightbox(
-        a.renders.map(r2 => ({ image: pickVariant(r2), title: "Render " + String(r2.k).padStart(2,"0") })),
+        a.renders.map(r2 => ({
+          morning:r2.morning, night:r2.night,
+          image: pickVariant(r2),
+          title: "Render " + String(r2.k).padStart(2,"0")
+        })),
         idx, "Render"
       ));
       els.renderGrid.appendChild(a1);
     });
     document.getElementById("rendersView").style.display = state.vizMode==="renders" ? "" : "none";
     document.getElementById("visualization").style.display = (a.renders.length || a.panoramas.length) ? "" : "none";
+    renderLightSwitch();
   }
 
   /* ==========================================================================
      TRUE 360° PANORAMA VIEWER (three.js) + automatic drag-slide fallback
-     The image is mapped onto the inside of a sphere; the camera rotates
-     inside it. Non-equirectangular images (ratio < 1.8:1) trigger fallback.
      ========================================================================== */
   const Pano360Viewer = (function(){
-    let renderer=null, scene=null, camera=null, mesh=null, loader=null;
+    let renderer=null, scene=null, camera=null, mesh=null, overlay=null, loader=null;
     let stage=null, canvas=null;
     let lon=0, lat=0, tLon=0, tLat=0, fov=75, tFov=75;
     let raf=null, running=false, live=false, dead=false;
     let currentSrc=null, lastInteract=0, pinch0=0, pinchFov0=75;
+    let transitionToken=0, fade=0;
     const pointers=new Map(), texCache=new Map(), cb={};
     const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
 
@@ -879,16 +972,17 @@ const PROJECT_CONFIG = {
       Object.assign(cb, opts); stage=opts.stage; canvas=opts.canvas;
       if(typeof THREE==="undefined"){ fail(); return false; }
       try{
-        renderer=new THREE.WebGLRenderer({ canvas, antialias:true });
-        renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,2));
+        renderer=new THREE.WebGLRenderer({ canvas, antialias:true, powerPreference:"high-performance" });
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,1.5));
         renderer.setClearColor(0x0B0B0A);
       }catch(e){ fail(); return false; }
       scene=new THREE.Scene();
       camera=new THREE.PerspectiveCamera(fov,1,0.1,1100);
-      const geo=new THREE.SphereGeometry(500,64,40);
-      geo.scale(-1,1,1);                       // camera sits inside the sphere
-      mesh=new THREE.Mesh(geo,new THREE.MeshBasicMaterial({ color:0x141414 }));
-      scene.add(mesh);
+      const geo=new THREE.SphereGeometry(500,48,32);
+      geo.scale(-1,1,1);
+      mesh=new THREE.Mesh(geo,new THREE.MeshBasicMaterial({ color:0xffffff, transparent:true, opacity:1, depthWrite:true }));
+      overlay=new THREE.Mesh(geo,new THREE.MeshBasicMaterial({ color:0xffffff, transparent:true, opacity:0, depthWrite:false }));
+      scene.add(mesh); scene.add(overlay);
       loader=new THREE.TextureLoader(); loader.setCrossOrigin("anonymous");
 
       stage.addEventListener("pointerdown",down);
@@ -921,12 +1015,12 @@ const PROJECT_CONFIG = {
       const p=pointers.get(e.pointerId);
       const dx=e.clientX-p.x, dy=e.clientY-p.y; p.x=e.clientX; p.y=e.clientY;
       if(pointers.size===1){
-        const k=fov/Math.max(stage.clientHeight,1);      // deg per pixel
+        const k=fov/Math.max(stage.clientHeight,1);
         tLon-=dx*k; tLat=clamp(tLat+dy*k,-85,85);
       }else if(pointers.size===2&&pinch0>0){
         const q=[...pointers.values()];
         const d=Math.hypot(q[0].x-q[1].x,q[0].y-q[1].y);
-        if(d>0) tFov=clamp(pinchFov0*pinch0/d,30,100);   // pinch zoom
+        if(d>0) tFov=clamp(pinchFov0*pinch0/d,30,100);
       }
       e.preventDefault();
     }
@@ -938,42 +1032,84 @@ const PROJECT_CONFIG = {
     }
     function cacheTex(src,tex){
       if(texCache.has(src)) return;
-      if(texCache.size>=8){ const cur=mesh.material.map;
-        texCache.forEach((t,s)=>{ if(t!==cur){ t.dispose(); texCache.delete(s); } }); }
+      if(texCache.size>=4){
+        const cur=mesh.material.map, over=overlay.material.map;
+        for(const [s,t] of texCache){
+          if(t!==cur && t!==over){ t.dispose(); texCache.delete(s); break; }
+        }
+      }
       texCache.set(src,tex);
     }
+    function getTexture(src,onReady,onError){
+      if(!src){ onError(src); return; }
+      if(texCache.has(src)){ onReady(texCache.get(src)); return; }
+      loader.load(src,tex=>{
+        tex.colorSpace = THREE.SRGBColorSpace || tex.colorSpace;
+        cacheTex(src,tex); onReady(tex);
+      },undefined,()=>onError(src));
+    }
     function load(src){
-      if(dead||!renderer) return false;
-      currentSrc=src; lon=tLon; lat=tLat;                // hold view while swapping
+      if(dead||!renderer||!src) return false;
+      currentSrc=src;
       if(cb.onLoading) cb.onLoading(true);
-      const apply=tex=>{
+      getTexture(src,tex=>{
         if(currentSrc!==src) return;
         const img=tex.image, ratio=(img.width||2)/Math.max(img.height||1,1);
-        if(ratio<1.8){ fail(src); return; }              // not equirectangular → fallback
-        mesh.material.map=tex; mesh.material.color.set(0xffffff);
+        if(ratio<1.8){ fail(src); return; }
+        mesh.material.map=tex;
+        mesh.material.opacity=1;
         mesh.material.needsUpdate=true;
+        overlay.material.opacity=0;
+        overlay.material.map=null;
+        overlay.material.needsUpdate=true;
         if(cb.onLoading) cb.onLoading(false);
-      };
-      if(texCache.has(src)) apply(texCache.get(src));
-      else loader.load(src,tex=>{
-        tex.anisotropy=renderer.capabilities.getMaxAnisotropy();
-        cacheTex(src,tex); apply(tex);
-      },undefined,()=>{ if(currentSrc===src) fail(src); });
+      },bad=>{ if(currentSrc===src) fail(bad); });
+      return true;
+    }
+    function transitionTo(src,duration=850){
+      if(dead||!renderer||!src) return false;
+      const token=++transitionToken;
+      if(src===currentSrc) return true;
+      if(cb.onLoading) cb.onLoading(true);
+      getTexture(src,tex=>{
+        if(token!==transitionToken) return;
+        const img=tex.image, ratio=(img.width||2)/Math.max(img.height||1,1);
+        if(ratio<1.8){ if(cb.onLoading) cb.onLoading(false); return; }
+        overlay.material.map=tex;
+        overlay.material.opacity=0;
+        overlay.material.needsUpdate=true;
+        const started=performance.now();
+        const from=mesh.material.map;
+        currentSrc=src;
+        const fadeFrame=now=>{
+          if(token!==transitionToken) return;
+          fade=Math.min(1,(now-started)/duration);
+          overlay.material.opacity=fade;
+          if(fade<1) requestAnimationFrame(fadeFrame);
+          else{
+            mesh.material.map=tex; mesh.material.opacity=1; mesh.material.needsUpdate=true;
+            overlay.material.map=null; overlay.material.opacity=0; overlay.material.needsUpdate=true;
+            if(from && from!==tex) cacheTex(src,tex);
+            if(cb.onLoading) cb.onLoading(false);
+          }
+        };
+        requestAnimationFrame(fadeFrame);
+      },bad=>{ if(token===transitionToken && cb.onLoading) cb.onLoading(false); });
       return true;
     }
     function frame(){
       if(!running) return;
       raf=requestAnimationFrame(frame);
-      if(performance.now()-lastInteract>5000) tLon+=0.02;  // gentle idle spin
+      if(performance.now()-lastInteract>5000) tLon+=0.02;
       lon+=(tLon-lon)*0.16; lat+=(tLat-lat)*0.16; fov+=(tFov-fov)*0.16;
       camera.fov=fov; camera.updateProjectionMatrix();
       const phi=THREE.MathUtils.degToRad(90-lat), theta=THREE.MathUtils.degToRad(lon);
       camera.lookAt(500*Math.sin(phi)*Math.cos(theta),500*Math.cos(phi),500*Math.sin(phi)*Math.sin(theta));
       try{ renderer.render(scene,camera); }catch(err){ fail(currentSrc); }
     }
-    function start(){ if(dead||!renderer||running) return; running=true; frame(); }
+    function start(){ if(dead||!renderer||running) return; running=true; resize(); frame(); }
     function stop(){ running=false; if(raf){ cancelAnimationFrame(raf); raf=null; } }
-    return { init, load, start, stop, resize, isAlive:()=>live&&!dead };
+    return { init, load, transitionTo, start, stop, resize, isAlive:()=>live&&!dead };
   })();
 
   function panoShowWebGL(){
@@ -986,15 +1122,36 @@ const PROJECT_CONFIG = {
     els.panoTrack.style.display="";
     document.getElementById("panoHint").textContent="Drag to slide";
   }
-  const panoWebGL = Pano360Viewer.init({
+  let panoWebGL=false;
+  let panoInitStarted=false;
+  const panoViewerOptions = {
     stage: els.panoStage,
     canvas: document.getElementById("panoCanvas"),
     onLoading: show => document.getElementById("panoLoading").classList.toggle("show", !!show),
     onFail: src => { panoShowLegacy(); if(src) legacyLoad(src); }
-  });
-  if(panoWebGL) panoShowWebGL(); else panoShowLegacy();
+  };
+  function ensurePanoViewer(){
+    if(panoWebGL || panoInitStarted) return;
+    if(typeof THREE !== "undefined"){
+      panoWebGL=Pano360Viewer.init(panoViewerOptions);
+      if(panoWebGL) panoShowWebGL(); else panoShowLegacy();
+      if(panoWebGL && state.vizMode==="panorama"){ applyPanorama(false); Pano360Viewer.start(); }
+      return;
+    }
+    panoInitStarted=true;
+    const script=document.createElement("script");
+    script.src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js";
+    script.async=true;
+    script.onload=()=>{
+      panoWebGL=Pano360Viewer.init(panoViewerOptions);
+      if(panoWebGL) panoShowWebGL(); else panoShowLegacy();
+      if(panoWebGL && state.vizMode==="panorama"){ applyPanorama(false); Pano360Viewer.start(); }
+    };
+    script.onerror=()=>panoShowLegacy();
+    document.head.appendChild(script);
+  }
+  panoShowLegacy();
 
-  /* old slide-style viewer kept as automatic fallback */
   const panoSlide={ active:false, startX:0, offset:0, singleWidth:0 };
   function legacyLoad(src){
     clear(els.panoTrack);
@@ -1022,36 +1179,60 @@ const PROJECT_CONFIG = {
     st.addEventListener("pointerup",end); st.addEventListener("pointercancel",end);
   })();
 
-  function renderPanoramaLocations(){
+  function renderPanoramaLocations(applyCurrent=true){
     const a=assets();
     clear(els.panoLocations);
     document.getElementById("btnPanorama").style.display=a.panoramas.length?"":"none";
     if(!a.panoramas.length){ if(state.vizMode==="panorama") setVizMode("renders"); return; }
     a.panoramas.forEach((p,i)=>{
       const btn=el("button","pano-loc"+(i===state.panoIndex?" active":""));
-      btn.appendChild(imageOrPlaceholder(pickVariant(p)));
+      const thumb=pickVariant(p);
+      if(thumb) btn.appendChild(imageOrPlaceholder(thumb));
       btn.appendChild(el("span",null,"Location "+String(p.k).padStart(2,"0")));
       btn.addEventListener("click",()=>selectPanorama(i));
       els.panoLocations.appendChild(btn);
     });
-    selectPanorama(Math.min(state.panoIndex,a.panoramas.length-1));
+    if(applyCurrent) selectPanorama(Math.min(state.panoIndex,a.panoramas.length-1));
+    else {
+      state.panoIndex=Math.min(state.panoIndex,a.panoramas.length-1);
+      const p=a.panoramas[state.panoIndex];
+      els.panoName.textContent="Location "+String(p.k).padStart(2,"0");
+      [...els.panoLocations.children].forEach((elx,idx)=>elx.classList.toggle("active",idx===state.panoIndex));
+    }
+    renderLightSwitch();
   }
+
   function selectPanorama(i){
     const a=assets(); if(!a.panoramas.length) return;
     state.panoIndex=Math.max(0,Math.min(i,a.panoramas.length-1));
     const p=a.panoramas[state.panoIndex];
     els.panoName.textContent="Location "+String(p.k).padStart(2,"0");
     [...els.panoLocations.children].forEach((elx,idx)=>elx.classList.toggle("active",idx===state.panoIndex));
-    if(state.vizMode==="panorama") applyPanorama();
+    renderLightSwitch();
+    if(state.vizMode==="panorama") applyPanorama(true);
   }
-  function applyPanorama(){
+
+  function applyPanorama(animate=true){
     const a=assets(); const p=a.panoramas[state.panoIndex]; if(!p) return;
     const src=pickVariant(p);
-    if(!(Pano360Viewer.isAlive()&&Pano360Viewer.load(src))) legacyLoad(src);
+    if(!(Pano360Viewer.isAlive() && src)) { if(src) legacyLoad(src); return; }
+    if(!Pano360Viewer.load(src)) legacyLoad(src);
   }
-  function refreshPanoramaFrame(){
+
+  function refreshPanoramaFrame(animate=true){
     const a=assets();
-    if(a && a.panoramas.length) renderPanoramaLocations(); // rebuilds thumbs for current time of day
+    if(!a || !a.panoramas.length) return;
+    renderPanoramaLocations(false);
+    const p=a.panoramas[state.panoIndex];
+    if(!p) return;
+    const src=pickVariant(p);
+    if(Pano360Viewer.isAlive() && p.morning && p.night && animate){
+      Pano360Viewer.transitionTo(src,850);
+    }else if(Pano360Viewer.isAlive()){
+      Pano360Viewer.load(src);
+    }else if(src){
+      legacyLoad(src);
+    }
   }
 
   function setVizMode(mode){
@@ -1060,11 +1241,43 @@ const PROJECT_CONFIG = {
     document.getElementById("btnPanorama").classList.toggle("active",mode==="panorama");
     document.getElementById("rendersView").style.display=mode==="renders"?"":"none";
     document.getElementById("panoramaView").style.display=mode==="panorama"?"":"none";
-    if(mode==="panorama"){ applyPanorama(); Pano360Viewer.resize(); Pano360Viewer.start(); }
-    else { Pano360Viewer.stop(); }
+    if(mode==="panorama"){
+      const a=assets();
+      const p=a && a.panoramas[state.panoIndex];
+      if(p){
+        const src=pickVariant(p);
+        if(src) legacyLoad(src);
+      }
+      ensurePanoViewer();
+      if(panoWebGL){ applyPanorama(false); Pano360Viewer.resize(); Pano360Viewer.start(); }
+      renderLightSwitch();
+    }else{
+      Pano360Viewer.stop();
+      renderLightSwitch();
+    }
   }
   document.getElementById("btnRenders").addEventListener("click", () => setVizMode("renders"));
   document.getElementById("btnPanorama").addEventListener("click", () => setVizMode("panorama"));
+
+  // Keep the global switch synchronized with the selected panorama.
+  document.getElementById("panoLightOn").addEventListener("click",()=>setLightMode("on",true));
+  document.getElementById("panoLightOff").addEventListener("click",()=>setLightMode("off",true));
+
+  async function toggleFullscreen(target,button){
+    try{
+      if(document.fullscreenElement===target){ await document.exitFullscreen(); }
+      else { await target.requestFullscreen(); }
+    }catch(_){}
+    button.textContent = document.fullscreenElement===target ? "Exit fullscreen" : "Fullscreen";
+  }
+  document.getElementById("panoFullscreen").addEventListener("click",()=>toggleFullscreen(els.panoStage,document.getElementById("panoFullscreen")));
+  document.addEventListener("fullscreenchange",()=>{
+    const panoFs=document.fullscreenElement===els.panoStage;
+    const lbFs=document.fullscreenElement===lbEls.box;
+    document.getElementById("panoFullscreen").textContent=panoFs?"Exit fullscreen":"Fullscreen";
+    document.getElementById("lbFullscreen").textContent=lbFs?"Exit fullscreen":"Fullscreen";
+    if(panoFs) Pano360Viewer.resize();
+  });
 
   /* ==========================================================================
      DOCUMENTS
@@ -1100,9 +1313,40 @@ const PROJECT_CONFIG = {
   function openLightbox(items, index, kind){
     lb.items = items; lb.index = index; lb.kind = kind; lbMoved = false;
     lbEls.box.classList.add("open"); document.body.style.overflow = "hidden";
+    const showLight = kind === "Render";
+    document.getElementById("lbLightSwitch").style.display = showLight ? "" : "none";
+    document.getElementById("lbFullscreen").style.display = showLight ? "" : "none";
     renderLbFrame(); renderLbThumbs();
+    syncLbLight();
   }
-  function closeLightbox(){ lbEls.box.classList.remove("open"); document.body.style.overflow = ""; }
+  function closeLightbox(){
+    if(document.fullscreenElement===lbEls.box){ document.exitFullscreen().catch(()=>{}); }
+    lbEls.box.classList.remove("open"); document.body.style.overflow = "";
+  }
+  function syncLbLight(){
+    document.getElementById("lbLightOn").classList.toggle("active",state.lightMode==="on");
+    document.getElementById("lbLightOff").classList.toggle("active",state.lightMode==="off");
+  }
+  function setLbLight(mode){
+    state.lightMode=mode; state.tod=mode==="on"?"morning":"night";
+    syncLbLight(); renderLightSwitch();
+    const item=lb.items[lb.index];
+    if(!item) return;
+    const src=mode==="on" ? (item.morning||item.night) : (item.night||item.morning);
+    if(!src) return;
+    const oldSrc=lbEls.img.src;
+    if(oldSrc===new URL(src,location.href).href) return;
+    const pre=new Image();
+    pre.decoding="async";
+    pre.onload=()=>{
+      lbEls.img.style.opacity="0";
+      setTimeout(()=>{
+        lbEls.img.src=src;
+        lbEls.img.onload=()=>{ lbEls.img.style.opacity="1"; };
+      },180);
+    };
+    pre.src=src;
+  }
   function applyLbTransform(){
     lbEls.img.style.transform = "translate(" + lb.panX + "px," + lb.panY + "px) scale(" + lb.zoom + ")";
   }
@@ -1113,7 +1357,10 @@ const PROJECT_CONFIG = {
     lbEls.img.style.transform = "translate(0px,0px) scale(1)";
     lbEls.title.textContent = item.title || "";
     lbEls.sub.textContent = lb.kind + " · " + (lb.index+1) + " / " + lb.items.length;
-    if(item.image){ lbEls.img.style.display=""; lbEls.img.src = item.image; lbEls.img.alt = item.title||""; }
+    const image = lb.kind==="Render"
+      ? (state.lightMode==="on" ? (item.morning||item.night) : (item.night||item.morning))
+      : item.image;
+    if(image){ lbEls.img.style.display=""; lbEls.img.style.opacity="1"; lbEls.img.src = image; lbEls.img.alt = item.title||""; }
     else { lbEls.img.style.display="none"; lbEls.img.src=""; }
   }
   function renderLbThumbs(){
@@ -1134,6 +1381,9 @@ const PROJECT_CONFIG = {
     renderLbFrame(); renderLbThumbs();
   }
   document.getElementById("lbClose").addEventListener("click", closeLightbox);
+  document.getElementById("lbLightOn").addEventListener("click",()=>setLbLight("on"));
+  document.getElementById("lbLightOff").addEventListener("click",()=>setLbLight("off"));
+  document.getElementById("lbFullscreen").addEventListener("click",()=>toggleFullscreen(lbEls.box,document.getElementById("lbFullscreen")));
   document.getElementById("lbPrev").addEventListener("click", () => lbGo(-1));
   document.getElementById("lbNext").addEventListener("click", () => lbGo(1));
   document.addEventListener("keydown", e => {
@@ -1205,33 +1455,79 @@ const PROJECT_CONFIG = {
   })();
 
   /* ==========================================================================
-     BOOT — resolve assets per option, then render the active one
+     BOOT — progressive loading
+     Priority:
+       1. option covers + style/mood
+       2. layout + furniture/materials/documents
+       3. renders
+       4. panoramas last
+     Other options only preload their cover until selected.
      ========================================================================== */
+  function ensureAssetRecord(i){
+    if(!state.assetCache[i]) state.assetCache[i]={
+      cover:null,d1:null,d2:null,mood:null,layouts:[],
+      renders:[],panoramas:[],furnitureImgs:[],materialImgs:[],docFiles:[]
+    };
+    return state.assetCache[i];
+  }
+
   function requestAssets(i){
     if(!state.assetPending[i]){
-      state.assetPending[i] = resolveOption(i+1).then(a => {
-        state.assetCache[i] = a;
-        fillCarouselCover(i, a.cover);
+      state.assetPending[i]=resolveOptionCore(i+1).then(a=>{
+        state.assetCache[i]=a;
+        fillCarouselCover(i,a.cover);
         return a;
       });
     }
     return state.assetPending[i];
   }
+
   async function loadAndRenderOption(i){
-    const a = await requestAssets(i);
-    if(state.optionIndex !== i) return;   // user switched options while loading
+    const a=await requestAssets(i);
+    if(state.optionIndex!==i) return;
+
+    // First paint: option, style and mood only.
     renderStyleAndMood();
+    warmOtherOptionCovers();
+
+    // Then load supporting design content.
+    await resolveOptionSecondary(i+1,a);
+    if(state.optionIndex!==i) return;
+    state.secondaryReady=true;
     renderLayoutTabs(); renderPlan();
-    renderFurniture(); renderMaterials();
-    renderTodToggle(); renderRenders(); renderPanoramaLocations();
-    renderDocuments();
+    renderFurniture(); renderMaterials(); renderDocuments();
+
+    // Render images next.
+    a.renders=await probeSequentialDayNightSeries("o"+(i+1)+"-r",MAX_SLOTS);
+    if(state.optionIndex!==i) return;
+    state.visualizationReady=true;
+    renderLightSwitch(); renderRenders();
+
+    // Panorama is intentionally last because it is the heaviest asset.
+    a.panoramas=await probeSequentialDayNightSeries("o"+(i+1)+"-p",MAX_SLOTS);
+    if(state.optionIndex!==i) return;
+    renderPanoramaLocations();
+    renderLightSwitch();
   }
 
   renderHeader();
   renderCarouselShell();
+
+  // Only the active option is fully resolved at startup.
   selectOption(0);
-  // warm-cache the other options so their covers fill in and switching is instant
-  for(let j=1; j<PROJECT_CONFIG.options.length; j++) requestAssets(j);
+
+  // Covers for other options start only after the first option has painted.
+  function warmOtherOptionCovers(){
+    const run=()=>{
+      for(let j=1;j<PROJECT_CONFIG.options.length;j++){
+        probeImage(url("o"+(j+1)+".png")).then(ok=>{
+          if(ok) fillCarouselCover(j,url("o"+(j+1)+".png"));
+        });
+      }
+    };
+    if("requestIdleCallback" in window) requestIdleCallback(run,{timeout:1200});
+    else setTimeout(run,400);
+  }
 
   /* mobile nav toggle */
   document.getElementById("navToggle").addEventListener("click", () => {
