@@ -1,42 +1,16 @@
 <!DOCTYPE html>
-<!--
-  ============================================================================
-  ARCHITECTURAL / INTERIOR DESIGN CLIENT PRESENTATION — SINGLE FILE BUILD
-  ============================================================================
-  This file does NOT hard-code a list of assets. For each option it PROBES
-  for files at fixed, predictable filenames and silently uses whichever ones
-  actually exist. Drop a correctly-named file next to this HTML file and it
-  appears; leave it out and that slot is skipped automatically.
+<!-- saved from url=(0059)https://fareskahri-crypto.github.io/narcisse/#visualization -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
-  FILE NAMING RULES (all lowercase)
-  ---------------------------------
-    Cover (carousel card)     o{n}.png                e.g. o1.png
-    Design direction images   o{n}-d{i}.png            o1-d1.png, o1-d2.png
-    Mood board image          o{n}-m1.png
-    Layout plan               o{n}-l{L}.png            o1-l1.png            (L = 1..3)
-    Elevation / detail shots  o{n}-l{L}-e{k}.png       up to e20
-    Renders                   o{n}-r{k}-morning.png    o1-r1-morning.png
-                               o{n}-r{k}-night.png     (k = 1..20, either or both)
-    Panoramas                 o{n}-p{k}-morning.png    o1-p1-morning.png
-                               o{n}-p{k}-night.png     (k = 1..20)
-                              !! Panoramas must be 2:1 equirectangular 360°
-                              !! renders (e.g. 4096x2048) for the 360 viewer.
-    Furniture                 o{n}-f{k}.png            up to f20
-    Materials                 o{n}-ma{k}.png           up to ma20
-    Documents (PDF)           o{n}-pdf{k}.pdf          up to pdf20
-
-  Text content is edited in PROJECT_CONFIG below.
--->
-<html lang="en">
-<head>
-<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Project Presentation</title>
 <link rel="icon" href="data:,">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,340;9..144,440;9..144,520&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-<!-- Three.js is loaded lazily only when the Panorama viewer is opened. -->
+<link rel="preconnect" href="https://fonts.googleapis.com/">
+<link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin="">
+<link href="./001 Project Presentation_files/css2" rel="stylesheet">
+<!-- three.js — powers the true 360° panorama viewer -->
+<script src="./001 Project Presentation_files/three.min.js.download"></script>
+<style>
 :root{
   --paper:     #F2F0EA;
   --paper-2:   #E8E5DD;
@@ -184,14 +158,13 @@ section + section{border-top:1px solid var(--line);}
 .viz-toggle{display:inline-flex; border:1px solid var(--ink);}
 .viz-toggle button{padding:10px 22px; background:none; border:0; font-size:12.5px; letter-spacing:.08em; text-transform:uppercase; color:var(--ink-soft);}
 .viz-toggle button.active{background:var(--ink); color:var(--white);}
-.light-switch{display:inline-flex; align-items:center; gap:0; border:1px solid var(--line); border-radius:999px; overflow:hidden; background:var(--white);}
-.light-switch button{padding:8px 15px; background:transparent; border:0; font-size:11.5px; letter-spacing:.06em; text-transform:uppercase; color:var(--ink-soft); transition:background .22s var(--ease),color .22s var(--ease);}
-.light-switch button.active{background:var(--ink); color:var(--white);}
+.tod-toggle{display:inline-flex; border:1px solid var(--line); border-radius:999px; overflow:hidden;}
+.tod-toggle button{padding:8px 18px; background:var(--white); border:0; font-size:12px; letter-spacing:.04em; color:var(--ink-soft); display:flex; align-items:center; gap:6px;}
+.tod-toggle button.active{background:var(--accent); color:var(--white);}
 .render-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:14px;}
 .render-grid a{position:relative; display:block; aspect-ratio:4/3; overflow:hidden; background:var(--paper-2); cursor:zoom-in;}
-.render-grid .render-layer{position:absolute; inset:0; width:100%; height:100%; object-fit:cover; opacity:0; transition:opacity .75s var(--ease),transform .5s var(--ease);}
-.render-grid .render-layer.is-visible{opacity:1;}
-.render-grid a:hover .render-layer{transform:scale(1.035);}
+.render-grid img{width:100%; height:100%; object-fit:cover; transition:transform .5s var(--ease), opacity .25s;}
+.render-grid a:hover img{transform:scale(1.035);}
 .render-cap{position:absolute; left:0; right:0; bottom:0; padding:9px 12px; font-size:11.5px; color:var(--white); background:linear-gradient(0deg, rgba(11,11,10,.62), rgba(11,11,10,0));}
 @media (max-width:900px){.render-grid{grid-template-columns:repeat(2,1fr);}}
 @media (max-width:560px){.render-grid{grid-template-columns:1fr;}}
@@ -205,11 +178,6 @@ section + section{border-top:1px solid var(--line);}
 .pano-label .eyebrow{color:rgba(255,255,255,.65);}
 .pano-label .name{font-family:var(--serif); font-size:20px; color:var(--white); margin-top:2px;}
 .pano-hint{position:absolute; right:20px; bottom:16px; color:rgba(255,255,255,.55); font-size:11px; z-index:2;}
-.pano-tools{position:absolute; right:18px; top:16px; z-index:5; display:flex; gap:8px;}
-.pano-tools button,.lb-tool{border:1px solid rgba(255,255,255,.35); background:rgba(11,11,10,.42); backdrop-filter:blur(8px); color:var(--white); padding:8px 11px; font-size:11px; letter-spacing:.06em; text-transform:uppercase;}
-.pano-tools button.active,.lb-tool.active{background:rgba(253,252,250,.92); color:var(--ink);}
-.pano-stage:fullscreen{height:100vh; border:0;}
-.pano-stage:-webkit-full-screen{height:100vh; border:0;}
 .pano-loading{position:absolute; inset:0; z-index:3; display:flex; align-items:center; justify-content:center; background:rgba(11,11,10,.55); color:rgba(255,255,255,.85); font-size:11px; letter-spacing:.12em; text-transform:uppercase; opacity:0; pointer-events:none; transition:opacity .25s var(--ease);}
 .pano-loading.show{opacity:1;}
 .pano-locations{display:flex; gap:10px; margin-top:16px; overflow-x:auto;}
@@ -230,12 +198,10 @@ footer{padding:44px 0 60px; color:var(--muted); font-size:12px; display:flex; ju
 /* ---- lightbox ---- */
 .lightbox{position:fixed; inset:0; background:rgba(11,11,10,.94); z-index:100; display:none; flex-direction:column;}
 .lightbox.open{display:flex;}
-.lb-top{display:flex; justify-content:space-between; align-items:center; padding:16px 20px; color:var(--white); gap:14px;}
+.lb-top{display:flex; justify-content:space-between; align-items:center; padding:16px 20px; color:var(--white);}
 .lb-top .lb-title{font-size:13px; letter-spacing:.03em;}
-.lb-tools{display:flex; align-items:center; gap:8px; margin-left:auto;}
 .lb-top .lb-title .sub{color:rgba(255,255,255,.55); margin-left:8px;}
 .lb-close{background:none; border:1px solid rgba(255,255,255,.35); color:var(--white); width:32px; height:32px; font-size:16px;}
-.lightbox:fullscreen .lb-body,.lightbox:-webkit-full-screen .lb-body{height:100vh;}
 .lb-body{flex:1; position:relative; overflow:hidden; display:flex; align-items:center; justify-content:center; touch-action:none;}
 .lb-body img{max-width:92%; max-height:88%; will-change:transform; user-select:none; -webkit-user-drag:none;}
 .lb-arrow{position:absolute; top:50%; transform:translateY(-50%); background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.3); color:var(--white); width:42px; height:42px; font-size:18px;}
@@ -246,20 +212,20 @@ footer{padding:44px 0 60px; color:var(--muted); font-size:12px; display:flex; ju
 .lb-hint{position:absolute; bottom:12px; left:50%; transform:translateX(-50%); color:rgba(255,255,255,.45); font-size:11px;}
 </style>
 </head>
-<body>
+<body style="">
 
 <div class="topnav">
   <div class="wrap topnav-inner">
-    <div class="topnav-id" id="navProjectName">Project</div>
+    <div class="topnav-id" id="navProjectName">Center of Skin Care</div>
     <ul class="topnav-links" id="navLinks">
-      <li><a href="#overview">Overview</a></li>
-      <li><a href="#style-mood">Style &amp; Mood</a></li>
-      <li><a href="#layout">Layout</a></li>
-      <li><a href="#visualization">Visualization</a></li>
-      <li><a href="#furniture">Furniture</a></li>
+      <li><a href="https://fareskahri-crypto.github.io/narcisse/#overview">Overview</a></li>
+      <li><a href="https://fareskahri-crypto.github.io/narcisse/#style-mood">Style &amp; Mood</a></li>
+      <li><a href="https://fareskahri-crypto.github.io/narcisse/#layout">Layout</a></li>
+      <li><a href="https://fareskahri-crypto.github.io/narcisse/#visualization">Visualization</a></li>
+      <li><a href="https://fareskahri-crypto.github.io/narcisse/#furniture">Furniture</a></li>
     </ul>
     <div style="display:flex; align-items:center; gap:14px;">
-      <div class="option-pill" id="navOptionPill"><span class="dot"></span><span id="navOptionLabel">Option 01</span></div>
+      <div class="option-pill" id="navOptionPill"><span class="dot"></span><span id="navOptionLabel">Option 01 — Warm Minimal</span></div>
       <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation">☰</button>
     </div>
   </div>
@@ -269,20 +235,20 @@ footer{padding:44px 0 60px; color:var(--muted); font-size:12px; display:flex; ju
   <div class="wrap">
     <div class="header-top">
       <div>
-        <div class="eyebrow" id="hdrClient">For —</div>
-        <h1 class="project-title" id="hdrTitle">Project Name</h1>
+        <div class="eyebrow" id="hdrClient">For — Tom Sahour</div>
+        <h1 class="project-title" id="hdrTitle">Center of Skin Care</h1>
         <div class="project-meta">
-          <div><span>Type</span><span id="hdrType" style="text-transform:none;"></span></div>
-          <div><span>Location</span><span id="hdrLocation" style="text-transform:none;"></span></div>
+          <div><span>Type</span><span id="hdrType" style="text-transform:none;">Interior Design — Medical Retail</span></div>
+          <div style="display: none;"><span>Location</span><span id="hdrLocation" style="text-transform:none;"></span></div>
         </div>
       </div>
-      <div class="version-tag" id="hdrVersion"></div>
+      <div class="version-tag" id="hdrVersion">Design Proposal — Revision 01<br>24 September 2026</div>
     </div>
   </div>
   <div class="wrap carousel-region">
     <div class="eyebrow" style="margin-bottom:2px;">Design Options</div>
-    <div class="carousel-track" id="carouselTrack" tabindex="0"></div>
-    <div class="carousel-nav" id="carouselDots"></div>
+    <div class="carousel-track" id="carouselTrack" tabindex="0"><div class="opt-card is-active" tabindex="0" role="button" aria-label="Select option 1"><div class="ph"><span>Missing image</span><small>o1.png</small></div><div class="opt-card-label"><div class="n">Option 01</div><div class="s">Warm Minimal</div></div></div><div class="opt-card is-side-r" tabindex="0" role="button" aria-label="Select option 2"><div class="ph"><span>Missing image</span><small>o2.png</small></div><div class="opt-card-label"><div class="n">Option 02</div><div class="s">Contemporary Stone</div></div></div></div>
+    <div class="carousel-nav" id="carouselDots"><button class="carousel-dot active" aria-label="Go to option 1"></button><button class="carousel-dot" aria-label="Go to option 2"></button></div>
   </div>
 </header>
 
@@ -292,12 +258,12 @@ footer{padding:44px 0 60px; color:var(--muted); font-size:12px; display:flex; ju
     <div class="sm-head">
       <div>
         <div class="eyebrow">Design Direction &amp; Atmosphere</div>
-        <h2 class="section-title" id="smTitle">Style</h2>
+        <h2 class="section-title" id="smTitle">Mood</h2>
       </div>
       <div style="display:flex; align-items:center; gap:18px;">
         <div class="sm-tabs">
-          <button class="sm-tab active" id="smTabStyle">Style</button>
-          <button class="sm-tab" id="smTabMood">Mood</button>
+          <button class="sm-tab" id="smTabStyle">Style</button>
+          <button class="sm-tab active" id="smTabMood">Mood</button>
         </div>
         <div class="sm-arrows">
           <button class="sm-arrow" id="smPrev" aria-label="Previous">‹</button>
@@ -307,20 +273,20 @@ footer{padding:44px 0 60px; color:var(--muted); font-size:12px; display:flex; ju
     </div>
 
     <div class="sm-viewport">
-      <div class="sm-track" id="smTrack">
+      <div class="sm-track" id="smTrack" style="transform: translateX(-50%);">
         <div class="sm-slide">
           <div class="direction-grid">
             <div class="direction-media">
-              <div class="m1" id="dirImg1"></div>
-              <div class="m2" id="dirImg2"></div>
+              <div class="m1" id="dirImg1"><div class="ph"><span>Missing image</span><small>o1-d1.png</small></div></div>
+              <div class="m2" id="dirImg2" style="display: none;"></div>
             </div>
-            <div class="direction-text"><p id="dirText"></p></div>
+            <div class="direction-text"><p id="dirText">A calm, materially honest interior built from natural oak, warm plaster, and soft indirect light. Forms stay simple and continuous so the architecture recedes and the treatment experience comes forward.</p></div>
           </div>
         </div>
         <div class="sm-slide">
           <div class="mood-single">
-            <div class="mood-img" id="moodImg"></div>
-            <p class="mood-caption" id="moodCaption"></p>
+            <div class="mood-img" id="moodImg"><div class="ph"><span>Missing image</span><small>o1-m1.png</small></div></div>
+            <p class="mood-caption" id="moodCaption">A restrained material palette — oak, limewash plaster, and honed stone — chosen for a sense of warmth, cleanliness, and quiet professionalism.</p>
           </div>
         </div>
       </div>
@@ -329,7 +295,7 @@ footer{padding:44px 0 60px; color:var(--muted); font-size:12px; display:flex; ju
 </section>
 
 <!-- LAYOUT -->
-<section id="layout">
+<section id="layout" style="display: none;">
   <div class="wrap">
     <div class="section-head">
       <div>
@@ -337,7 +303,7 @@ footer{padding:44px 0 60px; color:var(--muted); font-size:12px; display:flex; ju
         <h2 class="section-title">Layout</h2>
       </div>
     </div>
-    <div class="layout-tabs" id="layoutTabs"></div>
+    <div class="layout-tabs" id="layoutTabs" style="display: none;"></div>
     <div class="plan-frame" id="planFrame" style="margin-bottom:40px;"></div>
     <div id="elevationsWrap">
       <div class="tech-group-title">Elevations &amp; Details</div>
@@ -347,7 +313,7 @@ footer{padding:44px 0 60px; color:var(--muted); font-size:12px; display:flex; ju
 </section>
 
 <!-- VISUALIZATION -->
-<section id="visualization">
+<section id="visualization" style="">
   <div class="wrap">
     <div class="section-head">
       <div>
@@ -358,38 +324,31 @@ footer{padding:44px 0 60px; color:var(--muted); font-size:12px; display:flex; ju
     <div class="viz-controls">
       <div class="viz-toggle">
         <button id="btnRenders" class="active">Renders</button>
-        <button id="btnPanorama">Panorama</button>
+        <button id="btnPanorama" style="">Panorama</button>
       </div>
-      <div class="light-switch" id="lightSwitch" aria-label="Lighting">
-        <button id="lightOn" class="active" type="button">Light On</button>
-        <button id="lightOff" type="button">Light Off</button>
+      <div class="tod-toggle" id="todToggle" style="">
+        <button id="todMorning" class="active">☀ Morning</button>
+        <button id="todNight" class="">☾ Night</button>
       </div>
     </div>
 
-    <div id="rendersView"><div class="render-grid" id="renderGrid"></div></div>
+    <div id="rendersView"><div class="render-grid" id="renderGrid"><a href="javascript:void(0)"><img src="./001 Project Presentation_files/o1-r1-morning.png" alt="" loading="lazy"><div class="render-cap">Render 01 — Morning</div></a><a href="javascript:void(0)"><img src="./001 Project Presentation_files/o1-r2-morning.png" alt="" loading="lazy"><div class="render-cap">Render 02 — Morning</div></a><a href="javascript:void(0)"><img src="./001 Project Presentation_files/o1-r3-morning.png" alt="" loading="lazy"><div class="render-cap">Render 03 — Morning</div></a><a href="javascript:void(0)"><img src="./001 Project Presentation_files/o1-r4-morning.png" alt="" loading="lazy"><div class="render-cap">Render 04 — Morning</div></a><a href="javascript:void(0)"><img src="./001 Project Presentation_files/o1-r5-night.png" alt="" loading="lazy"><div class="render-cap">Render 05</div></a><a href="javascript:void(0)"><img src="./001 Project Presentation_files/o1-r6-night.png" alt="" loading="lazy"><div class="render-cap">Render 06</div></a></div></div>
 
     <div id="panoramaView" style="display:none;">
       <div class="pano-stage" id="panoStage">
-        <div class="pano-img-track" id="panoTrack"></div>
-        <canvas id="panoCanvas" style="display:none;"></canvas>
-        <div class="pano-label"><div class="eyebrow">360° View</div><div class="name" id="panoName">—</div></div>
-        <div class="pano-tools">
-          <div class="light-switch" id="panoLightSwitch">
-            <button id="panoLightOn" class="active" type="button">Light On</button>
-            <button id="panoLightOff" type="button">Light Off</button>
-          </div>
-          <button id="panoFullscreen" type="button" aria-label="Enter fullscreen">Fullscreen</button>
-        </div>
+        <div class="pano-img-track" id="panoTrack" style="display: none;"></div>
+        <canvas id="panoCanvas" style="display: block;" width="240" height="120"></canvas>
+        <div class="pano-label"><div class="eyebrow">360° View</div><div class="name" id="panoName">Location 01</div></div>
         <div class="pano-loading" id="panoLoading">Loading panorama…</div>
         <div class="pano-hint" id="panoHint">Drag to look around · Scroll to zoom</div>
       </div>
-      <div class="pano-locations" id="panoLocations"></div>
+      <div class="pano-locations" id="panoLocations"><button class="pano-loc active"><img src="./001 Project Presentation_files/o1-p1-morning.png" alt="" loading="lazy"><span>Location 01</span></button></div>
     </div>
   </div>
 </section>
 
 <!-- FURNITURE -->
-<section id="furniture">
+<section id="furniture" style="display: none;">
   <div class="wrap">
     <div class="section-head"><div><div class="eyebrow">Furniture</div><h2 class="section-title">Furniture Selection</h2></div></div>
     <div class="grid-4" id="furnitureGrid"></div>
@@ -397,7 +356,7 @@ footer{padding:44px 0 60px; color:var(--muted); font-size:12px; display:flex; ju
 </section>
 
 <!-- MATERIALS -->
-<section id="materials">
+<section id="materials" style="display: none;">
   <div class="wrap">
     <div class="section-head"><div><div class="eyebrow">Material Specification</div><h2 class="section-title">Materials</h2></div></div>
     <div class="grid-4" id="materialsGrid"></div>
@@ -405,7 +364,7 @@ footer{padding:44px 0 60px; color:var(--muted); font-size:12px; display:flex; ju
 </section>
 
 <!-- DOCUMENTS -->
-<section id="documents">
+<section id="documents" style="display: none;">
   <div class="wrap">
     <div class="section-head"><div><div class="eyebrow">Documentation</div><h2 class="section-title">Project Documents</h2></div></div>
     <div class="doc-list" id="docList"></div>
@@ -413,29 +372,22 @@ footer{padding:44px 0 60px; color:var(--muted); font-size:12px; display:flex; ju
 </section>
 
 <footer class="wrap">
-  <div id="footVersion"></div>
+  <div id="footVersion">Design Proposal — Revision 01 — 24 September 2026</div>
   <div>Prepared for client review</div>
 </footer>
 
 <div class="lightbox" id="lightbox" role="dialog" aria-modal="true">
   <div class="lb-top">
-    <div class="lb-title"><span id="lbTitle">—</span><span class="sub" id="lbSub"></span></div>
-    <div class="lb-tools">
-      <div class="light-switch" id="lbLightSwitch">
-        <button id="lbLightOn" class="active" type="button">Light On</button>
-        <button id="lbLightOff" type="button">Light Off</button>
-      </div>
-      <button class="lb-tool" id="lbFullscreen" type="button">Fullscreen</button>
-      <button class="lb-close" id="lbClose" aria-label="Close">✕</button>
-    </div>
+    <div class="lb-title"><span id="lbTitle">Render 01</span><span class="sub" id="lbSub">Render · 1 / 6</span></div>
+    <button class="lb-close" id="lbClose" aria-label="Close">✕</button>
   </div>
   <div class="lb-body" id="lbBody">
     <button class="lb-arrow prev" id="lbPrev" aria-label="Previous">‹</button>
-    <img id="lbImg" src="" alt="">
+    <img id="lbImg" src="./001 Project Presentation_files/o1-r1-morning.png" alt="Render 01" style="transform: translate(0px, 0px) scale(1);">
     <button class="lb-arrow next" id="lbNext" aria-label="Next">›</button>
     <div class="lb-hint">Scroll or pinch to zoom · drag to pan</div>
   </div>
-  <div class="lb-thumbs" id="lbThumbs"></div>
+  <div class="lb-thumbs" id="lbThumbs"><img src="./001 Project Presentation_files/o1-r1-morning.png" alt="" class="active"><img src="./001 Project Presentation_files/o1-r2-morning.png" alt=""><img src="./001 Project Presentation_files/o1-r3-morning.png" alt=""><img src="./001 Project Presentation_files/o1-r4-morning.png" alt=""><img src="./001 Project Presentation_files/o1-r5-night.png" alt=""><img src="./001 Project Presentation_files/o1-r6-night.png" alt=""></div>
 </div>
 
 <!-- =========================================================================
@@ -498,88 +450,72 @@ const PROJECT_CONFIG = {
   }
   async function probeFile(src){
     try{
-      const res = await fetch(src, { method:"HEAD", cache:"force-cache" });
+      const res = await fetch(src, { method:"HEAD", cache:"no-store" });
       return res.ok;
     }catch(e){ return false; }
   }
 
-  // Numbered assets are contiguous by design: once N is missing, N+1 is not probed.
-  async function probeSequentialImages(prefix, max){
-    const out = [];
+  async function probeNumberedImages(prefix, max){
+    const checks = [];
     for(let k=1; k<=max; k++){
       const src = url(prefix + k + ".png");
-      if(!await probeImage(src)) break;
-      out.push({k, src});
+      checks.push(probeImage(src).then(ok => ok ? {k, src} : null));
     }
-    return out;
+    return (await Promise.all(checks)).filter(Boolean);
   }
 
-  async function probeSequentialFiles(prefix, max, ext){
-    const out = [];
+  async function probeNumberedFiles(prefix, max, ext){
+    const checks = [];
     for(let k=1; k<=max; k++){
       const src = url(prefix + k + "." + ext);
-      if(!await probeFile(src)) break;
-      out.push({k, src});
+      checks.push(probeFile(src).then(ok => ok ? {k, src} : null));
     }
-    return out;
+    return (await Promise.all(checks)).filter(Boolean);
   }
 
-  async function probeSequentialDayNightSeries(prefix, max){
-    const out = [];
+  async function probeDayNightSeries(prefix, max){
+    const checks = [];
     for(let k=1; k<=max; k++){
-      const [m,n] = await Promise.all([
+      checks.push(Promise.all([
         probeImage(url(prefix + k + "-morning.png")),
         probeImage(url(prefix + k + "-night.png"))
-      ]);
-      // If neither side of this numbered pair exists, stop immediately.
-      if(!m && !n) break;
-      out.push({
+      ]).then(([m,n]) => (m||n) ? {
         k,
         morning: m ? url(prefix + k + "-morning.png") : null,
-        night:   n ? url(prefix + k + "-night.png") : null
-      });
+        night:   n ? url(prefix + k + "-night.png")   : null
+      } : null));
     }
-    return out;
+    return (await Promise.all(checks)).filter(Boolean);
   }
 
-  async function resolveOptionCore(n){
+  /* Resolve every asset for one option (n is 1-based option number). */
+  async function resolveOption(n){
     const p = "o" + n;
-    const [cover, d1, d2, mood] = await Promise.all([
+
+    const [cover, d1, d2] = await Promise.all([
       probeImage(url(p + ".png")).then(ok => ok ? url(p + ".png") : null),
       probeImage(url(p + "-d1.png")).then(ok => ok ? url(p + "-d1.png") : null),
       probeImage(url(p + "-d2.png")).then(ok => ok ? url(p + "-d2.png") : null),
-      probeImage(url(p + "-m1.png")).then(ok => ok ? url(p + "-m1.png") : null)
     ]);
-    return {
-      cover, d1, d2, mood,
-      layouts: [], renders: [], panoramas: [],
-      furnitureImgs: [], materialImgs: [], docFiles: []
-    };
-  }
+    const mood = await probeImage(url(p + "-m1.png")).then(ok => ok ? url(p + "-m1.png") : null);
 
-  async function resolveOptionSecondary(n, a){
-    const p = "o" + n;
+    // layouts: try l1, l2, l3 — each with its own elevation series
     const layouts = [];
     for(let L=1; L<=MAX_LAYOUTS; L++){
       const planUrl = url(p + "-l" + L + ".png");
-      if(!await probeImage(planUrl)) break;
-      const elevations = await probeSequentialImages(p + "-l" + L + "-e", MAX_SLOTS);
+      const exists = await probeImage(planUrl);
+      if(!exists) continue;
+      const elevations = await probeNumberedImages(p + "-l" + L + "-e", MAX_SLOTS);
       layouts.push({ n:L, image:planUrl, elevations });
     }
-    a.layouts = layouts;
 
-    // Keep non-visual supporting content after the primary design direction is visible.
-    a.furnitureImgs = await probeSequentialImages(p + "-f", MAX_SLOTS);
-    a.materialImgs = await probeSequentialImages(p + "-ma", MAX_SLOTS);
-    a.docFiles = await probeSequentialFiles(p + "-pdf", MAX_SLOTS, "pdf");
-    return a;
-  }
+    const renders = await probeDayNightSeries(p + "-r", MAX_SLOTS);
+    const panoramas = await probeDayNightSeries(p + "-p", MAX_SLOTS);
+    const furnitureImgs = await probeNumberedImages(p + "-f", MAX_SLOTS);
+    const materialImgs = await probeNumberedImages(p + "-ma", MAX_SLOTS);
+    const docFiles = await probeNumberedFiles(p + "-pdf", MAX_SLOTS, "pdf");
 
-  async function resolveOptionVisualization(n, a){
-    const p = "o" + n;
-    a.renders = await probeSequentialDayNightSeries(p + "-r", MAX_SLOTS);
-    a.panoramas = await probeSequentialDayNightSeries(p + "-p", MAX_SLOTS);
-    return a;
+    return { cover, d1, d2, mood, layouts, renders, panoramas, furnitureImgs, materialImgs, docFiles };
   }
 
   /* ==========================================================================
@@ -604,7 +540,7 @@ const PROJECT_CONFIG = {
   function imageOrPlaceholder(src, label, alt){
     if(!src) return placeholder(label);
     const img = document.createElement("img");
-    img.src = src; img.alt = alt || ""; img.loading = "lazy"; img.decoding = "async";
+    img.src = src; img.alt = alt || ""; img.loading = "lazy";
     return img;
   }
 
@@ -618,11 +554,8 @@ const PROJECT_CONFIG = {
     layoutIndex: 0,
     smSlide: 0,               // 0 = style, 1 = mood
     vizMode: "renders",
-    lightMode: "on",
     tod: "morning",
-    panoIndex: 0,
-    secondaryReady: false,
-    visualizationReady: false
+    panoIndex: 0
   };
 
   const els = {
@@ -727,10 +660,7 @@ const PROJECT_CONFIG = {
     state.layoutIndex = 0;
     state.smSlide = 0;
     state.panoIndex = 0;
-    state.lightMode = "on";
     state.tod = "morning";
-    state.secondaryReady = false;
-    state.visualizationReady = false;
     setVizMode("renders");
     positionCarousel();
     els.navOptionLabel.textContent = "Option " + String(i+1).padStart(2,"0") + " — " + (cfg().styleName||"");
@@ -858,111 +788,62 @@ const PROJECT_CONFIG = {
   }
 
   /* ==========================================================================
-     VISUALIZATION: RENDERS + PANORAMA
-     Light On = morning, Light Off = night. Variants crossfade instead of swap.
+     VISUALIZATION: RENDERS + PANORAMA (with morning / night toggle)
      ========================================================================== */
   let flatRenderList = [];
 
-  function currentTimeKey(){ return state.lightMode === "on" ? "morning" : "night"; }
   function bothTodAvailable(){
     const a = assets(); if(!a) return false;
     const pool = [...a.renders, ...a.panoramas];
     return pool.some(x => x.morning) && pool.some(x => x.night);
   }
   function pickVariant(item){
-    return state.lightMode === "on" ? (item.morning || item.night) : (item.night || item.morning);
-  }
-  function renderLightSwitch(){
-    const a=assets();
-    const activeRender = a && a.renders.some(r => r.morning && r.night);
-    const activePano = a && a.panoramas[state.panoIndex] && a.panoramas[state.panoIndex].morning && a.panoramas[state.panoIndex].night;
-    const show = !!(activeRender || activePano);
-    document.getElementById("lightSwitch").style.display = show ? "" : "none";
-    ["lightOn","lightOff"].forEach(id => document.getElementById(id).classList.remove("active"));
-    document.getElementById(state.lightMode==="on" ? "lightOn" : "lightOff").classList.add("active");
+    // prefer the globally selected time of day; gracefully fall back
+    if(state.tod === "morning") return item.morning || item.night;
+    return item.night || item.morning;
   }
 
-  function crossfadeImage(container, src, alt){
-    if(!src) return;
-    const current=container.querySelector(".render-layer.is-visible");
-    if(current && current.dataset.src===src) return;
-    const next=document.createElement("img");
-    next.className="render-layer";
-    next.alt=alt||"";
-    next.decoding="async";
-    next.src=src;
-    next.onload=()=>{
-      next.classList.add("is-visible");
-      if(current){
-        current.classList.remove("is-visible");
-        setTimeout(()=>current.remove(), 800);
-      }
-    };
-    if(!current) next.classList.add("is-visible");
-    container.appendChild(next);
+  function renderTodToggle(){
+    const show = bothTodAvailable();
+    document.getElementById("todToggle").style.display = show ? "" : "none";
+    document.getElementById("todMorning").classList.toggle("active", state.tod==="morning");
+    document.getElementById("todNight").classList.toggle("active", state.tod==="night");
   }
-
-  function setLightMode(mode, animate=true){
-    if(mode===state.lightMode && !animate) return;
-    state.lightMode=mode;
-    state.tod=mode==="on" ? "morning" : "night";
-    renderLightSwitch();
-    const a=assets();
-    if(!a) return;
-
-    // Renders: load the target image first, then crossfade.
-    a.renders.forEach((r,idx)=>{
-      const tile=els.renderGrid.children[idx];
-      if(!tile) return;
-      crossfadeImage(tile, pickVariant(r), "Render " + String(r.k).padStart(2,"0"));
-    });
-
-    // Panorama: keep the current texture until the next one is ready, then fade.
-    refreshPanoramaFrame(animate);
-  }
-
-  document.getElementById("lightOn").addEventListener("click",()=>setLightMode("on",true));
-  document.getElementById("lightOff").addEventListener("click",()=>setLightMode("off",true));
+  document.getElementById("todMorning").addEventListener("click", () => { state.tod="morning"; renderTodToggle(); renderRenders(); refreshPanoramaFrame(); });
+  document.getElementById("todNight").addEventListener("click", () => { state.tod="night"; renderTodToggle(); renderRenders(); refreshPanoramaFrame(); });
 
   function renderRenders(){
     const a = assets();
     clear(els.renderGrid);
     flatRenderList = a.renders;
     a.renders.forEach((r, idx) => {
+      const src = pickVariant(r);
+      const label = "Render " + String(r.k).padStart(2,"0") + (r.morning && r.night ? (" — " + (pickVariant(r)===r.morning ? "Morning" : "Night")) : "");
       const a1 = document.createElement("a");
       a1.href = "javascript:void(0)";
-      const layer=document.createElement("img");
-      layer.className="render-layer is-visible";
-      layer.src=pickVariant(r)||"";
-      layer.alt="Render "+String(r.k).padStart(2,"0");
-      layer.decoding="async";
-      a1.appendChild(layer);
-      a1.appendChild(el("div","render-cap", "Render " + String(r.k).padStart(2,"0")));
+      a1.appendChild(imageOrPlaceholder(src));
+      a1.appendChild(el("div","render-cap", escapeHtml(label)));
       a1.addEventListener("click", () => openLightbox(
-        a.renders.map(r2 => ({
-          morning:r2.morning, night:r2.night,
-          image: pickVariant(r2),
-          title: "Render " + String(r2.k).padStart(2,"0")
-        })),
+        a.renders.map(r2 => ({ image: pickVariant(r2), title: "Render " + String(r2.k).padStart(2,"0") })),
         idx, "Render"
       ));
       els.renderGrid.appendChild(a1);
     });
     document.getElementById("rendersView").style.display = state.vizMode==="renders" ? "" : "none";
     document.getElementById("visualization").style.display = (a.renders.length || a.panoramas.length) ? "" : "none";
-    renderLightSwitch();
   }
 
   /* ==========================================================================
      TRUE 360° PANORAMA VIEWER (three.js) + automatic drag-slide fallback
+     The image is mapped onto the inside of a sphere; the camera rotates
+     inside it. Non-equirectangular images (ratio < 1.8:1) trigger fallback.
      ========================================================================== */
   const Pano360Viewer = (function(){
-    let renderer=null, scene=null, camera=null, mesh=null, overlay=null, loader=null;
+    let renderer=null, scene=null, camera=null, mesh=null, loader=null;
     let stage=null, canvas=null;
     let lon=0, lat=0, tLon=0, tLat=0, fov=75, tFov=75;
     let raf=null, running=false, live=false, dead=false;
     let currentSrc=null, lastInteract=0, pinch0=0, pinchFov0=75;
-    let transitionToken=0, fade=0;
     const pointers=new Map(), texCache=new Map(), cb={};
     const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
 
@@ -970,17 +851,16 @@ const PROJECT_CONFIG = {
       Object.assign(cb, opts); stage=opts.stage; canvas=opts.canvas;
       if(typeof THREE==="undefined"){ fail(); return false; }
       try{
-        renderer=new THREE.WebGLRenderer({ canvas, antialias:true, powerPreference:"high-performance" });
-        renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,1.5));
+        renderer=new THREE.WebGLRenderer({ canvas, antialias:true });
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,2));
         renderer.setClearColor(0x0B0B0A);
       }catch(e){ fail(); return false; }
       scene=new THREE.Scene();
       camera=new THREE.PerspectiveCamera(fov,1,0.1,1100);
-      const geo=new THREE.SphereGeometry(500,48,32);
-      geo.scale(-1,1,1);
-      mesh=new THREE.Mesh(geo,new THREE.MeshBasicMaterial({ color:0xffffff, transparent:true, opacity:1, depthWrite:true }));
-      overlay=new THREE.Mesh(geo,new THREE.MeshBasicMaterial({ color:0xffffff, transparent:true, opacity:0, depthWrite:false }));
-      scene.add(mesh); scene.add(overlay);
+      const geo=new THREE.SphereGeometry(500,64,40);
+      geo.scale(-1,1,1);                       // camera sits inside the sphere
+      mesh=new THREE.Mesh(geo,new THREE.MeshBasicMaterial({ color:0x141414 }));
+      scene.add(mesh);
       loader=new THREE.TextureLoader(); loader.setCrossOrigin("anonymous");
 
       stage.addEventListener("pointerdown",down);
@@ -1013,12 +893,12 @@ const PROJECT_CONFIG = {
       const p=pointers.get(e.pointerId);
       const dx=e.clientX-p.x, dy=e.clientY-p.y; p.x=e.clientX; p.y=e.clientY;
       if(pointers.size===1){
-        const k=fov/Math.max(stage.clientHeight,1);
+        const k=fov/Math.max(stage.clientHeight,1);      // deg per pixel
         tLon-=dx*k; tLat=clamp(tLat+dy*k,-85,85);
       }else if(pointers.size===2&&pinch0>0){
         const q=[...pointers.values()];
         const d=Math.hypot(q[0].x-q[1].x,q[0].y-q[1].y);
-        if(d>0) tFov=clamp(pinchFov0*pinch0/d,30,100);
+        if(d>0) tFov=clamp(pinchFov0*pinch0/d,30,100);   // pinch zoom
       }
       e.preventDefault();
     }
@@ -1030,84 +910,42 @@ const PROJECT_CONFIG = {
     }
     function cacheTex(src,tex){
       if(texCache.has(src)) return;
-      if(texCache.size>=4){
-        const cur=mesh.material.map, over=overlay.material.map;
-        for(const [s,t] of texCache){
-          if(t!==cur && t!==over){ t.dispose(); texCache.delete(s); break; }
-        }
-      }
+      if(texCache.size>=8){ const cur=mesh.material.map;
+        texCache.forEach((t,s)=>{ if(t!==cur){ t.dispose(); texCache.delete(s); } }); }
       texCache.set(src,tex);
     }
-    function getTexture(src,onReady,onError){
-      if(!src){ onError(src); return; }
-      if(texCache.has(src)){ onReady(texCache.get(src)); return; }
-      loader.load(src,tex=>{
-        tex.colorSpace = THREE.SRGBColorSpace || tex.colorSpace;
-        cacheTex(src,tex); onReady(tex);
-      },undefined,()=>onError(src));
-    }
     function load(src){
-      if(dead||!renderer||!src) return false;
-      currentSrc=src;
+      if(dead||!renderer) return false;
+      currentSrc=src; lon=tLon; lat=tLat;                // hold view while swapping
       if(cb.onLoading) cb.onLoading(true);
-      getTexture(src,tex=>{
+      const apply=tex=>{
         if(currentSrc!==src) return;
         const img=tex.image, ratio=(img.width||2)/Math.max(img.height||1,1);
-        if(ratio<1.8){ fail(src); return; }
-        mesh.material.map=tex;
-        mesh.material.opacity=1;
+        if(ratio<1.8){ fail(src); return; }              // not equirectangular → fallback
+        mesh.material.map=tex; mesh.material.color.set(0xffffff);
         mesh.material.needsUpdate=true;
-        overlay.material.opacity=0;
-        overlay.material.map=null;
-        overlay.material.needsUpdate=true;
         if(cb.onLoading) cb.onLoading(false);
-      },bad=>{ if(currentSrc===src) fail(bad); });
-      return true;
-    }
-    function transitionTo(src,duration=850){
-      if(dead||!renderer||!src) return false;
-      const token=++transitionToken;
-      if(src===currentSrc) return true;
-      if(cb.onLoading) cb.onLoading(true);
-      getTexture(src,tex=>{
-        if(token!==transitionToken) return;
-        const img=tex.image, ratio=(img.width||2)/Math.max(img.height||1,1);
-        if(ratio<1.8){ if(cb.onLoading) cb.onLoading(false); return; }
-        overlay.material.map=tex;
-        overlay.material.opacity=0;
-        overlay.material.needsUpdate=true;
-        const started=performance.now();
-        const from=mesh.material.map;
-        currentSrc=src;
-        const fadeFrame=now=>{
-          if(token!==transitionToken) return;
-          fade=Math.min(1,(now-started)/duration);
-          overlay.material.opacity=fade;
-          if(fade<1) requestAnimationFrame(fadeFrame);
-          else{
-            mesh.material.map=tex; mesh.material.opacity=1; mesh.material.needsUpdate=true;
-            overlay.material.map=null; overlay.material.opacity=0; overlay.material.needsUpdate=true;
-            if(from && from!==tex) cacheTex(src,tex);
-            if(cb.onLoading) cb.onLoading(false);
-          }
-        };
-        requestAnimationFrame(fadeFrame);
-      },bad=>{ if(token===transitionToken && cb.onLoading) cb.onLoading(false); });
+      };
+      if(texCache.has(src)) apply(texCache.get(src));
+      else loader.load(src,tex=>{
+        tex.anisotropy=renderer.capabilities.getMaxAnisotropy();
+        cacheTex(src,tex); apply(tex);
+      },undefined,()=>{ if(currentSrc===src) fail(src); });
       return true;
     }
     function frame(){
       if(!running) return;
       raf=requestAnimationFrame(frame);
-      if(performance.now()-lastInteract>5000) tLon+=0.02;
+      if(performance.now()-lastInteract>5000) tLon+=0.02;  // gentle idle spin
       lon+=(tLon-lon)*0.16; lat+=(tLat-lat)*0.16; fov+=(tFov-fov)*0.16;
       camera.fov=fov; camera.updateProjectionMatrix();
       const phi=THREE.MathUtils.degToRad(90-lat), theta=THREE.MathUtils.degToRad(lon);
       camera.lookAt(500*Math.sin(phi)*Math.cos(theta),500*Math.cos(phi),500*Math.sin(phi)*Math.sin(theta));
       try{ renderer.render(scene,camera); }catch(err){ fail(currentSrc); }
     }
-    function start(){ if(dead||!renderer||running) return; running=true; resize(); frame(); }
+    function start(){ if(dead||!renderer||running) return; running=true; frame(); }
     function stop(){ running=false; if(raf){ cancelAnimationFrame(raf); raf=null; } }
-    return { init, load, transitionTo, start, stop, resize, isAlive:()=>live&&!dead };
+    return { init, load, start, stop, resize, isAlive:()=>live&&!dead };
   })();
 
   function panoShowWebGL(){
@@ -1120,36 +958,15 @@ const PROJECT_CONFIG = {
     els.panoTrack.style.display="";
     document.getElementById("panoHint").textContent="Drag to slide";
   }
-  let panoWebGL=false;
-  let panoInitStarted=false;
-  const panoViewerOptions = {
+  const panoWebGL = Pano360Viewer.init({
     stage: els.panoStage,
     canvas: document.getElementById("panoCanvas"),
     onLoading: show => document.getElementById("panoLoading").classList.toggle("show", !!show),
     onFail: src => { panoShowLegacy(); if(src) legacyLoad(src); }
-  };
-  function ensurePanoViewer(){
-    if(panoWebGL || panoInitStarted) return;
-    if(typeof THREE !== "undefined"){
-      panoWebGL=Pano360Viewer.init(panoViewerOptions);
-      if(panoWebGL) panoShowWebGL(); else panoShowLegacy();
-      if(panoWebGL && state.vizMode==="panorama"){ applyPanorama(false); Pano360Viewer.start(); }
-      return;
-    }
-    panoInitStarted=true;
-    const script=document.createElement("script");
-    script.src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js";
-    script.async=true;
-    script.onload=()=>{
-      panoWebGL=Pano360Viewer.init(panoViewerOptions);
-      if(panoWebGL) panoShowWebGL(); else panoShowLegacy();
-      if(panoWebGL && state.vizMode==="panorama"){ applyPanorama(false); Pano360Viewer.start(); }
-    };
-    script.onerror=()=>panoShowLegacy();
-    document.head.appendChild(script);
-  }
-  panoShowLegacy();
+  });
+  if(panoWebGL) panoShowWebGL(); else panoShowLegacy();
 
+  /* old slide-style viewer kept as automatic fallback */
   const panoSlide={ active:false, startX:0, offset:0, singleWidth:0 };
   function legacyLoad(src){
     clear(els.panoTrack);
@@ -1177,60 +994,36 @@ const PROJECT_CONFIG = {
     st.addEventListener("pointerup",end); st.addEventListener("pointercancel",end);
   })();
 
-  function renderPanoramaLocations(applyCurrent=true){
+  function renderPanoramaLocations(){
     const a=assets();
     clear(els.panoLocations);
     document.getElementById("btnPanorama").style.display=a.panoramas.length?"":"none";
     if(!a.panoramas.length){ if(state.vizMode==="panorama") setVizMode("renders"); return; }
     a.panoramas.forEach((p,i)=>{
       const btn=el("button","pano-loc"+(i===state.panoIndex?" active":""));
-      const thumb=pickVariant(p);
-      if(thumb) btn.appendChild(imageOrPlaceholder(thumb));
+      btn.appendChild(imageOrPlaceholder(pickVariant(p)));
       btn.appendChild(el("span",null,"Location "+String(p.k).padStart(2,"0")));
       btn.addEventListener("click",()=>selectPanorama(i));
       els.panoLocations.appendChild(btn);
     });
-    if(applyCurrent) selectPanorama(Math.min(state.panoIndex,a.panoramas.length-1));
-    else {
-      state.panoIndex=Math.min(state.panoIndex,a.panoramas.length-1);
-      const p=a.panoramas[state.panoIndex];
-      els.panoName.textContent="Location "+String(p.k).padStart(2,"0");
-      [...els.panoLocations.children].forEach((elx,idx)=>elx.classList.toggle("active",idx===state.panoIndex));
-    }
-    renderLightSwitch();
+    selectPanorama(Math.min(state.panoIndex,a.panoramas.length-1));
   }
-
   function selectPanorama(i){
     const a=assets(); if(!a.panoramas.length) return;
     state.panoIndex=Math.max(0,Math.min(i,a.panoramas.length-1));
     const p=a.panoramas[state.panoIndex];
     els.panoName.textContent="Location "+String(p.k).padStart(2,"0");
     [...els.panoLocations.children].forEach((elx,idx)=>elx.classList.toggle("active",idx===state.panoIndex));
-    renderLightSwitch();
-    if(state.vizMode==="panorama") applyPanorama(true);
+    if(state.vizMode==="panorama") applyPanorama();
   }
-
-  function applyPanorama(animate=true){
+  function applyPanorama(){
     const a=assets(); const p=a.panoramas[state.panoIndex]; if(!p) return;
     const src=pickVariant(p);
-    if(!(Pano360Viewer.isAlive() && src)) { if(src) legacyLoad(src); return; }
-    if(!Pano360Viewer.load(src)) legacyLoad(src);
+    if(!(Pano360Viewer.isAlive()&&Pano360Viewer.load(src))) legacyLoad(src);
   }
-
-  function refreshPanoramaFrame(animate=true){
+  function refreshPanoramaFrame(){
     const a=assets();
-    if(!a || !a.panoramas.length) return;
-    renderPanoramaLocations(false);
-    const p=a.panoramas[state.panoIndex];
-    if(!p) return;
-    const src=pickVariant(p);
-    if(Pano360Viewer.isAlive() && p.morning && p.night && animate){
-      Pano360Viewer.transitionTo(src,850);
-    }else if(Pano360Viewer.isAlive()){
-      Pano360Viewer.load(src);
-    }else if(src){
-      legacyLoad(src);
-    }
+    if(a && a.panoramas.length) renderPanoramaLocations(); // rebuilds thumbs for current time of day
   }
 
   function setVizMode(mode){
@@ -1239,43 +1032,11 @@ const PROJECT_CONFIG = {
     document.getElementById("btnPanorama").classList.toggle("active",mode==="panorama");
     document.getElementById("rendersView").style.display=mode==="renders"?"":"none";
     document.getElementById("panoramaView").style.display=mode==="panorama"?"":"none";
-    if(mode==="panorama"){
-      const a=assets();
-      const p=a && a.panoramas[state.panoIndex];
-      if(p){
-        const src=pickVariant(p);
-        if(src) legacyLoad(src);
-      }
-      ensurePanoViewer();
-      if(panoWebGL){ applyPanorama(false); Pano360Viewer.resize(); Pano360Viewer.start(); }
-      renderLightSwitch();
-    }else{
-      Pano360Viewer.stop();
-      renderLightSwitch();
-    }
+    if(mode==="panorama"){ applyPanorama(); Pano360Viewer.resize(); Pano360Viewer.start(); }
+    else { Pano360Viewer.stop(); }
   }
   document.getElementById("btnRenders").addEventListener("click", () => setVizMode("renders"));
   document.getElementById("btnPanorama").addEventListener("click", () => setVizMode("panorama"));
-
-  // Keep the global switch synchronized with the selected panorama.
-  document.getElementById("panoLightOn").addEventListener("click",()=>setLightMode("on",true));
-  document.getElementById("panoLightOff").addEventListener("click",()=>setLightMode("off",true));
-
-  async function toggleFullscreen(target,button){
-    try{
-      if(document.fullscreenElement===target){ await document.exitFullscreen(); }
-      else { await target.requestFullscreen(); }
-    }catch(_){}
-    button.textContent = document.fullscreenElement===target ? "Exit fullscreen" : "Fullscreen";
-  }
-  document.getElementById("panoFullscreen").addEventListener("click",()=>toggleFullscreen(els.panoStage,document.getElementById("panoFullscreen")));
-  document.addEventListener("fullscreenchange",()=>{
-    const panoFs=document.fullscreenElement===els.panoStage;
-    const lbFs=document.fullscreenElement===lbEls.box;
-    document.getElementById("panoFullscreen").textContent=panoFs?"Exit fullscreen":"Fullscreen";
-    document.getElementById("lbFullscreen").textContent=lbFs?"Exit fullscreen":"Fullscreen";
-    if(panoFs) Pano360Viewer.resize();
-  });
 
   /* ==========================================================================
      DOCUMENTS
@@ -1311,40 +1072,9 @@ const PROJECT_CONFIG = {
   function openLightbox(items, index, kind){
     lb.items = items; lb.index = index; lb.kind = kind; lbMoved = false;
     lbEls.box.classList.add("open"); document.body.style.overflow = "hidden";
-    const showLight = kind === "Render";
-    document.getElementById("lbLightSwitch").style.display = showLight ? "" : "none";
-    document.getElementById("lbFullscreen").style.display = showLight ? "" : "none";
     renderLbFrame(); renderLbThumbs();
-    syncLbLight();
   }
-  function closeLightbox(){
-    if(document.fullscreenElement===lbEls.box){ document.exitFullscreen().catch(()=>{}); }
-    lbEls.box.classList.remove("open"); document.body.style.overflow = "";
-  }
-  function syncLbLight(){
-    document.getElementById("lbLightOn").classList.toggle("active",state.lightMode==="on");
-    document.getElementById("lbLightOff").classList.toggle("active",state.lightMode==="off");
-  }
-  function setLbLight(mode){
-    state.lightMode=mode; state.tod=mode==="on"?"morning":"night";
-    syncLbLight(); renderLightSwitch();
-    const item=lb.items[lb.index];
-    if(!item) return;
-    const src=mode==="on" ? (item.morning||item.night) : (item.night||item.morning);
-    if(!src) return;
-    const oldSrc=lbEls.img.src;
-    if(oldSrc===new URL(src,location.href).href) return;
-    const pre=new Image();
-    pre.decoding="async";
-    pre.onload=()=>{
-      lbEls.img.style.opacity="0";
-      setTimeout(()=>{
-        lbEls.img.src=src;
-        lbEls.img.onload=()=>{ lbEls.img.style.opacity="1"; };
-      },180);
-    };
-    pre.src=src;
-  }
+  function closeLightbox(){ lbEls.box.classList.remove("open"); document.body.style.overflow = ""; }
   function applyLbTransform(){
     lbEls.img.style.transform = "translate(" + lb.panX + "px," + lb.panY + "px) scale(" + lb.zoom + ")";
   }
@@ -1355,10 +1085,7 @@ const PROJECT_CONFIG = {
     lbEls.img.style.transform = "translate(0px,0px) scale(1)";
     lbEls.title.textContent = item.title || "";
     lbEls.sub.textContent = lb.kind + " · " + (lb.index+1) + " / " + lb.items.length;
-    const image = lb.kind==="Render"
-      ? (state.lightMode==="on" ? (item.morning||item.night) : (item.night||item.morning))
-      : item.image;
-    if(image){ lbEls.img.style.display=""; lbEls.img.style.opacity="1"; lbEls.img.src = image; lbEls.img.alt = item.title||""; }
+    if(item.image){ lbEls.img.style.display=""; lbEls.img.src = item.image; lbEls.img.alt = item.title||""; }
     else { lbEls.img.style.display="none"; lbEls.img.src=""; }
   }
   function renderLbThumbs(){
@@ -1379,9 +1106,6 @@ const PROJECT_CONFIG = {
     renderLbFrame(); renderLbThumbs();
   }
   document.getElementById("lbClose").addEventListener("click", closeLightbox);
-  document.getElementById("lbLightOn").addEventListener("click",()=>setLbLight("on"));
-  document.getElementById("lbLightOff").addEventListener("click",()=>setLbLight("off"));
-  document.getElementById("lbFullscreen").addEventListener("click",()=>toggleFullscreen(lbEls.box,document.getElementById("lbFullscreen")));
   document.getElementById("lbPrev").addEventListener("click", () => lbGo(-1));
   document.getElementById("lbNext").addEventListener("click", () => lbGo(1));
   document.addEventListener("keydown", e => {
@@ -1453,79 +1177,33 @@ const PROJECT_CONFIG = {
   })();
 
   /* ==========================================================================
-     BOOT — progressive loading
-     Priority:
-       1. option covers + style/mood
-       2. layout + furniture/materials/documents
-       3. renders
-       4. panoramas last
-     Other options only preload their cover until selected.
+     BOOT — resolve assets per option, then render the active one
      ========================================================================== */
-  function ensureAssetRecord(i){
-    if(!state.assetCache[i]) state.assetCache[i]={
-      cover:null,d1:null,d2:null,mood:null,layouts:[],
-      renders:[],panoramas:[],furnitureImgs:[],materialImgs:[],docFiles:[]
-    };
-    return state.assetCache[i];
-  }
-
   function requestAssets(i){
     if(!state.assetPending[i]){
-      state.assetPending[i]=resolveOptionCore(i+1).then(a=>{
-        state.assetCache[i]=a;
-        fillCarouselCover(i,a.cover);
+      state.assetPending[i] = resolveOption(i+1).then(a => {
+        state.assetCache[i] = a;
+        fillCarouselCover(i, a.cover);
         return a;
       });
     }
     return state.assetPending[i];
   }
-
   async function loadAndRenderOption(i){
-    const a=await requestAssets(i);
-    if(state.optionIndex!==i) return;
-
-    // First paint: option, style and mood only.
+    const a = await requestAssets(i);
+    if(state.optionIndex !== i) return;   // user switched options while loading
     renderStyleAndMood();
-    warmOtherOptionCovers();
-
-    // Then load supporting design content.
-    await resolveOptionSecondary(i+1,a);
-    if(state.optionIndex!==i) return;
-    state.secondaryReady=true;
     renderLayoutTabs(); renderPlan();
-    renderFurniture(); renderMaterials(); renderDocuments();
-
-    // Render images next.
-    a.renders=await probeSequentialDayNightSeries("o"+(i+1)+"-r",MAX_SLOTS);
-    if(state.optionIndex!==i) return;
-    state.visualizationReady=true;
-    renderLightSwitch(); renderRenders();
-
-    // Panorama is intentionally last because it is the heaviest asset.
-    a.panoramas=await probeSequentialDayNightSeries("o"+(i+1)+"-p",MAX_SLOTS);
-    if(state.optionIndex!==i) return;
-    renderPanoramaLocations();
-    renderLightSwitch();
+    renderFurniture(); renderMaterials();
+    renderTodToggle(); renderRenders(); renderPanoramaLocations();
+    renderDocuments();
   }
 
   renderHeader();
   renderCarouselShell();
-
-  // Only the active option is fully resolved at startup.
   selectOption(0);
-
-  // Covers for other options start only after the first option has painted.
-  function warmOtherOptionCovers(){
-    const run=()=>{
-      for(let j=1;j<PROJECT_CONFIG.options.length;j++){
-        probeImage(url("o"+(j+1)+".png")).then(ok=>{
-          if(ok) fillCarouselCover(j,url("o"+(j+1)+".png"));
-        });
-      }
-    };
-    if("requestIdleCallback" in window) requestIdleCallback(run,{timeout:1200});
-    else setTimeout(run,400);
-  }
+  // warm-cache the other options so their covers fill in and switching is instant
+  for(let j=1; j<PROJECT_CONFIG.options.length; j++) requestAssets(j);
 
   /* mobile nav toggle */
   document.getElementById("navToggle").addEventListener("click", () => {
@@ -1536,5 +1214,6 @@ const PROJECT_CONFIG = {
   }));
 })();
 </script>
-</body>
-</html>
+
+
+</body></html>
