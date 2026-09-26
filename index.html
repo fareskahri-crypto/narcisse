@@ -1,15 +1,17 @@
 <!DOCTYPE html>
-<!-- saved from url=(0059)https://fareskahri-crypto.github.io/narcisse/#visualization -->
-<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-
+<html lang="en">
+<head>
+<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Project Presentation</title>
 <link rel="icon" href="data:,">
 <link rel="preconnect" href="https://fonts.googleapis.com/">
 <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin="">
-<link href="./001 Project Presentation_files/css2" rel="stylesheet">
-<!-- three.js — powers the true 360° panorama viewer -->
-<script src="./001 Project Presentation_files/three.min.js.download"></script>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300..500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<!-- Three.js with CDN fallback for 360° Panorama -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>if (typeof THREE === 'undefined') document.write('<script src="./001 Project Presentation_files/three.min.js.download"><\/script>');</script>
+
 <style>
 :root{
   --paper:     #F2F0EA;
@@ -121,58 +123,95 @@ section + section{border-top:1px solid var(--line);}
 .ph{display:flex; align-items:center; justify-content:center; flex-direction:column; gap:6px; width:100%; height:100%; min-height:160px; background:repeating-linear-gradient(135deg, var(--paper-2), var(--paper-2) 10px, #DEDBD1 10px, #DEDBD1 11px); color:var(--muted); text-align:center; padding:8px;}
 .ph span{font-size:10px; letter-spacing:.06em; text-transform:uppercase;}
 .ph small{font-size:9.5px; opacity:.75; word-break:break-all;}
-.direction-media .ph{min-height:420px;}
-#planFrame .ph{min-height:420px;}
-.skeleton-tile{background:linear-gradient(90deg, var(--paper-2) 25%, #EDEAE2 37%, var(--paper-2) 63%); background-size:400% 100%; animation:sk 1.4s ease infinite; min-height:160px; width:100%; height:100%;}
-@keyframes sk{0%{background-position:100% 0;}100%{background-position:0 0;}}
 
-/* ---- layout ---- */
-.layout-tabs{display:flex; gap:10px; flex-wrap:wrap; margin-bottom:32px;}
-.layout-tab{border:1px solid var(--line); background:var(--white); padding:10px 16px; font-size:12.5px; letter-spacing:.03em; border-radius:999px; color:var(--ink-soft); transition:all .2s;}
-.layout-tab.active{background:var(--ink); color:var(--white); border-color:var(--ink);}
-.plan-frame{position:relative; border:1px solid var(--line); background:var(--white);}
-.plan-frame img{width:100%; display:block;}
-.tech-group-title{font-size:13px; letter-spacing:.06em; text-transform:uppercase; color:var(--muted); margin-bottom:14px;}
-.tech-row{display:grid; grid-template-columns:repeat(auto-fill, minmax(190px,1fr)); gap:16px;}
-.tech-card{border:1px solid var(--line); background:var(--white); cursor:pointer;}
-.tech-card .thumb{aspect-ratio:4/3; overflow:hidden; background:var(--paper-2);}
-.tech-card .thumb img{width:100%; height:100%; object-fit:cover;}
-.tech-card .label{padding:10px 12px; font-size:12.5px; border-top:1px solid var(--line);}
-
-/* ---- furniture / materials ---- */
-.grid-4{display:grid; grid-template-columns:repeat(4,1fr); gap:22px;}
-.item-card{border:1px solid var(--line); background:var(--white);}
-.item-card .thumb{aspect-ratio:4/3; overflow:hidden; background:var(--paper-2);}
-.item-card .thumb img{width:100%; height:100%; object-fit:cover;}
-.item-card .body{padding:14px 15px 16px;}
-.item-card .kicker{font-size:10.5px; letter-spacing:.08em; text-transform:uppercase; color:var(--muted);}
-.item-card h4{font-family:var(--serif); font-size:16.5px; font-weight:440; margin:3px 0 8px;}
-.item-card dl{display:grid; grid-template-columns:auto 1fr; gap:3px 10px; margin:0; font-size:12.5px;}
-.item-card dt{color:var(--muted);}
-.item-card dd{margin:0; color:var(--ink-soft); text-align:right;}
-@media (max-width:960px){.grid-4{grid-template-columns:repeat(2,1fr);}}
-@media (max-width:520px){.grid-4{grid-template-columns:1fr;}}
-
-/* ---- visualization ---- */
+/* ---- visualization & dual cross-fade ---- */
 .viz-controls{display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:16px; margin-bottom:34px;}
 .viz-toggle{display:inline-flex; border:1px solid var(--ink);}
 .viz-toggle button{padding:10px 22px; background:none; border:0; font-size:12.5px; letter-spacing:.08em; text-transform:uppercase; color:var(--ink-soft);}
 .viz-toggle button.active{background:var(--ink); color:var(--white);}
-.tod-toggle{display:inline-flex; border:1px solid var(--line); border-radius:999px; overflow:hidden;}
-.tod-toggle button{padding:8px 18px; background:var(--white); border:0; font-size:12px; letter-spacing:.04em; color:var(--ink-soft); display:flex; align-items:center; gap:6px;}
-.tod-toggle button.active{background:var(--accent); color:var(--white);}
+
+/* ---- HANGING CEILING LIGHT BULB SWITCH ---- */
+.hanging-bulb-switch{
+  display:inline-flex;
+  flex-direction:column;
+  align-items:center;
+  cursor:pointer;
+  user-select:none;
+  background:none;
+  border:none;
+  padding:0 8px;
+  position:relative;
+}
+.hanging-bulb-switch .wire{
+  width:2px;
+  height:22px;
+  background:var(--ink-soft);
+  transition:height 0.2s ease, background-color 0.3s;
+}
+.hanging-bulb-switch:hover .wire{ height:26px; }
+.hanging-bulb-switch .bulb-head{
+  width:32px;
+  height:32px;
+  border-radius:50%;
+  background:var(--paper-2);
+  border:1.5px solid var(--ink-soft);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  box-shadow:0 2px 6px rgba(0,0,0,0.1);
+  transition:transform 0.2s cubic-bezier(0.34,1.56,0.64,1), background-color 0.3s, border-color 0.3s, box-shadow 0.3s;
+}
+.hanging-bulb-switch:active .bulb-head{ transform:translateY(3px) scale(0.95); }
+.hanging-bulb-switch svg{
+  width:18px;
+  height:18px;
+  fill:none;
+  stroke:var(--ink-soft);
+  stroke-width:1.8;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+  transition:stroke 0.3s, fill 0.3s, filter 0.3s;
+}
+.hanging-bulb-switch .bulb-tag{
+  font-size:10px;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  margin-top:4px;
+  font-weight:600;
+  color:var(--ink-soft);
+  transition:color 0.3s;
+}
+
+/* Light On State */
+.hanging-bulb-switch.is-on .wire{ background:#E6A100; }
+.hanging-bulb-switch.is-on .bulb-head{
+  background:#FFF9E6;
+  border-color:#E6A100;
+  box-shadow:0 0 12px rgba(230,161,0,0.6), 0 0 24px rgba(230,161,0,0.3);
+}
+.hanging-bulb-switch.is-on svg{
+  stroke:#D98200;
+  fill:#FFD54F;
+  filter:drop-shadow(0 0 3px #FFCA28);
+}
+.hanging-bulb-switch.is-on .bulb-tag{ color:#B37400; }
+
 .render-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:14px;}
 .render-grid a{position:relative; display:block; aspect-ratio:4/3; overflow:hidden; background:var(--paper-2); cursor:zoom-in;}
-.render-grid img{width:100%; height:100%; object-fit:cover; transition:transform .5s var(--ease), opacity .25s;}
-.render-grid a:hover img{transform:scale(1.035);}
-.render-cap{position:absolute; left:0; right:0; bottom:0; padding:9px 12px; font-size:11.5px; color:var(--white); background:linear-gradient(0deg, rgba(11,11,10,.62), rgba(11,11,10,0));}
+
+/* Dual image stack for seamless day/night blend */
+.dual-img-container{position:relative; width:100%; height:100%;}
+.dual-img-container img{position:absolute; inset:0; width:100%; height:100%; object-fit:cover; transition:opacity 0.6s var(--ease), transform 0.5s var(--ease);}
+.dual-img-container img.img-night{opacity:0;}
+.is-night-mode .dual-img-container img.img-night{opacity:1;}
+.render-grid a:hover .dual-img-container img{transform:scale(1.035);}
+
+.render-cap{position:absolute; left:0; right:0; bottom:0; padding:9px 12px; font-size:11.5px; color:var(--white); background:linear-gradient(0deg, rgba(11,11,10,.62), rgba(11,11,10,0)); z-index:2;}
 @media (max-width:900px){.render-grid{grid-template-columns:repeat(2,1fr);}}
 @media (max-width:560px){.render-grid{grid-template-columns:1fr;}}
 
 .pano-stage{position:relative; background:var(--black); border:1px solid var(--ink); overflow:hidden; height:min(62vh, 560px); touch-action:none; cursor:grab;}
 .pano-stage:active{cursor:grabbing;}
-.pano-img-track{position:absolute; top:0; left:0; height:100%; display:flex; will-change:transform;}
-.pano-img-track img{height:100%; width:auto; max-width:none; user-select:none; -webkit-user-drag:none;}
 .pano-stage canvas{position:absolute; top:0; left:0; width:100%; height:100%; display:block;}
 .pano-label{position:absolute; left:20px; top:18px; color:var(--white); z-index:2;}
 .pano-label .eyebrow{color:rgba(255,255,255,.65);}
@@ -180,49 +219,56 @@ section + section{border-top:1px solid var(--line);}
 .pano-hint{position:absolute; right:20px; bottom:16px; color:rgba(255,255,255,.55); font-size:11px; z-index:2;}
 .pano-loading{position:absolute; inset:0; z-index:3; display:flex; align-items:center; justify-content:center; background:rgba(11,11,10,.55); color:rgba(255,255,255,.85); font-size:11px; letter-spacing:.12em; text-transform:uppercase; opacity:0; pointer-events:none; transition:opacity .25s var(--ease);}
 .pano-loading.show{opacity:1;}
+
+.pano-overlay-bulb{
+  position:absolute;
+  top:0;
+  right:24px;
+  z-index:10;
+}
+.pano-overlay-bulb .wire{ background:rgba(255,255,255,0.7); }
+.pano-overlay-bulb .bulb-head{ background:rgba(20,20,20,0.6); border-color:rgba(255,255,255,0.5); }
+.pano-overlay-bulb svg{ stroke:#FFF; }
+.pano-overlay-bulb .bulb-tag{ color:rgba(255,255,255,0.85); }
+
 .pano-locations{display:flex; gap:10px; margin-top:16px; overflow-x:auto;}
-.pano-loc{flex:0 0 auto; border:1px solid var(--line); background:var(--white); padding:8px 10px 8px 8px; display:flex; align-items:center; gap:8px; font-size:12px;}
+.pano-loc{flex:0 0 auto; border:1px solid var(--line); background:var(--white); padding:8px 10px 8px 8px; display:flex; align-items:center; gap:8px; font-size:12px; cursor:pointer;}
 .pano-loc.active{border-color:var(--ink);}
 .pano-loc img{width:44px; height:32px; object-fit:cover;}
-.empty-note{color:var(--muted); font-size:13.5px;}
-
-/* ---- documents ---- */
-.doc-list{border-top:1px solid var(--line);}
-.doc-row{display:flex; justify-content:space-between; align-items:center; gap:18px; padding:18px 0; border-bottom:1px solid var(--line);}
-.doc-row .doc-name{font-size:15px;}
-.doc-row .doc-file{font-size:11.5px; color:var(--muted); margin-top:2px;}
-.doc-open{font-size:12px; letter-spacing:.05em; text-transform:uppercase; border:1px solid var(--ink); padding:8px 14px; text-decoration:none; white-space:nowrap;}
-
-footer{padding:44px 0 60px; color:var(--muted); font-size:12px; display:flex; justify-content:space-between; flex-wrap:wrap; gap:10px;}
 
 /* ---- lightbox ---- */
-.lightbox{position:fixed; inset:0; background:rgba(11,11,10,.94); z-index:100; display:none; flex-direction:column;}
+.lightbox{position:fixed; inset:0; background:rgba(11,11,10,.95); z-index:100; display:none; flex-direction:column;}
 .lightbox.open{display:flex;}
-.lb-top{display:flex; justify-content:space-between; align-items:center; padding:16px 20px; color:var(--white);}
+.lb-top{display:flex; justify-content:space-between; align-items:center; padding:12px 20px; color:var(--white); border-bottom:1px solid rgba(255,255,255,0.1);}
 .lb-top .lb-title{font-size:13px; letter-spacing:.03em;}
 .lb-top .lb-title .sub{color:rgba(255,255,255,.55); margin-left:8px;}
-.lb-close{background:none; border:1px solid rgba(255,255,255,.35); color:var(--white); width:32px; height:32px; font-size:16px;}
+.lb-close{background:none; border:1px solid rgba(255,255,255,.35); color:var(--white); width:32px; height:32px; font-size:16px; cursor:pointer;}
 .lb-body{flex:1; position:relative; overflow:hidden; display:flex; align-items:center; justify-content:center; touch-action:none;}
-.lb-body img{max-width:92%; max-height:88%; will-change:transform; user-select:none; -webkit-user-drag:none;}
-.lb-arrow{position:absolute; top:50%; transform:translateY(-50%); background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.3); color:var(--white); width:42px; height:42px; font-size:18px;}
+
+.lb-img-wrap{position:relative; max-width:92%; max-height:88%; width:100%; height:100%; display:flex; align-items:center; justify-content:center;}
+.lb-img-wrap img{max-width:100%; max-height:100%; object-fit:contain; position:absolute; transition:opacity 0.5s ease-in-out; will-change:transform;}
+.lb-img-wrap img.img-night{opacity:0;}
+.is-night-mode .lb-img-wrap img.img-night{opacity:1;}
+
+.lb-arrow{position:absolute; top:50%; transform:translateY(-50%); background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.3); color:var(--white); width:42px; height:42px; font-size:18px; cursor:pointer; z-index:5;}
 .lb-arrow.prev{left:16px;} .lb-arrow.next{right:16px;}
 .lb-thumbs{display:flex; gap:8px; padding:14px 20px 20px; overflow-x:auto;}
 .lb-thumbs img{width:66px; height:48px; object-fit:cover; opacity:.5; cursor:pointer; border:1px solid transparent;}
 .lb-thumbs img.active{opacity:1; border-color:var(--white);}
 .lb-hint{position:absolute; bottom:12px; left:50%; transform:translateX(-50%); color:rgba(255,255,255,.45); font-size:11px;}
+
+footer{padding:44px 0 60px; color:var(--muted); font-size:12px; display:flex; justify-content:space-between; flex-wrap:wrap; gap:10px;}
 </style>
 </head>
-<body style="">
+<body>
 
 <div class="topnav">
   <div class="wrap topnav-inner">
     <div class="topnav-id" id="navProjectName">Center of Skin Care</div>
     <ul class="topnav-links" id="navLinks">
-      <li><a href="https://fareskahri-crypto.github.io/narcisse/#overview">Overview</a></li>
-      <li><a href="https://fareskahri-crypto.github.io/narcisse/#style-mood">Style &amp; Mood</a></li>
-      <li><a href="https://fareskahri-crypto.github.io/narcisse/#layout">Layout</a></li>
-      <li><a href="https://fareskahri-crypto.github.io/narcisse/#visualization">Visualization</a></li>
-      <li><a href="https://fareskahri-crypto.github.io/narcisse/#furniture">Furniture</a></li>
+      <li><a href="#overview">Overview</a></li>
+      <li><a href="#style-mood">Style &amp; Mood</a></li>
+      <li><a href="#visualization">Visualization</a></li>
     </ul>
     <div style="display:flex; align-items:center; gap:14px;">
       <div class="option-pill" id="navOptionPill"><span class="dot"></span><span id="navOptionLabel">Option 01 — Warm Minimal</span></div>
@@ -238,8 +284,7 @@ footer{padding:44px 0 60px; color:var(--muted); font-size:12px; display:flex; ju
         <div class="eyebrow" id="hdrClient">For — Tom Sahour</div>
         <h1 class="project-title" id="hdrTitle">Center of Skin Care</h1>
         <div class="project-meta">
-          <div><span>Type</span><span id="hdrType" style="text-transform:none;">Interior Design — Medical Retail</span></div>
-          <div style="display: none;"><span>Location</span><span id="hdrLocation" style="text-transform:none;"></span></div>
+          <div><span>Type</span><span id="hdrType">Interior Design — Medical Retail</span></div>
         </div>
       </div>
       <div class="version-tag" id="hdrVersion">Design Proposal — Revision 01<br>24 September 2026</div>
@@ -247,23 +292,23 @@ footer{padding:44px 0 60px; color:var(--muted); font-size:12px; display:flex; ju
   </div>
   <div class="wrap carousel-region">
     <div class="eyebrow" style="margin-bottom:2px;">Design Options</div>
-    <div class="carousel-track" id="carouselTrack" tabindex="0"><div class="opt-card is-active" tabindex="0" role="button" aria-label="Select option 1"><div class="ph"><span>Missing image</span><small>o1.png</small></div><div class="opt-card-label"><div class="n">Option 01</div><div class="s">Warm Minimal</div></div></div><div class="opt-card is-side-r" tabindex="0" role="button" aria-label="Select option 2"><div class="ph"><span>Missing image</span><small>o2.png</small></div><div class="opt-card-label"><div class="n">Option 02</div><div class="s">Contemporary Stone</div></div></div></div>
-    <div class="carousel-nav" id="carouselDots"><button class="carousel-dot active" aria-label="Go to option 1"></button><button class="carousel-dot" aria-label="Go to option 2"></button></div>
+    <div class="carousel-track" id="carouselTrack" tabindex="0"></div>
+    <div class="carousel-nav" id="carouselDots"></div>
   </div>
 </header>
 
-<!-- STYLE + MOOD — combined swipeable section -->
+<!-- STYLE + MOOD -->
 <section id="style-mood">
   <div class="wrap">
     <div class="sm-head">
       <div>
         <div class="eyebrow">Design Direction &amp; Atmosphere</div>
-        <h2 class="section-title" id="smTitle">Mood</h2>
+        <h2 class="section-title" id="smTitle">Style &amp; Mood</h2>
       </div>
       <div style="display:flex; align-items:center; gap:18px;">
         <div class="sm-tabs">
-          <button class="sm-tab" id="smTabStyle">Style</button>
-          <button class="sm-tab active" id="smTabMood">Mood</button>
+          <button class="sm-tab active" id="smTabStyle">Style</button>
+          <button class="sm-tab" id="smTabMood">Mood</button>
         </div>
         <div class="sm-arrows">
           <button class="sm-arrow" id="smPrev" aria-label="Previous">‹</button>
@@ -273,20 +318,20 @@ footer{padding:44px 0 60px; color:var(--muted); font-size:12px; display:flex; ju
     </div>
 
     <div class="sm-viewport">
-      <div class="sm-track" id="smTrack" style="transform: translateX(-50%);">
+      <div class="sm-track" id="smTrack">
         <div class="sm-slide">
           <div class="direction-grid">
             <div class="direction-media">
               <div class="m1" id="dirImg1"><div class="ph"><span>Missing image</span><small>o1-d1.png</small></div></div>
-              <div class="m2" id="dirImg2" style="display: none;"></div>
+              <div class="m2" id="dirImg2" style="display:none;"></div>
             </div>
-            <div class="direction-text"><p id="dirText">A calm, materially honest interior built from natural oak, warm plaster, and soft indirect light. Forms stay simple and continuous so the architecture recedes and the treatment experience comes forward.</p></div>
+            <div class="direction-text"><p id="dirText"></p></div>
           </div>
         </div>
         <div class="sm-slide">
           <div class="mood-single">
             <div class="mood-img" id="moodImg"><div class="ph"><span>Missing image</span><small>o1-m1.png</small></div></div>
-            <p class="mood-caption" id="moodCaption">A restrained material palette — oak, limewash plaster, and honed stone — chosen for a sense of warmth, cleanliness, and quiet professionalism.</p>
+            <p class="mood-caption" id="moodCaption"></p>
           </div>
         </div>
       </div>
@@ -294,26 +339,8 @@ footer{padding:44px 0 60px; color:var(--muted); font-size:12px; display:flex; ju
   </div>
 </section>
 
-<!-- LAYOUT -->
-<section id="layout" style="display: none;">
-  <div class="wrap">
-    <div class="section-head">
-      <div>
-        <div class="eyebrow">Spatial Organization</div>
-        <h2 class="section-title">Layout</h2>
-      </div>
-    </div>
-    <div class="layout-tabs" id="layoutTabs" style="display: none;"></div>
-    <div class="plan-frame" id="planFrame" style="margin-bottom:40px;"></div>
-    <div id="elevationsWrap">
-      <div class="tech-group-title">Elevations &amp; Details</div>
-      <div class="tech-row" id="elevRow"></div>
-    </div>
-  </div>
-</section>
-
 <!-- VISUALIZATION -->
-<section id="visualization" style="">
+<section id="visualization">
   <div class="wrap">
     <div class="section-head">
       <div>
@@ -321,53 +348,53 @@ footer{padding:44px 0 60px; color:var(--muted); font-size:12px; display:flex; ju
         <h2 class="section-title">Renders &amp; Panorama</h2>
       </div>
     </div>
+    
     <div class="viz-controls">
       <div class="viz-toggle">
         <button id="btnRenders" class="active">Renders</button>
-        <button id="btnPanorama" style="">Panorama</button>
+        <button id="btnPanorama">Panorama</button>
       </div>
-      <div class="tod-toggle" id="todToggle" style="">
-        <button id="todMorning" class="active">☀ Morning</button>
-        <button id="todNight" class="">☾ Night</button>
-      </div>
+
+      <!-- HANGING LIGHT BULB SWITCH (VISUALIZATION SECTION) -->
+      <button class="hanging-bulb-switch" id="bulbSwitchMain" aria-label="Toggle Light On/Off">
+        <div class="wire"></div>
+        <div class="bulb-head">
+          <svg viewBox="0 0 24 24">
+            <path d="M9 21h6m-5 2h4M12 2a7 7 0 0 0-7 7c0 2.38 1.19 4.47 3 5.74V17a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1v-2.26c1.81-1.27 3-3.36 3-5.74a7 7 0 0 0-7-7z"/>
+          </svg>
+        </div>
+        <div class="bulb-tag" id="bulbTagMain">Light Off</div>
+      </button>
     </div>
 
-    <div id="rendersView"><div class="render-grid" id="renderGrid"><a href="javascript:void(0)"><img src="./001 Project Presentation_files/o1-r1-morning.png" alt="" loading="lazy"><div class="render-cap">Render 01 — Morning</div></a><a href="javascript:void(0)"><img src="./001 Project Presentation_files/o1-r2-morning.png" alt="" loading="lazy"><div class="render-cap">Render 02 — Morning</div></a><a href="javascript:void(0)"><img src="./001 Project Presentation_files/o1-r3-morning.png" alt="" loading="lazy"><div class="render-cap">Render 03 — Morning</div></a><a href="javascript:void(0)"><img src="./001 Project Presentation_files/o1-r4-morning.png" alt="" loading="lazy"><div class="render-cap">Render 04 — Morning</div></a><a href="javascript:void(0)"><img src="./001 Project Presentation_files/o1-r5-night.png" alt="" loading="lazy"><div class="render-cap">Render 05</div></a><a href="javascript:void(0)"><img src="./001 Project Presentation_files/o1-r6-night.png" alt="" loading="lazy"><div class="render-cap">Render 06</div></a></div></div>
+    <div id="rendersView">
+      <div class="render-grid" id="renderGrid"></div>
+    </div>
 
     <div id="panoramaView" style="display:none;">
       <div class="pano-stage" id="panoStage">
-        <div class="pano-img-track" id="panoTrack" style="display: none;"></div>
-        <canvas id="panoCanvas" style="display: block;" width="240" height="120"></canvas>
-        <div class="pano-label"><div class="eyebrow">360° View</div><div class="name" id="panoName">Location 01</div></div>
+        <canvas id="panoCanvas"></canvas>
+        <div class="pano-label">
+          <div class="eyebrow">360° View</div>
+          <div class="name" id="panoName">Location 01</div>
+        </div>
+
+        <!-- HANGING LIGHT BULB OVERLAY (PANORAMA FULLSCREEN / STAGE) -->
+        <button class="hanging-bulb-switch pano-overlay-bulb" id="bulbSwitchPano" aria-label="Toggle Panorama Light On/Off">
+          <div class="wire"></div>
+          <div class="bulb-head">
+            <svg viewBox="0 0 24 24">
+              <path d="M9 21h6m-5 2h4M12 2a7 7 0 0 0-7 7c0 2.38 1.19 4.47 3 5.74V17a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1v-2.26c1.81-1.27 3-3.36 3-5.74a7 7 0 0 0-7-7z"/>
+            </svg>
+          </div>
+          <div class="bulb-tag" id="bulbTagPano">Light Off</div>
+        </button>
+
         <div class="pano-loading" id="panoLoading">Loading panorama…</div>
-        <div class="pano-hint" id="panoHint">Drag to look around · Scroll to zoom</div>
+        <div class="pano-hint">Drag to look around · Scroll to zoom</div>
       </div>
-      <div class="pano-locations" id="panoLocations"><button class="pano-loc active"><img src="./001 Project Presentation_files/o1-p1-morning.png" alt="" loading="lazy"><span>Location 01</span></button></div>
+      <div class="pano-locations" id="panoLocations"></div>
     </div>
-  </div>
-</section>
-
-<!-- FURNITURE -->
-<section id="furniture" style="display: none;">
-  <div class="wrap">
-    <div class="section-head"><div><div class="eyebrow">Furniture</div><h2 class="section-title">Furniture Selection</h2></div></div>
-    <div class="grid-4" id="furnitureGrid"></div>
-  </div>
-</section>
-
-<!-- MATERIALS -->
-<section id="materials" style="display: none;">
-  <div class="wrap">
-    <div class="section-head"><div><div class="eyebrow">Material Specification</div><h2 class="section-title">Materials</h2></div></div>
-    <div class="grid-4" id="materialsGrid"></div>
-  </div>
-</section>
-
-<!-- DOCUMENTS -->
-<section id="documents" style="display: none;">
-  <div class="wrap">
-    <div class="section-head"><div><div class="eyebrow">Documentation</div><h2 class="section-title">Project Documents</h2></div></div>
-    <div class="doc-list" id="docList"></div>
   </div>
 </section>
 
@@ -376,52 +403,54 @@ footer{padding:44px 0 60px; color:var(--muted); font-size:12px; display:flex; ju
   <div>Prepared for client review</div>
 </footer>
 
+<!-- LIGHTBOX -->
 <div class="lightbox" id="lightbox" role="dialog" aria-modal="true">
   <div class="lb-top">
-    <div class="lb-title"><span id="lbTitle">Render 01</span><span class="sub" id="lbSub">Render · 1 / 6</span></div>
+    <div class="lb-title"><span id="lbTitle">Render 01</span><span class="sub" id="lbSub"></span></div>
+    
+    <!-- HANGING LIGHT BULB SWITCH (FULLSCREEN LIGHTBOX) -->
+    <button class="hanging-bulb-switch" id="bulbSwitchLb" style="margin-right:20px;" aria-label="Toggle Light On/Off in Lightbox">
+      <div class="wire"></div>
+      <div class="bulb-head">
+        <svg viewBox="0 0 24 24">
+          <path d="M9 21h6m-5 2h4M12 2a7 7 0 0 0-7 7c0 2.38 1.19 4.47 3 5.74V17a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1v-2.26c1.81-1.27 3-3.36 3-5.74a7 7 0 0 0-7-7z"/>
+        </svg>
+      </div>
+      <div class="bulb-tag" id="bulbTagLb">Light Off</div>
+    </button>
+
     <button class="lb-close" id="lbClose" aria-label="Close">✕</button>
   </div>
   <div class="lb-body" id="lbBody">
     <button class="lb-arrow prev" id="lbPrev" aria-label="Previous">‹</button>
-    <img id="lbImg" src="./001 Project Presentation_files/o1-r1-morning.png" alt="Render 01" style="transform: translate(0px, 0px) scale(1);">
+    <div class="lb-img-wrap">
+      <img id="lbImgMorning" src="" alt="Render Day Layer" />
+      <img id="lbImgNight" class="img-night" src="" alt="Render Night Layer" />
+    </div>
     <button class="lb-arrow next" id="lbNext" aria-label="Next">›</button>
-    <div class="lb-hint">Scroll or pinch to zoom · drag to pan</div>
+    <div class="lb-hint">Scroll to zoom · drag to pan</div>
   </div>
-  <div class="lb-thumbs" id="lbThumbs"><img src="./001 Project Presentation_files/o1-r1-morning.png" alt="" class="active"><img src="./001 Project Presentation_files/o1-r2-morning.png" alt=""><img src="./001 Project Presentation_files/o1-r3-morning.png" alt=""><img src="./001 Project Presentation_files/o1-r4-morning.png" alt=""><img src="./001 Project Presentation_files/o1-r5-night.png" alt=""><img src="./001 Project Presentation_files/o1-r6-night.png" alt=""></div>
+  <div class="lb-thumbs" id="lbThumbs"></div>
 </div>
 
-<!-- =========================================================================
-     TEXT CONTENT — edit this. Images are handled separately by filename
-     probing further down; this object only holds copy and per-item labels.
-     ========================================================================= -->
 <script id="config">
 const PROJECT_CONFIG = {
   name: "Center of Skin Care",
   client: "Tom Sahour",
   type: "Interior Design — Medical Retail",
-  location: "",
   version: "Design Proposal — Revision 01",
   date: "24 September 2026",
 
-  // one entry per option, in order: option 1, option 2, ...
   options: [
     {
       styleName: "Warm Minimal",
       directionText: "A calm, materially honest interior built from natural oak, warm plaster, and soft indirect light. Forms stay simple and continuous so the architecture recedes and the treatment experience comes forward.",
-      moodCaption: "A restrained material palette — oak, limewash plaster, and honed stone — chosen for a sense of warmth, cleanliness, and quiet professionalism.",
-      furniture: { 1:{name:"Reception Desk", category:"Casework", dimensions:"240 × 60 × 105 cm", material:"Oak veneer, matte lacquer"},
-                   2:{name:"Lounge Chair", category:"Seating", dimensions:"68 × 72 × 78 cm", material:"Boucle upholstery, oak legs"} },
-      materials: { 1:{name:"Natural Oak Veneer", finish:"Matte", application:"Wall paneling, casework"},
-                   2:{name:"Honed Limestone", finish:"Honed", application:"Reception counter"} },
-      documents: { 1:{label:"Technical Floor Plan — Revision 01"} }
+      moodCaption: "A restrained material palette — oak, limewash plaster, and honed stone — chosen for a sense of warmth, cleanliness, and quiet professionalism."
     },
     {
       styleName: "Contemporary Stone",
       directionText: "A cooler, more architectural mood built from large-format stone, dark bronze metalwork, and sharply detailed joinery — a more sculptural, gallery-like read.",
-      moodCaption: "Stone and bronze establish a more contemporary, gallery-like identity while keeping the plan's clinical clarity.",
-      furniture: { 1:{name:"Reception Desk", category:"Casework", dimensions:"260 × 65 × 105 cm", material:"Bronze-edged stone top"} },
-      materials: { 1:{name:"Grey Travertine", finish:"Honed", application:"Reception cladding"} },
-      documents: {}
+      moodCaption: "Stone and bronze establish a more contemporary, gallery-like identity while keeping the plan's clinical clarity."
     }
   ]
 };
@@ -431,789 +460,465 @@ const PROJECT_CONFIG = {
 (function(){
   "use strict";
 
-  /* ==========================================================================
-     ASSET PROBING ENGINE
-     ========================================================================== */
-  const ASSET_BASE = "";      // e.g. "assets/" if you put files in a subfolder
-  const MAX_SLOTS  = 20;      // max numbered items probed per category
-  const MAX_LAYOUTS = 3;
+  const ASSET_BASE = "";
+  const MAX_SLOTS  = 20;
+
+  let currentOptionIndex = 0;
+  let loadedOptionsData = [];
+  let isNightMode = false;
 
   function url(name){ return ASSET_BASE + name; }
 
   function probeImage(src){
     return new Promise(resolve => {
+      if(!src) return resolve(false);
       const img = new Image();
       img.onload = () => resolve(true);
       img.onerror = () => resolve(false);
       img.src = src;
     });
   }
-  async function probeFile(src){
-    try{
-      const res = await fetch(src, { method:"HEAD", cache:"no-store" });
-      return res.ok;
-    }catch(e){ return false; }
-  }
 
-  async function probeNumberedImages(prefix, max){
-    const checks = [];
-    for(let k=1; k<=max; k++){
-      const src = url(prefix + k + ".png");
-      checks.push(probeImage(src).then(ok => ok ? {k, src} : null));
-    }
-    return (await Promise.all(checks)).filter(Boolean);
-  }
+  /* TASK 2: SEQUENTIAL PROBING WITH EARLY STOP FOR RENDERS & PANORAMAS */
+  async function probeDayNightSeriesSequential(prefix, max){
+    const series = [];
+    for(let k = 1; k <= max; k++){
+      const morningUrl = url(prefix + k + "-morning.png");
+      const nightUrl   = url(prefix + k + "-night.png");
 
-  async function probeNumberedFiles(prefix, max, ext){
-    const checks = [];
-    for(let k=1; k<=max; k++){
-      const src = url(prefix + k + "." + ext);
-      checks.push(probeFile(src).then(ok => ok ? {k, src} : null));
-    }
-    return (await Promise.all(checks)).filter(Boolean);
-  }
+      const [hasMorning, hasNight] = await Promise.all([
+        probeImage(morningUrl),
+        probeImage(nightUrl)
+      ]);
 
-  async function probeDayNightSeries(prefix, max){
-    const checks = [];
-    for(let k=1; k<=max; k++){
-      checks.push(Promise.all([
-        probeImage(url(prefix + k + "-morning.png")),
-        probeImage(url(prefix + k + "-night.png"))
-      ]).then(([m,n]) => (m||n) ? {
+      // IF NEITHER IS FOUND: STOP SUBSEQUENT PROBING IMMEDIATELY
+      if(!hasMorning && !hasNight){
+        break;
+      }
+
+      series.push({
         k,
-        morning: m ? url(prefix + k + "-morning.png") : null,
-        night:   n ? url(prefix + k + "-night.png")   : null
-      } : null));
-    }
-    return (await Promise.all(checks)).filter(Boolean);
-  }
-
-  /* Resolve every asset for one option (n is 1-based option number). */
-  async function resolveOption(n){
-    const p = "o" + n;
-
-    const [cover, d1, d2] = await Promise.all([
-      probeImage(url(p + ".png")).then(ok => ok ? url(p + ".png") : null),
-      probeImage(url(p + "-d1.png")).then(ok => ok ? url(p + "-d1.png") : null),
-      probeImage(url(p + "-d2.png")).then(ok => ok ? url(p + "-d2.png") : null),
-    ]);
-    const mood = await probeImage(url(p + "-m1.png")).then(ok => ok ? url(p + "-m1.png") : null);
-
-    // layouts: try l1, l2, l3 — each with its own elevation series
-    const layouts = [];
-    for(let L=1; L<=MAX_LAYOUTS; L++){
-      const planUrl = url(p + "-l" + L + ".png");
-      const exists = await probeImage(planUrl);
-      if(!exists) continue;
-      const elevations = await probeNumberedImages(p + "-l" + L + "-e", MAX_SLOTS);
-      layouts.push({ n:L, image:planUrl, elevations });
-    }
-
-    const renders = await probeDayNightSeries(p + "-r", MAX_SLOTS);
-    const panoramas = await probeDayNightSeries(p + "-p", MAX_SLOTS);
-    const furnitureImgs = await probeNumberedImages(p + "-f", MAX_SLOTS);
-    const materialImgs = await probeNumberedImages(p + "-ma", MAX_SLOTS);
-    const docFiles = await probeNumberedFiles(p + "-pdf", MAX_SLOTS, "pdf");
-
-    return { cover, d1, d2, mood, layouts, renders, panoramas, furnitureImgs, materialImgs, docFiles };
-  }
-
-  /* ==========================================================================
-     RENDER HELPERS
-     ========================================================================== */
-  function el(tag, cls, html){
-    const e = document.createElement(tag);
-    if(cls) e.className = cls;
-    if(html != null) e.innerHTML = html;
-    return e;
-  }
-  function clear(node){ while(node.firstChild) node.removeChild(node.firstChild); }
-  function escapeHtml(s){
-    return String(s == null ? "" : s).replace(/[&<>"']/g, c => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;" }[c]));
-  }
-  function skeleton(){ return el("div","skeleton-tile"); }
-  function placeholder(label){
-    const d = el("div","ph");
-    d.innerHTML = '<span>Missing image</span><small>'+escapeHtml(label)+'</small>';
-    return d;
-  }
-  function imageOrPlaceholder(src, label, alt){
-    if(!src) return placeholder(label);
-    const img = document.createElement("img");
-    img.src = src; img.alt = alt || ""; img.loading = "lazy";
-    return img;
-  }
-
-  /* ==========================================================================
-     STATE
-     ========================================================================== */
-  const state = {
-    optionIndex: 0,
-    assetCache: {},          // optionIndex -> resolved assets
-    assetPending: {},        // optionIndex -> in-flight resolve promise
-    layoutIndex: 0,
-    smSlide: 0,               // 0 = style, 1 = mood
-    vizMode: "renders",
-    tod: "morning",
-    panoIndex: 0
-  };
-
-  const els = {
-    navProjectName: document.getElementById("navProjectName"),
-    navOptionLabel: document.getElementById("navOptionLabel"),
-    hdrClient: document.getElementById("hdrClient"),
-    hdrTitle: document.getElementById("hdrTitle"),
-    hdrType: document.getElementById("hdrType"),
-    hdrLocation: document.getElementById("hdrLocation"),
-    hdrVersion: document.getElementById("hdrVersion"),
-    footVersion: document.getElementById("footVersion"),
-    carouselTrack: document.getElementById("carouselTrack"),
-    carouselDots: document.getElementById("carouselDots"),
-    smTitle: document.getElementById("smTitle"),
-    smTrack: document.getElementById("smTrack"),
-    smTabStyle: document.getElementById("smTabStyle"),
-    smTabMood: document.getElementById("smTabMood"),
-    dirImg1: document.getElementById("dirImg1"),
-    dirImg2: document.getElementById("dirImg2"),
-    dirText: document.getElementById("dirText"),
-    moodImg: document.getElementById("moodImg"),
-    moodCaption: document.getElementById("moodCaption"),
-    layoutTabs: document.getElementById("layoutTabs"),
-    planFrame: document.getElementById("planFrame"),
-    elevationsWrap: document.getElementById("elevationsWrap"),
-    elevRow: document.getElementById("elevRow"),
-    furnitureGrid: document.getElementById("furnitureGrid"),
-    materialsGrid: document.getElementById("materialsGrid"),
-    renderGrid: document.getElementById("renderGrid"),
-    panoStage: document.getElementById("panoStage"),
-    panoTrack: document.getElementById("panoTrack"),
-    panoName: document.getElementById("panoName"),
-    panoLocations: document.getElementById("panoLocations"),
-    docList: document.getElementById("docList"),
-    section_furniture: document.getElementById("furniture"),
-    section_materials: document.getElementById("materials"),
-    section_documents: document.getElementById("documents"),
-    section_layout: document.getElementById("layout"),
-  };
-
-  function cfg(){ return PROJECT_CONFIG.options[state.optionIndex]; }
-  function assets(){ return state.assetCache[state.optionIndex]; }
-
-  /* ==========================================================================
-     HEADER
-     ========================================================================== */
-  function renderHeader(){
-    els.navProjectName.textContent = PROJECT_CONFIG.name;
-    els.hdrClient.textContent = PROJECT_CONFIG.client ? "For — " + PROJECT_CONFIG.client : "";
-    els.hdrTitle.textContent = PROJECT_CONFIG.name;
-    els.hdrType.textContent = PROJECT_CONFIG.type || "";
-    const locWrap = els.hdrLocation.closest("div");
-    if(PROJECT_CONFIG.location){ els.hdrLocation.textContent = PROJECT_CONFIG.location; locWrap.style.display = ""; }
-    else locWrap.style.display = "none";
-    els.hdrVersion.innerHTML = escapeHtml(PROJECT_CONFIG.version||"") + (PROJECT_CONFIG.date ? "<br>"+escapeHtml(PROJECT_CONFIG.date) : "");
-    els.footVersion.textContent = [PROJECT_CONFIG.version, PROJECT_CONFIG.date].filter(Boolean).join(" — ");
-  }
-
-  /* ==========================================================================
-     OPTION CAROUSEL
-     ========================================================================== */
-  function renderCarouselShell(){
-    clear(els.carouselTrack); clear(els.carouselDots);
-    PROJECT_CONFIG.options.forEach((opt, i) => {
-      const card = el("div","opt-card");
-      card.tabIndex = 0; card.setAttribute("role","button"); card.setAttribute("aria-label","Select option " + (i+1));
-      card.appendChild(skeleton());
-      const label = el("div","opt-card-label", '<div class="n">Option '+String(i+1).padStart(2,"0")+'</div><div class="s">'+escapeHtml(opt.styleName||"")+'</div>');
-      card.appendChild(label);
-      card.addEventListener("click", () => selectOption(i));
-      card.addEventListener("keydown", e => { if(e.key==="Enter"||e.key===" "){ e.preventDefault(); selectOption(i); }});
-      els.carouselTrack.appendChild(card);
-
-      const dot = el("button","carousel-dot");
-      dot.setAttribute("aria-label","Go to option " + (i+1));
-      dot.addEventListener("click", () => selectOption(i));
-      els.carouselDots.appendChild(dot);
-    });
-    positionCarousel();
-  }
-  function fillCarouselCover(i, coverUrl){
-    const card = els.carouselTrack.children[i];
-    if(!card) return;
-    const first = card.firstChild;
-    const replacement = coverUrl ? imageOrPlaceholder(coverUrl) : placeholder("o"+(i+1)+".png");
-    card.replaceChild(replacement, first);
-  }
-  function positionCarousel(){
-    [...els.carouselTrack.children].forEach((card, i) => {
-      card.classList.remove("is-active","is-side-l","is-side-r","is-far");
-      const diff = i - state.optionIndex;
-      if(diff === 0) card.classList.add("is-active");
-      else if(diff === -1) card.classList.add("is-side-l");
-      else if(diff === 1) card.classList.add("is-side-r");
-      else card.classList.add("is-far");
-    });
-    [...els.carouselDots.children].forEach((d,i) => d.classList.toggle("active", i === state.optionIndex));
-  }
-  function selectOption(i){
-    if(i < 0 || i >= PROJECT_CONFIG.options.length) return;
-    state.optionIndex = i;
-    state.layoutIndex = 0;
-    state.smSlide = 0;
-    state.panoIndex = 0;
-    state.tod = "morning";
-    setVizMode("renders");
-    positionCarousel();
-    els.navOptionLabel.textContent = "Option " + String(i+1).padStart(2,"0") + " — " + (cfg().styleName||"");
-    loadAndRenderOption(i);
-  }
-  els.carouselTrack.addEventListener("keydown", e => {
-    if(e.key === "ArrowRight") selectOption(state.optionIndex+1);
-    if(e.key === "ArrowLeft") selectOption(state.optionIndex-1);
-  });
-  (function(){
-    let startX = null;
-    els.carouselTrack.addEventListener("pointerdown", e => { startX = e.clientX; });
-    els.carouselTrack.addEventListener("pointerup", e => {
-      if(startX == null) return;
-      const dx = e.clientX - startX;
-      if(Math.abs(dx) > 40) selectOption(state.optionIndex + (dx < 0 ? 1 : -1));
-      startX = null;
-    });
-  })();
-
-  /* ==========================================================================
-     STYLE + MOOD SLIDER
-     ========================================================================== */
-  function setSmSlide(i){
-    state.smSlide = i;
-    els.smTrack.style.transform = "translateX(-" + (i*50) + "%)";
-    els.smTabStyle.classList.toggle("active", i===0);
-    els.smTabMood.classList.toggle("active", i===1);
-    els.smTitle.textContent = i===0 ? "Style" : "Mood";
-  }
-  document.getElementById("smPrev").addEventListener("click", () => setSmSlide(state.smSlide===0 ? 1 : 0));
-  document.getElementById("smNext").addEventListener("click", () => setSmSlide(state.smSlide===0 ? 1 : 0));
-  els.smTabStyle.addEventListener("click", () => setSmSlide(0));
-  els.smTabMood.addEventListener("click", () => setSmSlide(1));
-
-  function renderStyleAndMood(){
-    const a = assets();
-    clear(els.dirImg1); clear(els.dirImg2); clear(els.moodImg);
-    els.dirImg1.appendChild(imageOrPlaceholder(a.d1, "o"+(state.optionIndex+1)+"-d1.png"));
-    if(a.d2){ els.dirImg2.style.display=""; els.dirImg2.appendChild(imageOrPlaceholder(a.d2)); }
-    else { els.dirImg2.style.display="none"; }
-    els.dirText.textContent = cfg().directionText || "";
-    els.moodImg.appendChild(imageOrPlaceholder(a.mood, "o"+(state.optionIndex+1)+"-m1.png"));
-    els.moodCaption.textContent = cfg().moodCaption || "";
-    setSmSlide(0);
-  }
-
-  /* ==========================================================================
-     LAYOUT
-     ========================================================================== */
-  function renderLayoutTabs(){
-    const a = assets();
-    clear(els.layoutTabs);
-    if(a.layouts.length <= 1){ els.layoutTabs.style.display = "none"; }
-    else {
-      els.layoutTabs.style.display = "";
-      a.layouts.forEach((layout, i) => {
-        const tab = el("button","layout-tab" + (i===state.layoutIndex ? " active" : ""), "Layout " + String(layout.n).padStart(2,"0"));
-        tab.addEventListener("click", () => { state.layoutIndex = i; renderLayoutTabs(); renderPlan(); });
-        els.layoutTabs.appendChild(tab);
+        morning: hasMorning ? morningUrl : null,
+        night:   hasNight   ? nightUrl   : null
       });
     }
-    els.section_layout.style.display = a.layouts.length ? "" : "none";
+    return series;
   }
-  function renderPlan(){
-    const a = assets();
-    if(!a.layouts.length) return;
-    const layout = a.layouts[state.layoutIndex];
-    clear(els.planFrame);
-    els.planFrame.appendChild(imageOrPlaceholder(layout.image, "o"+(state.optionIndex+1)+"-l"+layout.n+".png"));
 
-    clear(els.elevRow);
-    if(!layout.elevations.length){
-      els.elevationsWrap.style.display = "none";
-    } else {
-      els.elevationsWrap.style.display = "";
-      layout.elevations.forEach((ev, idx) => {
-        const card = el("div","tech-card");
-        const thumb = el("div","thumb"); thumb.appendChild(imageOrPlaceholder(ev.src));
-        const label = el("div","label","Elevation " + String(ev.k).padStart(2,"0"));
-        card.appendChild(thumb); card.appendChild(label);
-        card.addEventListener("click", () => openLightbox(
-          layout.elevations.map(e2 => ({ image:e2.src, title:"Elevation " + String(e2.k).padStart(2,"0") })),
-          idx, "Technical Drawing"
-        ));
-        els.elevRow.appendChild(card);
-      });
+  /* TASK 1: PRIORITIZED PIPELINE LOADING */
+  async function loadProjectData(){
+    // Step 1: Base UI & Headers
+    document.getElementById("navProjectName").textContent = PROJECT_CONFIG.name;
+    document.getElementById("hdrTitle").textContent = PROJECT_CONFIG.name;
+    document.getElementById("hdrClient").textContent = "For — " + PROJECT_CONFIG.client;
+    document.getElementById("hdrType").textContent = PROJECT_CONFIG.type;
+    document.getElementById("hdrVersion").innerHTML = PROJECT_CONFIG.version + "<br>" + PROJECT_CONFIG.date;
+
+    // Step 2: Load Options Covers
+    const optionCovers = [];
+    for(let i = 0; i < PROJECT_CONFIG.options.length; i++){
+      const optNum = i + 1;
+      const coverUrl = url("o" + optNum + ".png");
+      const exists = await probeImage(coverUrl);
+      optionCovers.push(exists ? coverUrl : null);
     }
-  }
+    renderCarousel(optionCovers);
 
-  /* ==========================================================================
-     FURNITURE / MATERIALS
-     ========================================================================== */
-  function renderFurniture(){
-    const a = assets(); const meta = cfg().furniture || {};
-    clear(els.furnitureGrid);
-    a.furnitureImgs.forEach(item => {
-      const m = meta[item.k] || {};
-      const card = el("div","item-card");
-      const thumb = el("div","thumb"); thumb.appendChild(imageOrPlaceholder(item.src));
-      const rows = [["Category",m.category],["Dimensions",m.dimensions],["Material",m.material],["Finish",m.finish],["Quantity",m.quantity]].filter(([,v])=>v);
-      const body = el("div","body",
-        '<h4>'+escapeHtml(m.name || ("Furniture " + String(item.k).padStart(2,"0")))+'</h4>'+
-        '<dl>'+rows.map(([l,v])=>'<dt>'+escapeHtml(l)+'</dt><dd>'+escapeHtml(v)+'</dd>').join("")+'</dl>');
-      card.appendChild(thumb); card.appendChild(body);
-      els.furnitureGrid.appendChild(card);
-    });
-    els.section_furniture.style.display = a.furnitureImgs.length ? "" : "none";
-  }
-  function renderMaterials(){
-    const a = assets(); const meta = cfg().materials || {};
-    clear(els.materialsGrid);
-    a.materialImgs.forEach(item => {
-      const m = meta[item.k] || {};
-      const card = el("div","item-card");
-      const thumb = el("div","thumb"); thumb.appendChild(imageOrPlaceholder(item.src));
-      const rows = [["Finish",m.finish],["Color",m.color],["Application",m.application],["Supplier",m.supplier]].filter(([,v])=>v);
-      const body = el("div","body",
-        '<h4>'+escapeHtml(m.name || ("Material " + String(item.k).padStart(2,"0")))+'</h4>'+
-        '<dl>'+rows.map(([l,v])=>'<dt>'+escapeHtml(l)+'</dt><dd>'+escapeHtml(v)+'</dd>').join("")+'</dl>');
-      card.appendChild(thumb); card.appendChild(body);
-      els.materialsGrid.appendChild(card);
-    });
-    els.section_materials.style.display = a.materialImgs.length ? "" : "none";
-  }
+    // Step 3, 4, 5: Sequentially load details for each option
+    for(let i = 0; i < PROJECT_CONFIG.options.length; i++){
+      const optNum = i + 1;
+      const prefix = "o" + optNum;
 
-  /* ==========================================================================
-     VISUALIZATION: RENDERS + PANORAMA (with morning / night toggle)
-     ========================================================================== */
-  let flatRenderList = [];
+      // Tier 3: Mood & Style
+      const [d1, d2, mood] = await Promise.all([
+        probeImage(url(prefix + "-d1.png")).then(ok => ok ? url(prefix + "-d1.png") : null),
+        probeImage(url(prefix + "-d2.png")).then(ok => ok ? url(prefix + "-d2.png") : null),
+        probeImage(url(prefix + "-m1.png")).then(ok => ok ? url(prefix + "-m1.png") : null)
+      ]);
 
-  function bothTodAvailable(){
-    const a = assets(); if(!a) return false;
-    const pool = [...a.renders, ...a.panoramas];
-    return pool.some(x => x.morning) && pool.some(x => x.night);
-  }
-  function pickVariant(item){
-    // prefer the globally selected time of day; gracefully fall back
-    if(state.tod === "morning") return item.morning || item.night;
-    return item.night || item.morning;
-  }
+      // Tier 4: Renders (Sequential + Stop on failure)
+      const renders = await probeDayNightSeriesSequential(prefix + "-r", MAX_SLOTS);
 
-  function renderTodToggle(){
-    const show = bothTodAvailable();
-    document.getElementById("todToggle").style.display = show ? "" : "none";
-    document.getElementById("todMorning").classList.toggle("active", state.tod==="morning");
-    document.getElementById("todNight").classList.toggle("active", state.tod==="night");
-  }
-  document.getElementById("todMorning").addEventListener("click", () => { state.tod="morning"; renderTodToggle(); renderRenders(); refreshPanoramaFrame(); });
-  document.getElementById("todNight").addEventListener("click", () => { state.tod="night"; renderTodToggle(); renderRenders(); refreshPanoramaFrame(); });
+      // Tier 5: Panoramas (Sequential + Stop on failure)
+      const panoramas = await probeDayNightSeriesSequential(prefix + "-p", MAX_SLOTS);
 
-  function renderRenders(){
-    const a = assets();
-    clear(els.renderGrid);
-    flatRenderList = a.renders;
-    a.renders.forEach((r, idx) => {
-      const src = pickVariant(r);
-      const label = "Render " + String(r.k).padStart(2,"0") + (r.morning && r.night ? (" — " + (pickVariant(r)===r.morning ? "Morning" : "Night")) : "");
-      const a1 = document.createElement("a");
-      a1.href = "javascript:void(0)";
-      a1.appendChild(imageOrPlaceholder(src));
-      a1.appendChild(el("div","render-cap", escapeHtml(label)));
-      a1.addEventListener("click", () => openLightbox(
-        a.renders.map(r2 => ({ image: pickVariant(r2), title: "Render " + String(r2.k).padStart(2,"0") })),
-        idx, "Render"
-      ));
-      els.renderGrid.appendChild(a1);
-    });
-    document.getElementById("rendersView").style.display = state.vizMode==="renders" ? "" : "none";
-    document.getElementById("visualization").style.display = (a.renders.length || a.panoramas.length) ? "" : "none";
-  }
-
-  /* ==========================================================================
-     TRUE 360° PANORAMA VIEWER (three.js) + automatic drag-slide fallback
-     The image is mapped onto the inside of a sphere; the camera rotates
-     inside it. Non-equirectangular images (ratio < 1.8:1) trigger fallback.
-     ========================================================================== */
-  const Pano360Viewer = (function(){
-    let renderer=null, scene=null, camera=null, mesh=null, loader=null;
-    let stage=null, canvas=null;
-    let lon=0, lat=0, tLon=0, tLat=0, fov=75, tFov=75;
-    let raf=null, running=false, live=false, dead=false;
-    let currentSrc=null, lastInteract=0, pinch0=0, pinchFov0=75;
-    const pointers=new Map(), texCache=new Map(), cb={};
-    const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
-
-    function init(opts){
-      Object.assign(cb, opts); stage=opts.stage; canvas=opts.canvas;
-      if(typeof THREE==="undefined"){ fail(); return false; }
-      try{
-        renderer=new THREE.WebGLRenderer({ canvas, antialias:true });
-        renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,2));
-        renderer.setClearColor(0x0B0B0A);
-      }catch(e){ fail(); return false; }
-      scene=new THREE.Scene();
-      camera=new THREE.PerspectiveCamera(fov,1,0.1,1100);
-      const geo=new THREE.SphereGeometry(500,64,40);
-      geo.scale(-1,1,1);                       // camera sits inside the sphere
-      mesh=new THREE.Mesh(geo,new THREE.MeshBasicMaterial({ color:0x141414 }));
-      scene.add(mesh);
-      loader=new THREE.TextureLoader(); loader.setCrossOrigin("anonymous");
-
-      stage.addEventListener("pointerdown",down);
-      stage.addEventListener("pointermove",move);
-      stage.addEventListener("pointerup",up);
-      stage.addEventListener("pointercancel",up);
-      stage.addEventListener("wheel",wheel,{ passive:false });
-      if(window.ResizeObserver) new ResizeObserver(resize).observe(stage);
-      window.addEventListener("resize",resize);
-      live=true; return true;
-    }
-    function fail(src){ dead=true; stop(); if(cb.onLoading) cb.onLoading(false); if(cb.onFail) cb.onFail(src); }
-    function resize(){
-      if(!renderer||!stage) return;
-      const w=stage.clientWidth, h=stage.clientHeight; if(!w||!h) return;
-      renderer.setSize(w,h,false); camera.aspect=w/h; camera.updateProjectionMatrix();
-    }
-    function down(e){
-      if(dead||!currentSrc) return;
-      lastInteract=performance.now();
-      pointers.set(e.pointerId,{x:e.clientX,y:e.clientY});
-      try{ stage.setPointerCapture(e.pointerId); }catch(_){}
-      if(pointers.size===2){ const p=[...pointers.values()];
-        pinch0=Math.hypot(p[0].x-p[1].x,p[0].y-p[1].y); pinchFov0=tFov; }
-      e.preventDefault();
-    }
-    function move(e){
-      if(dead||!pointers.has(e.pointerId)) return;
-      lastInteract=performance.now();
-      const p=pointers.get(e.pointerId);
-      const dx=e.clientX-p.x, dy=e.clientY-p.y; p.x=e.clientX; p.y=e.clientY;
-      if(pointers.size===1){
-        const k=fov/Math.max(stage.clientHeight,1);      // deg per pixel
-        tLon-=dx*k; tLat=clamp(tLat+dy*k,-85,85);
-      }else if(pointers.size===2&&pinch0>0){
-        const q=[...pointers.values()];
-        const d=Math.hypot(q[0].x-q[1].x,q[0].y-q[1].y);
-        if(d>0) tFov=clamp(pinchFov0*pinch0/d,30,100);   // pinch zoom
-      }
-      e.preventDefault();
-    }
-    function up(e){ pointers.delete(e.pointerId); if(pointers.size<2) pinch0=0; }
-    function wheel(e){
-      if(dead||!currentSrc) return;
-      lastInteract=performance.now(); e.preventDefault();
-      tFov=clamp(tFov+e.deltaY*0.05,30,100);
-    }
-    function cacheTex(src,tex){
-      if(texCache.has(src)) return;
-      if(texCache.size>=8){ const cur=mesh.material.map;
-        texCache.forEach((t,s)=>{ if(t!==cur){ t.dispose(); texCache.delete(s); } }); }
-      texCache.set(src,tex);
-    }
-    function load(src){
-      if(dead||!renderer) return false;
-      currentSrc=src; lon=tLon; lat=tLat;                // hold view while swapping
-      if(cb.onLoading) cb.onLoading(true);
-      const apply=tex=>{
-        if(currentSrc!==src) return;
-        const img=tex.image, ratio=(img.width||2)/Math.max(img.height||1,1);
-        if(ratio<1.8){ fail(src); return; }              // not equirectangular → fallback
-        mesh.material.map=tex; mesh.material.color.set(0xffffff);
-        mesh.material.needsUpdate=true;
-        if(cb.onLoading) cb.onLoading(false);
+      loadedOptionsData[i] = {
+        cover: optionCovers[i],
+        d1, d2, mood,
+        renders,
+        panoramas,
+        cfg: PROJECT_CONFIG.options[i]
       };
-      if(texCache.has(src)) apply(texCache.get(src));
-      else loader.load(src,tex=>{
-        tex.anisotropy=renderer.capabilities.getMaxAnisotropy();
-        cacheTex(src,tex); apply(tex);
-      },undefined,()=>{ if(currentSrc===src) fail(src); });
-      return true;
+
+      // Immediately render active option if it's the current one
+      if(i === currentOptionIndex){
+        applyOptionUI(currentOptionIndex);
+      }
     }
-    function frame(){
-      if(!running) return;
-      raf=requestAnimationFrame(frame);
-      if(performance.now()-lastInteract>5000) tLon+=0.02;  // gentle idle spin
-      lon+=(tLon-lon)*0.16; lat+=(tLat-lat)*0.16; fov+=(tFov-fov)*0.16;
-      camera.fov=fov; camera.updateProjectionMatrix();
-      const phi=THREE.MathUtils.degToRad(90-lat), theta=THREE.MathUtils.degToRad(lon);
-      camera.lookAt(500*Math.sin(phi)*Math.cos(theta),500*Math.cos(phi),500*Math.sin(phi)*Math.sin(theta));
-      try{ renderer.render(scene,camera); }catch(err){ fail(currentSrc); }
-    }
-    function start(){ if(dead||!renderer||running) return; running=true; frame(); }
-    function stop(){ running=false; if(raf){ cancelAnimationFrame(raf); raf=null; } }
-    return { init, load, start, stop, resize, isAlive:()=>live&&!dead };
-  })();
-
-  function panoShowWebGL(){
-    document.getElementById("panoCanvas").style.display="block";
-    els.panoTrack.style.display="none";
-    document.getElementById("panoHint").textContent="Drag to look around · Scroll to zoom";
-  }
-  function panoShowLegacy(){
-    document.getElementById("panoCanvas").style.display="none";
-    els.panoTrack.style.display="";
-    document.getElementById("panoHint").textContent="Drag to slide";
-  }
-  const panoWebGL = Pano360Viewer.init({
-    stage: els.panoStage,
-    canvas: document.getElementById("panoCanvas"),
-    onLoading: show => document.getElementById("panoLoading").classList.toggle("show", !!show),
-    onFail: src => { panoShowLegacy(); if(src) legacyLoad(src); }
-  });
-  if(panoWebGL) panoShowWebGL(); else panoShowLegacy();
-
-  /* old slide-style viewer kept as automatic fallback */
-  const panoSlide={ active:false, startX:0, offset:0, singleWidth:0 };
-  function legacyLoad(src){
-    clear(els.panoTrack);
-    for(let k=0;k<3;k++) els.panoTrack.appendChild(imageOrPlaceholder(src));
-    requestAnimationFrame(()=>{
-      const single=els.panoTrack.children[0];
-      panoSlide.singleWidth=single?single.getBoundingClientRect().width:0;
-      panoSlide.offset=-panoSlide.singleWidth;
-      els.panoTrack.style.transform="translateX("+panoSlide.offset+"px)";
-    });
-  }
-  (function bindLegacyPano(){
-    const st=els.panoStage;
-    st.addEventListener("pointerdown",e=>{ panoSlide.active=true; panoSlide.startX=e.clientX;
-      try{ st.setPointerCapture(e.pointerId); }catch(_){} });
-    st.addEventListener("pointermove",e=>{
-      if(!panoSlide.active||Pano360Viewer.isAlive()) return;
-      const dx=e.clientX-panoSlide.startX;
-      let next=panoSlide.offset+dx; const w=panoSlide.singleWidth||1;
-      if(next>-0.02*w){ next-=w; panoSlide.startX=e.clientX; panoSlide.offset=next; }
-      if(next<-1.98*w){ next+=w; panoSlide.startX=e.clientX; panoSlide.offset=next; }
-      els.panoTrack.style.transform="translateX("+next+"px)";
-    });
-    const end=e=>{ if(!panoSlide.active) return; panoSlide.active=false; panoSlide.offset+=e.clientX-panoSlide.startX; };
-    st.addEventListener("pointerup",end); st.addEventListener("pointercancel",end);
-  })();
-
-  function renderPanoramaLocations(){
-    const a=assets();
-    clear(els.panoLocations);
-    document.getElementById("btnPanorama").style.display=a.panoramas.length?"":"none";
-    if(!a.panoramas.length){ if(state.vizMode==="panorama") setVizMode("renders"); return; }
-    a.panoramas.forEach((p,i)=>{
-      const btn=el("button","pano-loc"+(i===state.panoIndex?" active":""));
-      btn.appendChild(imageOrPlaceholder(pickVariant(p)));
-      btn.appendChild(el("span",null,"Location "+String(p.k).padStart(2,"0")));
-      btn.addEventListener("click",()=>selectPanorama(i));
-      els.panoLocations.appendChild(btn);
-    });
-    selectPanorama(Math.min(state.panoIndex,a.panoramas.length-1));
-  }
-  function selectPanorama(i){
-    const a=assets(); if(!a.panoramas.length) return;
-    state.panoIndex=Math.max(0,Math.min(i,a.panoramas.length-1));
-    const p=a.panoramas[state.panoIndex];
-    els.panoName.textContent="Location "+String(p.k).padStart(2,"0");
-    [...els.panoLocations.children].forEach((elx,idx)=>elx.classList.toggle("active",idx===state.panoIndex));
-    if(state.vizMode==="panorama") applyPanorama();
-  }
-  function applyPanorama(){
-    const a=assets(); const p=a.panoramas[state.panoIndex]; if(!p) return;
-    const src=pickVariant(p);
-    if(!(Pano360Viewer.isAlive()&&Pano360Viewer.load(src))) legacyLoad(src);
-  }
-  function refreshPanoramaFrame(){
-    const a=assets();
-    if(a && a.panoramas.length) renderPanoramaLocations(); // rebuilds thumbs for current time of day
   }
 
-  function setVizMode(mode){
-    state.vizMode=mode;
-    document.getElementById("btnRenders").classList.toggle("active",mode==="renders");
-    document.getElementById("btnPanorama").classList.toggle("active",mode==="panorama");
-    document.getElementById("rendersView").style.display=mode==="renders"?"":"none";
-    document.getElementById("panoramaView").style.display=mode==="panorama"?"":"none";
-    if(mode==="panorama"){ applyPanorama(); Pano360Viewer.resize(); Pano360Viewer.start(); }
-    else { Pano360Viewer.stop(); }
-  }
-  document.getElementById("btnRenders").addEventListener("click", () => setVizMode("renders"));
-  document.getElementById("btnPanorama").addEventListener("click", () => setVizMode("panorama"));
+  function renderCarousel(covers){
+    const track = document.getElementById("carouselTrack");
+    const dots = document.getElementById("carouselDots");
+    track.innerHTML = "";
+    dots.innerHTML = "";
 
-  /* ==========================================================================
-     DOCUMENTS
-     ========================================================================== */
-  function renderDocuments(){
-    const a = assets(); const meta = cfg().documents || {};
-    clear(els.docList);
-    els.section_documents.style.display = a.docFiles.length ? "" : "none";
-    a.docFiles.forEach(doc => {
-      const m = meta[doc.k] || {};
-      const row = el("div","doc-row");
-      const left = el("div",null,
-        '<div class="doc-name">'+escapeHtml(m.label || ("Document " + String(doc.k).padStart(2,"0")))+'</div>'+
-        '<div class="doc-file">o'+(state.optionIndex+1)+'-pdf'+doc.k+'.pdf</div>');
-      const link = document.createElement("a");
-      link.className = "doc-open"; link.textContent = "Open"; link.href = doc.src; link.target = "_blank"; link.rel = "noopener";
-      row.appendChild(left); row.appendChild(link);
-      els.docList.appendChild(row);
+    PROJECT_CONFIG.options.forEach((opt, idx) => {
+      const card = document.createElement("div");
+      card.className = "opt-card " + (idx === 0 ? "is-active" : "is-side-r");
+      card.tabIndex = 0;
+
+      const imgHtml = covers[idx] 
+        ? `<img src="${covers[idx]}" alt="${opt.styleName}">`
+        : `<div class="ph"><span>Missing cover</span><small>o${idx+1}.png</small></div>`;
+
+      card.innerHTML = `${imgHtml}
+        <div class="opt-card-label">
+          <div class="n">Option 0${idx+1}</div>
+          <div class="s">${opt.styleName}</div>
+        </div>`;
+
+      card.onclick = () => selectOption(idx);
+      track.appendChild(card);
+
+      const dot = document.createElement("button");
+      dot.className = "carousel-dot " + (idx === 0 ? "active" : "");
+      dot.onclick = () => selectOption(idx);
+      dots.appendChild(dot);
     });
   }
 
-  /* ==========================================================================
-     SHARED LIGHTBOX (with zoom / pan / thumbnails / keyboard)
-     ========================================================================== */
-  const lbEls = {
-    box: document.getElementById("lightbox"), img: document.getElementById("lbImg"),
-    title: document.getElementById("lbTitle"), sub: document.getElementById("lbSub"),
-    thumbs: document.getElementById("lbThumbs"), body: document.getElementById("lbBody")
-  };
-  let lb = { items: [], index: 0, kind: "", zoom:1, panX:0, panY:0, dragging:false, lastX:0, lastY:0 };
-  let lbMoved = false;
+  function selectOption(index){
+    currentOptionIndex = index;
+    const cards = document.querySelectorAll(".opt-card");
+    const dots = document.querySelectorAll(".carousel-dot");
 
-  function openLightbox(items, index, kind){
-    lb.items = items; lb.index = index; lb.kind = kind; lbMoved = false;
-    lbEls.box.classList.add("open"); document.body.style.overflow = "hidden";
-    renderLbFrame(); renderLbThumbs();
-  }
-  function closeLightbox(){ lbEls.box.classList.remove("open"); document.body.style.overflow = ""; }
-  function applyLbTransform(){
-    lbEls.img.style.transform = "translate(" + lb.panX + "px," + lb.panY + "px) scale(" + lb.zoom + ")";
-  }
-  function renderLbFrame(){
-    const item = lb.items[lb.index];
-    if(!item) return;
-    lb.zoom=1; lb.panX=0; lb.panY=0;
-    lbEls.img.style.transform = "translate(0px,0px) scale(1)";
-    lbEls.title.textContent = item.title || "";
-    lbEls.sub.textContent = lb.kind + " · " + (lb.index+1) + " / " + lb.items.length;
-    if(item.image){ lbEls.img.style.display=""; lbEls.img.src = item.image; lbEls.img.alt = item.title||""; }
-    else { lbEls.img.style.display="none"; lbEls.img.src=""; }
-  }
-  function renderLbThumbs(){
-    clear(lbEls.thumbs);
-    lb.items.forEach((item, i) => {
-      if(!item.image) return;
-      const t = document.createElement("img");
-      t.src = item.image; t.alt = "";
-      if(i === lb.index) t.classList.add("active");
-      t.addEventListener("click", () => { lb.index = i; renderLbFrame(); renderLbThumbs(); });
-      lbEls.thumbs.appendChild(t);
+    cards.forEach((card, idx) => {
+      card.className = "opt-card " + (idx === index ? "is-active" : (idx < index ? "is-side-l" : "is-side-r"));
     });
-    lbEls.thumbs.style.display = lb.items.length > 1 ? "" : "none";
+    dots.forEach((dot, idx) => dot.classList.toggle("active", idx === index));
+
+    applyOptionUI(index);
   }
-  function lbGo(delta){
-    if(lb.items.length < 2) return;
-    lb.index = (lb.index + delta + lb.items.length) % lb.items.length;
-    renderLbFrame(); renderLbThumbs();
+
+  function applyOptionUI(index){
+    const data = loadedOptionsData[index];
+    if(!data) return;
+
+    document.getElementById("navOptionLabel").textContent = `Option 0${index+1} — ${data.cfg.styleName}`;
+
+    // Update Style & Mood
+    document.getElementById("dirText").textContent = data.cfg.directionText;
+    document.getElementById("moodCaption").textContent = data.cfg.moodCaption;
+
+    const dirImg1 = document.getElementById("dirImg1");
+    dirImg1.innerHTML = data.d1 
+      ? `<img src="${data.d1}" alt="Style 1">` 
+      : `<div class="ph"><span>Missing image</span><small>o${index+1}-d1.png</small></div>`;
+
+    const moodImg = document.getElementById("moodImg");
+    moodImg.innerHTML = data.mood 
+      ? `<img src="${data.mood}" alt="Mood">` 
+      : `<div class="ph"><span>Missing image</span><small>o${index+1}-m1.png</small></div>`;
+
+    // Render Grid Visualization
+    renderGrid(data.renders);
+
+    // Render 360 Panorama View
+    initPanorama(data.panoramas);
   }
-  document.getElementById("lbClose").addEventListener("click", closeLightbox);
-  document.getElementById("lbPrev").addEventListener("click", () => lbGo(-1));
-  document.getElementById("lbNext").addEventListener("click", () => lbGo(1));
-  document.addEventListener("keydown", e => {
-    if(!lbEls.box.classList.contains("open")) return;
-    if(e.key === "Escape") closeLightbox();
-    else if(e.key === "ArrowLeft") lbGo(-1);
-    else if(e.key === "ArrowRight") lbGo(1);
-  });
-  lbEls.box.addEventListener("click", e => {
-    if(lbMoved){ lbMoved = false; return; }   // ignore the click that ends a pan/pinch
-    if(e.target === lbEls.box || e.target === lbEls.body) closeLightbox();
-  });
-  lbEls.box.addEventListener("wheel", e => {
-    if(!lbEls.box.classList.contains("open")) return;
-    e.preventDefault();
-    const prev = lb.zoom;
-    lb.zoom = Math.min(6, Math.max(1, lb.zoom * (e.deltaY < 0 ? 1.15 : 1/1.15)));
-    if(lb.zoom === 1){ lb.panX = 0; lb.panY = 0; }
-    else if(lb.zoom !== prev){
-      const r = lbEls.img.getBoundingClientRect();
-      const cx = e.clientX - (r.left + r.width/2);
-      const cy = e.clientY - (r.top + r.height/2);
-      const k = lb.zoom / prev;
-      lb.panX = cx - k*(cx - lb.panX);
-      lb.panY = cy - k*(cy - lb.panY);
-    }
-    applyLbTransform();
-  }, {passive:false});
-  (function lbPointerZoomPan(){
-    const ptrs = new Map(); let pinch0 = 0, zoom0 = 1;
-    lbEls.body.addEventListener("pointerdown", e => {
-      if(e.target.closest(".lb-arrow")) return;
-      ptrs.set(e.pointerId, {x:e.clientX, y:e.clientY});
-      try{ lbEls.body.setPointerCapture(e.pointerId); }catch(_){}
-      if(ptrs.size === 1){ lb.dragging = true; lb.lastX = e.clientX; lb.lastY = e.clientY; }
-      if(ptrs.size === 2){
-        const p = [...ptrs.values()];
-        pinch0 = Math.hypot(p[0].x-p[1].x, p[0].y-p[1].y); zoom0 = lb.zoom;
-        lb.dragging = false;
+
+  /* TASK 3: DAY/NIGHT SWITCH & DUAL-LAYER CROSS-FADE */
+  function toggleDayNight(forceState){
+    isNightMode = typeof forceState === "boolean" ? forceState : !isNightMode;
+
+    const switches = [
+      { btn: "bulbSwitchMain", tag: "bulbTagMain" },
+      { btn: "bulbSwitchPano", tag: "bulbTagPano" },
+      { btn: "bulbSwitchLb",   tag: "bulbTagLb"   }
+    ];
+
+    switches.forEach(s => {
+      const el = document.getElementById(s.btn);
+      const tag = document.getElementById(s.tag);
+      if(el){
+        el.classList.toggle("is-on", isNightMode);
+      }
+      if(tag){
+        tag.textContent = isNightMode ? "Light On" : "Light Off";
       }
     });
-    lbEls.body.addEventListener("pointermove", e => {
-      if(!ptrs.has(e.pointerId)) return;
-      const p = ptrs.get(e.pointerId); p.x = e.clientX; p.y = e.clientY;
-      if(ptrs.size === 1 && lb.dragging && lb.zoom > 1){
-        lb.panX += e.clientX - lb.lastX; lb.panY += e.clientY - lb.lastY;
-        lb.lastX = e.clientX; lb.lastY = e.clientY;
-        lbMoved = true;
-        applyLbTransform();
-      } else if(ptrs.size === 2 && pinch0 > 0){
-        const q = [...ptrs.values()];
-        const d = Math.hypot(q[0].x-q[1].x, q[0].y-q[1].y);
-        if(d > 0){
-          lb.zoom = Math.min(6, Math.max(1, zoom0 * d / pinch0));
-          if(lb.zoom === 1){ lb.panX = 0; lb.panY = 0; }
-          lbMoved = true;
-          applyLbTransform();
-        }
-      }
+
+    document.body.classList.toggle("is-night-mode", isNightMode);
+
+    // Trigger Three.js panorama lerp target update
+    if(panoSceneState){
+      panoSceneState.targetNightOpacity = isNightMode ? 1.0 : 0.0;
+    }
+  }
+
+  function renderGrid(renders){
+    const grid = document.getElementById("renderGrid");
+    grid.innerHTML = "";
+
+    if(!renders || renders.length === 0){
+      grid.innerHTML = `<div class="empty-note">No render images found for this option.</div>`;
+      return;
+    }
+
+    renders.forEach((r, idx) => {
+      const card = document.createElement("a");
+      card.href = "javascript:void(0)";
+      
+      const mornSrc = r.morning || r.night;
+      const nightSrc = r.night || r.morning;
+
+      card.innerHTML = `
+        <div class="dual-img-container">
+          <img class="img-morning" src="${mornSrc}" alt="Render ${r.k} Day" loading="lazy">
+          <img class="img-night" src="${nightSrc}" alt="Render ${r.k} Night" loading="lazy">
+        </div>
+        <div class="render-cap">Render 0${r.k}</div>
+      `;
+
+      card.onclick = () => openLightbox(renders, idx);
+      grid.appendChild(card);
     });
-    const end = e => {
-      ptrs.delete(e.pointerId);
-      if(ptrs.size < 2) pinch0 = 0;
-      if(ptrs.size === 0) lb.dragging = false;
-      else if(ptrs.size === 1){ const p=[...ptrs.values()][0]; lb.dragging=true; lb.lastX=p.x; lb.lastY=p.y; }
+  }
+
+  /* THREE.JS PANORAMA VIEWER WITH SEAMLESS 60FPS BLEND */
+  let panoSceneState = null;
+
+  function initPanorama(panoramas){
+    const container = document.getElementById("panoStage");
+    const canvas = document.getElementById("panoCanvas");
+    const locsContainer = document.getElementById("panoLocations");
+
+    locsContainer.innerHTML = "";
+
+    if(!panoramas || panoramas.length === 0){
+      canvas.style.display = "none";
+      return;
+    }
+    canvas.style.display = "block";
+
+    panoramas.forEach((p, idx) => {
+      const btn = document.createElement("button");
+      btn.className = "pano-loc " + (idx === 0 ? "active" : "");
+      btn.innerHTML = `<img src="${p.morning || p.night}" alt=""><span>Location 0${p.k}</span>`;
+      btn.onclick = () => {
+        document.querySelectorAll(".pano-loc").forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        loadPanoramaTexture(p);
+      };
+      locsContainer.appendChild(btn);
+    });
+
+    if(!panoSceneState){
+      const scene = new THREE.Scene();
+      const camera = new THREE.PerspectiveCamera(75, container.clientWidth / container.clientHeight, 1, 1100);
+      const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
+      renderer.setSize(container.clientWidth, container.clientHeight);
+
+      const geo = new THREE.SphereGeometry(500, 60, 40);
+      geo.scale(-1, 1, 1);
+
+      const matMorning = new THREE.MeshBasicMaterial({ transparent: true, opacity: 1 });
+      const matNight   = new THREE.MeshBasicMaterial({ transparent: true, opacity: 0 });
+
+      const meshMorning = new THREE.Mesh(geo, matMorning);
+      const meshNight   = new THREE.Mesh(geo, matNight);
+
+      scene.add(meshMorning);
+      scene.add(meshNight);
+
+      panoSceneState = {
+        scene, camera, renderer,
+        meshMorning, meshNight,
+        matMorning, matNight,
+        lat: 0, lon: 0,
+        currentNightOpacity: isNightMode ? 1.0 : 0.0,
+        targetNightOpacity: isNightMode ? 1.0 : 0.0
+      };
+
+      // Controls
+      let isDragging = false, onPointerDownPointerX = 0, onPointerDownPointerY = 0, onPointerDownLon = 0, onPointerDownLat = 0;
+
+      container.onpointerdown = (e) => {
+        isDragging = true;
+        onPointerDownPointerX = e.clientX;
+        onPointerDownPointerY = e.clientY;
+        onPointerDownLon = panoSceneState.lon;
+        onPointerDownLat = panoSceneState.lat;
+      };
+
+      window.onpointermove = (e) => {
+        if(!isDragging) return;
+        panoSceneState.lon = (onPointerDownPointerX - e.clientX) * 0.1 + onPointerDownLon;
+        panoSceneState.lat = (e.clientY - onPointerDownPointerY) * 0.1 + onPointerDownLat;
+      };
+
+      window.onpointerup = () => { isDragging = false; };
+
+      container.onwheel = (e) => {
+        e.preventDefault();
+        camera.fov = Math.max(30, Math.min(90, camera.fov + e.deltaY * 0.05));
+        camera.updateProjectionMatrix();
+      };
+
+      function animate(){
+        requestAnimationFrame(animate);
+
+        // Smooth day/night lighting blend
+        panoSceneState.currentNightOpacity += (panoSceneState.targetNightOpacity - panoSceneState.currentNightOpacity) * 0.08;
+        panoSceneState.matNight.opacity = panoSceneState.currentNightOpacity;
+
+        panoSceneState.lat = Math.max(-85, Math.min(85, panoSceneState.lat));
+        const phi = THREE.MathUtils.degToRad(90 - panoSceneState.lat);
+        const theta = THREE.MathUtils.degToRad(panoSceneState.lon);
+
+        camera.target = new THREE.Vector3(
+          500 * Math.sin(phi) * Math.cos(theta),
+          500 * Math.cos(phi),
+          500 * Math.sin(phi) * Math.sin(theta)
+        );
+        camera.lookAt(camera.target);
+        renderer.render(scene, camera);
+      }
+      animate();
+    }
+
+    loadPanoramaTexture(panoramas[0]);
+  }
+
+  function loadPanoramaTexture(pItem){
+    if(!panoSceneState) return;
+    const loader = new THREE.TextureLoader();
+    const loaderEl = document.getElementById("panoLoading");
+    loaderEl.classList.add("show");
+
+    let loaded = 0;
+    const checkDone = () => {
+      loaded++;
+      if(loaded >= 1) loaderEl.classList.remove("show");
     };
-    lbEls.body.addEventListener("pointerup", end);
-    lbEls.body.addEventListener("pointercancel", end);
-  })();
 
-  /* ==========================================================================
-     BOOT — resolve assets per option, then render the active one
-     ========================================================================== */
-  function requestAssets(i){
-    if(!state.assetPending[i]){
-      state.assetPending[i] = resolveOption(i+1).then(a => {
-        state.assetCache[i] = a;
-        fillCarouselCover(i, a.cover);
-        return a;
+    if(pItem.morning){
+      loader.load(pItem.morning, (tex) => {
+        panoSceneState.matMorning.map = tex;
+        panoSceneState.matMorning.needsUpdate = true;
+        checkDone();
       });
     }
-    return state.assetPending[i];
-  }
-  async function loadAndRenderOption(i){
-    const a = await requestAssets(i);
-    if(state.optionIndex !== i) return;   // user switched options while loading
-    renderStyleAndMood();
-    renderLayoutTabs(); renderPlan();
-    renderFurniture(); renderMaterials();
-    renderTodToggle(); renderRenders(); renderPanoramaLocations();
-    renderDocuments();
+    if(pItem.night){
+      loader.load(pItem.night, (tex) => {
+        panoSceneState.matNight.map = tex;
+        panoSceneState.matNight.needsUpdate = true;
+        checkDone();
+      });
+    }
   }
 
-  renderHeader();
-  renderCarouselShell();
-  selectOption(0);
-  // warm-cache the other options so their covers fill in and switching is instant
-  for(let j=1; j<PROJECT_CONFIG.options.length; j++) requestAssets(j);
+  /* FULLSCREEN LIGHTBOX WITH HANGING BULB SWITCH */
+  let currentRenders = [];
+  let currentLbIndex = 0;
 
-  /* mobile nav toggle */
-  document.getElementById("navToggle").addEventListener("click", () => {
-    document.getElementById("navLinks").classList.toggle("open");
+  function openLightbox(renders, index){
+    currentRenders = renders;
+    currentLbIndex = index;
+
+    const lb = document.getElementById("lightbox");
+    lb.classList.add("open");
+
+    updateLightboxView();
+  }
+
+  function updateLightboxView(){
+    const r = currentRenders[currentLbIndex];
+    if(!r) return;
+
+    document.getElementById("lbTitle").textContent = `Render 0${r.k}`;
+    document.getElementById("lbSub").textContent = `${currentLbIndex + 1} / ${currentRenders.length}`;
+
+    const mornImg = document.getElementById("lbImgMorning");
+    const nightImg = document.getElementById("lbImgNight");
+
+    mornImg.src = r.morning || r.night;
+    nightImg.src = r.night || r.morning;
+
+    const thumbs = document.getElementById("lbThumbs");
+    thumbs.innerHTML = "";
+    currentRenders.forEach((rn, i) => {
+      const t = document.createElement("img");
+      t.src = rn.morning || rn.night;
+      t.className = i === currentLbIndex ? "active" : "";
+      t.onclick = () => { currentLbIndex = i; updateLightboxView(); };
+      thumbs.appendChild(t);
+    });
+  }
+
+  // Event Listeners Initialization
+  document.addEventListener("DOMContentLoaded", () => {
+    // Hanging Light Bulb Toggles
+    document.getElementById("bulbSwitchMain").onclick = () => toggleDayNight();
+    document.getElementById("bulbSwitchPano").onclick = () => toggleDayNight();
+    document.getElementById("bulbSwitchLb").onclick   = () => toggleDayNight();
+
+    // View Switching (Renders vs Panorama)
+    const btnRenders = document.getElementById("btnRenders");
+    const btnPanorama = document.getElementById("btnPanorama");
+    const rendersView = document.getElementById("rendersView");
+    const panoramaView = document.getElementById("panoramaView");
+
+    btnRenders.onclick = () => {
+      btnRenders.classList.add("active");
+      btnPanorama.classList.remove("active");
+      rendersView.style.display = "block";
+      panoramaView.style.display = "none";
+    };
+
+    btnPanorama.onclick = () => {
+      btnPanorama.classList.add("active");
+      btnRenders.classList.remove("active");
+      rendersView.style.display = "none";
+      panoramaView.style.display = "block";
+    };
+
+    // Style & Mood tabs
+    const smTabStyle = document.getElementById("smTabStyle");
+    const smTabMood  = document.getElementById("smTabMood");
+    const smTrack    = document.getElementById("smTrack");
+
+    smTabStyle.onclick = () => {
+      smTabStyle.classList.add("active");
+      smTabMood.classList.remove("active");
+      smTrack.style.transform = "translateX(0%)";
+    };
+    smTabMood.onclick = () => {
+      smTabMood.classList.add("active");
+      smTabStyle.classList.remove("active");
+      smTrack.style.transform = "translateX(-50%)";
+    };
+
+    document.getElementById("smPrev").onclick = () => smTabStyle.click();
+    document.getElementById("smNext").onclick = () => smTabMood.click();
+
+    // Lightbox Controls
+    document.getElementById("lbClose").onclick = () => {
+      document.getElementById("lightbox").classList.remove("open");
+    };
+    document.getElementById("lbPrev").onclick = () => {
+      if(currentLbIndex > 0){ currentLbIndex--; updateLightboxView(); }
+    };
+    document.getElementById("lbNext").onclick = () => {
+      if(currentLbIndex < currentRenders.length - 1){ currentLbIndex++; updateLightboxView(); }
+    };
+
+    // Start prioritized loading sequence
+    loadProjectData();
   });
-  document.querySelectorAll("#navLinks a").forEach(a2 => a2.addEventListener("click", () => {
-    document.getElementById("navLinks").classList.remove("open");
-  }));
+
 })();
 </script>
-
-
-</body></html>
+</body>
+</html>
