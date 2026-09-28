@@ -1,1219 +1,1293 @@
 <!DOCTYPE html>
-<!-- saved from url=(0059)https://fareskahri-crypto.github.io/narcisse/#visualization -->
-<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Project Presentation</title>
-<link rel="icon" href="data:,">
-<link rel="preconnect" href="https://fonts.googleapis.com/">
-<link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin="">
-<link href="./001 Project Presentation_files/css2" rel="stylesheet">
-<!-- three.js — powers the true 360° panorama viewer -->
-<script src="./001 Project Presentation_files/three.min.js.download"></script>
-<style>
-:root{
-  --paper:     #F2F0EA;
-  --paper-2:   #E8E5DD;
-  --ink:       #17181B;
-  --ink-soft:  #46453F;
-  --line:      #D8D3C7;
-  --muted:     #8C8578;
-  --accent:    #7A6337;
-  --accent-2:  #5B4B2A;
-  --white:     #FDFCFA;
-  --black:     #0B0B0A;
+    <title>Architectural Visualization — Cinematic Showcase</title>
 
-  --serif: 'Fraunces', 'Iowan Old Style', 'Palatino Linotype', serif;
-  --sans:  'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    <style>
+        /* =========================================================
+           RESET / BASE
+        ========================================================= */
 
-  --gutter: clamp(20px, 4vw, 64px);
-  --radius: 2px;
-  --ease: cubic-bezier(.22,.61,.36,1);
-}
-*{box-sizing:border-box;}
-html{scroll-behavior:smooth; scroll-padding-top:76px;}
-body{margin:0; background:var(--paper); color:var(--ink); font-family:var(--sans); font-size:15px; line-height:1.6; -webkit-font-smoothing:antialiased;}
-img{max-width:100%; display:block;}
-button{font-family:inherit; cursor:pointer;}
-a{color:inherit;}
-:focus-visible{outline:2px solid var(--accent); outline-offset:3px;}
-@media (prefers-reduced-motion: reduce){ *{animation-duration:.001ms !important; transition-duration:.001ms !important;} }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
 
-.wrap{max-width:1360px; margin:0 auto; padding-left:var(--gutter); padding-right:var(--gutter);}
-.eyebrow{font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:var(--muted); font-weight:500;}
-h1,h2,h3{font-family:var(--serif); font-weight:440; margin:0; letter-spacing:-.01em;}
+        html,
+        body {
+            width: 100%;
+            min-height: 100%;
+            background: #080808;
+            color: #fff;
+            font-family: Arial, Helvetica, sans-serif;
+        }
 
-/* ---- top nav ---- */
-.topnav{position:sticky; top:0; z-index:40; background:rgba(242,240,234,.92); backdrop-filter:blur(10px); border-bottom:1px solid var(--line);}
-.topnav-inner{display:flex; align-items:center; justify-content:space-between; height:60px; gap:24px;}
-.topnav-id{font-family:var(--serif); font-size:16px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:40vw;}
-.topnav-links{display:flex; gap:26px; list-style:none; margin:0; padding:0;}
-.topnav-links a{font-size:12.5px; letter-spacing:.06em; text-transform:uppercase; text-decoration:none; color:var(--ink-soft); padding:4px 0; border-bottom:1px solid transparent;}
-.topnav-links a:hover{color:var(--ink); border-color:var(--line);}
-.option-pill{display:flex; align-items:center; gap:8px; border:1px solid var(--line); border-radius:999px; padding:6px 14px 6px 8px; font-size:12px; white-space:nowrap; background:var(--white);}
-.option-pill .dot{width:6px; height:6px; border-radius:50%; background:var(--accent);}
-.nav-toggle{display:none; background:none; border:1px solid var(--line); padding:8px 10px; border-radius:2px;}
-@media (max-width:860px){
-  .topnav-links{position:fixed; inset:60px 0 auto 0; background:var(--paper); flex-direction:column; padding:18px var(--gutter) 22px; gap:14px; border-bottom:1px solid var(--line); transform:translateY(-8px); opacity:0; pointer-events:none; transition:opacity .2s var(--ease), transform .2s var(--ease);}
-  .topnav-links.open{opacity:1; transform:translateY(0); pointer-events:auto;}
-  .nav-toggle{display:block;}
-}
+        body {
+            overflow-x: hidden;
+        }
 
-/* ---- header / identity ---- */
-.header{padding:56px 0 40px; border-bottom:1px solid var(--line);}
-.header-top{display:flex; justify-content:space-between; align-items:flex-end; gap:32px; flex-wrap:wrap; margin-bottom:44px;}
-.project-title{font-size:clamp(34px,5.4vw,58px); line-height:1.02;}
-.project-meta{display:flex; gap:28px; flex-wrap:wrap; margin-top:16px;}
-.project-meta div{font-size:13px; color:var(--ink-soft);}
-.project-meta span{display:block; color:var(--muted); font-size:10.5px; letter-spacing:.12em; text-transform:uppercase; margin-bottom:3px;}
-.version-tag{font-size:12px; color:var(--muted); text-align:right; line-height:1.5;}
+        button {
+            font: inherit;
+        }
 
-/* ---- option carousel ---- */
-.carousel-region{position:relative;}
-.carousel-track{display:flex; align-items:center; justify-content:center; padding:36px 0 18px; position:relative; perspective:1400px; touch-action:pan-y;}
-.opt-card{position:relative; flex:0 0 auto; width:min(300px, 62vw); aspect-ratio:4/3; margin:0 -34px; cursor:pointer; border:1px solid var(--line); background:var(--paper-2); overflow:hidden; border-radius:var(--radius); transform-origin:center; transition:transform .55s var(--ease), filter .55s var(--ease), opacity .55s var(--ease), z-index 0s .2s; filter:saturate(.75) brightness(.86); opacity:.72;}
-.opt-card img{width:100%; height:100%; object-fit:cover;}
-.opt-card .opt-card-label{position:absolute; left:0; right:0; bottom:0; padding:14px 16px; background:linear-gradient(0deg, rgba(11,11,10,.72), rgba(11,11,10,0)); color:var(--white);}
-.opt-card .opt-card-label .n{font-size:10.5px; letter-spacing:.14em; text-transform:uppercase; opacity:.8;}
-.opt-card .opt-card-label .s{font-family:var(--serif); font-size:19px; margin-top:2px;}
-.opt-card.is-active{z-index:5; opacity:1; filter:none; transform:translateZ(0) scale(1.14); box-shadow:0 30px 60px -22px rgba(11,11,10,.35); border-color:var(--ink);}
-.opt-card.is-side-l{transform:translateX(6%) translateZ(-120px) rotateY(10deg) scale(.86); z-index:3;}
-.opt-card.is-side-r{transform:translateX(-6%) translateZ(-120px) rotateY(-10deg) scale(.86); z-index:3;}
-.opt-card.is-far{transform:translateZ(-260px) scale(.72); z-index:1; opacity:.4;}
-.opt-card.is-active::after{content:""; position:absolute; top:10px; right:10px; width:9px; height:9px; border-radius:50%; background:var(--accent); box-shadow:0 0 0 3px rgba(253,252,250,.85);}
-.carousel-nav{display:flex; justify-content:center; gap:10px; margin-top:6px;}
-.carousel-dot{width:22px; height:2px; background:var(--line); border:0; padding:0; transition:background .2s;}
-.carousel-dot.active{background:var(--ink);}
-@media (max-width:640px){ .opt-card{margin:0 -46px;} }
+        /* =========================================================
+           MAIN SHOWCASE
+        ========================================================= */
 
-/* ---- section scaffold ---- */
-section{padding:88px 0;}
-section + section{border-top:1px solid var(--line);}
-.section-head{margin-bottom:44px; display:flex; justify-content:space-between; align-items:flex-end; gap:20px; flex-wrap:wrap;}
-.section-title{font-size:clamp(24px,3vw,34px);}
+        .showcase {
+            width: 100%;
+            min-height: 100vh;
+            background: #080808;
+        }
 
-/* ---- style & mood combined slider ---- */
-.sm-head{display:flex; align-items:center; justify-content:space-between; margin-bottom:30px;}
-.sm-tabs{display:flex; gap:8px;}
-.sm-tab{border:1px solid var(--line); background:var(--white); padding:8px 16px; font-size:12px; letter-spacing:.05em; text-transform:uppercase; color:var(--ink-soft);}
-.sm-tab.active{background:var(--ink); color:var(--white); border-color:var(--ink);}
-.sm-arrows{display:flex; gap:8px;}
-.sm-arrow{width:38px; height:38px; border:1px solid var(--line); background:var(--white); font-size:16px; color:var(--ink-soft);}
-.sm-arrow:hover{border-color:var(--ink); color:var(--ink);}
-.sm-viewport{overflow:hidden; position:relative;}
-.sm-track{display:flex; width:200%; transition:transform .5s var(--ease);}
-.sm-slide{width:50%; flex:0 0 auto;}
+        /* =========================================================
+           HEADER
+        ========================================================= */
 
-.direction-grid{display:grid; grid-template-columns:1.1fr .9fr; gap:0 40px; align-items:start;}
-.direction-media{position:relative; min-height:420px;}
-.direction-media .m1{width:78%; position:relative; z-index:2;}
-.direction-media .m2{width:52%; position:absolute; right:0; bottom:-48px; z-index:1; border:6px solid var(--paper);}
-.direction-text{padding-top:26px;}
-.direction-text p{color:var(--ink-soft); font-size:16px; max-width:46ch;}
-@media (max-width:900px){ .direction-grid{grid-template-columns:1fr; gap:64px 0;} .direction-media{min-height:340px;} }
+        .header {
+            position: fixed;
+            z-index: 1000;
+            top: 0;
+            left: 0;
 
-.mood-single{display:grid; grid-template-columns:1.3fr .7fr; gap:40px; align-items:center;}
-.mood-single .mood-img{width:100%;}
-.mood-caption{color:var(--ink-soft); font-size:16px;}
-@media (max-width:900px){ .mood-single{grid-template-columns:1fr;} }
+            width: 100%;
+            height: 72px;
 
-/* ---- placeholder tile ---- */
-.ph{display:flex; align-items:center; justify-content:center; flex-direction:column; gap:6px; width:100%; height:100%; min-height:160px; background:repeating-linear-gradient(135deg, var(--paper-2), var(--paper-2) 10px, #DEDBD1 10px, #DEDBD1 11px); color:var(--muted); text-align:center; padding:8px;}
-.ph span{font-size:10px; letter-spacing:.06em; text-transform:uppercase;}
-.ph small{font-size:9.5px; opacity:.75; word-break:break-all;}
-.direction-media .ph{min-height:420px;}
-#planFrame .ph{min-height:420px;}
-.skeleton-tile{background:linear-gradient(90deg, var(--paper-2) 25%, #EDEAE2 37%, var(--paper-2) 63%); background-size:400% 100%; animation:sk 1.4s ease infinite; min-height:160px; width:100%; height:100%;}
-@keyframes sk{0%{background-position:100% 0;}100%{background-position:0 0;}}
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
 
-/* ---- layout ---- */
-.layout-tabs{display:flex; gap:10px; flex-wrap:wrap; margin-bottom:32px;}
-.layout-tab{border:1px solid var(--line); background:var(--white); padding:10px 16px; font-size:12.5px; letter-spacing:.03em; border-radius:999px; color:var(--ink-soft); transition:all .2s;}
-.layout-tab.active{background:var(--ink); color:var(--white); border-color:var(--ink);}
-.plan-frame{position:relative; border:1px solid var(--line); background:var(--white);}
-.plan-frame img{width:100%; display:block;}
-.tech-group-title{font-size:13px; letter-spacing:.06em; text-transform:uppercase; color:var(--muted); margin-bottom:14px;}
-.tech-row{display:grid; grid-template-columns:repeat(auto-fill, minmax(190px,1fr)); gap:16px;}
-.tech-card{border:1px solid var(--line); background:var(--white); cursor:pointer;}
-.tech-card .thumb{aspect-ratio:4/3; overflow:hidden; background:var(--paper-2);}
-.tech-card .thumb img{width:100%; height:100%; object-fit:cover;}
-.tech-card .label{padding:10px 12px; font-size:12.5px; border-top:1px solid var(--line);}
+            padding: 0 32px;
 
-/* ---- furniture / materials ---- */
-.grid-4{display:grid; grid-template-columns:repeat(4,1fr); gap:22px;}
-.item-card{border:1px solid var(--line); background:var(--white);}
-.item-card .thumb{aspect-ratio:4/3; overflow:hidden; background:var(--paper-2);}
-.item-card .thumb img{width:100%; height:100%; object-fit:cover;}
-.item-card .body{padding:14px 15px 16px;}
-.item-card .kicker{font-size:10.5px; letter-spacing:.08em; text-transform:uppercase; color:var(--muted);}
-.item-card h4{font-family:var(--serif); font-size:16.5px; font-weight:440; margin:3px 0 8px;}
-.item-card dl{display:grid; grid-template-columns:auto 1fr; gap:3px 10px; margin:0; font-size:12.5px;}
-.item-card dt{color:var(--muted);}
-.item-card dd{margin:0; color:var(--ink-soft); text-align:right;}
-@media (max-width:960px){.grid-4{grid-template-columns:repeat(2,1fr);}}
-@media (max-width:520px){.grid-4{grid-template-columns:1fr;}}
+            pointer-events: none;
 
-/* ---- visualization ---- */
-.viz-controls{display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:16px; margin-bottom:34px;}
-.viz-toggle{display:inline-flex; border:1px solid var(--ink);}
-.viz-toggle button{padding:10px 22px; background:none; border:0; font-size:12.5px; letter-spacing:.08em; text-transform:uppercase; color:var(--ink-soft);}
-.viz-toggle button.active{background:var(--ink); color:var(--white);}
-.tod-toggle{display:inline-flex; border:1px solid var(--line); border-radius:999px; overflow:hidden;}
-.tod-toggle button{padding:8px 18px; background:var(--white); border:0; font-size:12px; letter-spacing:.04em; color:var(--ink-soft); display:flex; align-items:center; gap:6px;}
-.tod-toggle button.active{background:var(--accent); color:var(--white);}
-.render-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:14px;}
-.render-grid a{position:relative; display:block; aspect-ratio:4/3; overflow:hidden; background:var(--paper-2); cursor:zoom-in;}
-.render-grid img{width:100%; height:100%; object-fit:cover; transition:transform .5s var(--ease), opacity .25s;}
-.render-grid a:hover img{transform:scale(1.035);}
-.render-cap{position:absolute; left:0; right:0; bottom:0; padding:9px 12px; font-size:11.5px; color:var(--white); background:linear-gradient(0deg, rgba(11,11,10,.62), rgba(11,11,10,0));}
-@media (max-width:900px){.render-grid{grid-template-columns:repeat(2,1fr);}}
-@media (max-width:560px){.render-grid{grid-template-columns:1fr;}}
+            background: linear-gradient(
+                to bottom,
+                rgba(0,0,0,.55),
+                rgba(0,0,0,0)
+            );
+        }
 
-.pano-stage{position:relative; background:var(--black); border:1px solid var(--ink); overflow:hidden; height:min(62vh, 560px); touch-action:none; cursor:grab;}
-.pano-stage:active{cursor:grabbing;}
-.pano-img-track{position:absolute; top:0; left:0; height:100%; display:flex; will-change:transform;}
-.pano-img-track img{height:100%; width:auto; max-width:none; user-select:none; -webkit-user-drag:none;}
-.pano-stage canvas{position:absolute; top:0; left:0; width:100%; height:100%; display:block;}
-.pano-label{position:absolute; left:20px; top:18px; color:var(--white); z-index:2;}
-.pano-label .eyebrow{color:rgba(255,255,255,.65);}
-.pano-label .name{font-family:var(--serif); font-size:20px; color:var(--white); margin-top:2px;}
-.pano-hint{position:absolute; right:20px; bottom:16px; color:rgba(255,255,255,.55); font-size:11px; z-index:2;}
-.pano-loading{position:absolute; inset:0; z-index:3; display:flex; align-items:center; justify-content:center; background:rgba(11,11,10,.55); color:rgba(255,255,255,.85); font-size:11px; letter-spacing:.12em; text-transform:uppercase; opacity:0; pointer-events:none; transition:opacity .25s var(--ease);}
-.pano-loading.show{opacity:1;}
-.pano-locations{display:flex; gap:10px; margin-top:16px; overflow-x:auto;}
-.pano-loc{flex:0 0 auto; border:1px solid var(--line); background:var(--white); padding:8px 10px 8px 8px; display:flex; align-items:center; gap:8px; font-size:12px;}
-.pano-loc.active{border-color:var(--ink);}
-.pano-loc img{width:44px; height:32px; object-fit:cover;}
-.empty-note{color:var(--muted); font-size:13.5px;}
+        .project-title,
+        .header-right {
+            pointer-events: auto;
+        }
 
-/* ---- documents ---- */
-.doc-list{border-top:1px solid var(--line);}
-.doc-row{display:flex; justify-content:space-between; align-items:center; gap:18px; padding:18px 0; border-bottom:1px solid var(--line);}
-.doc-row .doc-name{font-size:15px;}
-.doc-row .doc-file{font-size:11.5px; color:var(--muted); margin-top:2px;}
-.doc-open{font-size:12px; letter-spacing:.05em; text-transform:uppercase; border:1px solid var(--ink); padding:8px 14px; text-decoration:none; white-space:nowrap;}
+        .project-title {
+            font-size: 12px;
+            letter-spacing: .18em;
+            text-transform: uppercase;
+            opacity: .85;
+        }
 
-footer{padding:44px 0 60px; color:var(--muted); font-size:12px; display:flex; justify-content:space-between; flex-wrap:wrap; gap:10px;}
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
 
-/* ---- lightbox ---- */
-.lightbox{position:fixed; inset:0; background:rgba(11,11,10,.94); z-index:100; display:none; flex-direction:column;}
-.lightbox.open{display:flex;}
-.lb-top{display:flex; justify-content:space-between; align-items:center; padding:16px 20px; color:var(--white);}
-.lb-top .lb-title{font-size:13px; letter-spacing:.03em;}
-.lb-top .lb-title .sub{color:rgba(255,255,255,.55); margin-left:8px;}
-.lb-close{background:none; border:1px solid rgba(255,255,255,.35); color:var(--white); width:32px; height:32px; font-size:16px;}
-.lb-body{flex:1; position:relative; overflow:hidden; display:flex; align-items:center; justify-content:center; touch-action:none;}
-.lb-body img{max-width:92%; max-height:88%; will-change:transform; user-select:none; -webkit-user-drag:none;}
-.lb-arrow{position:absolute; top:50%; transform:translateY(-50%); background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.3); color:var(--white); width:42px; height:42px; font-size:18px;}
-.lb-arrow.prev{left:16px;} .lb-arrow.next{right:16px;}
-.lb-thumbs{display:flex; gap:8px; padding:14px 20px 20px; overflow-x:auto;}
-.lb-thumbs img{width:66px; height:48px; object-fit:cover; opacity:.5; cursor:pointer; border:1px solid transparent;}
-.lb-thumbs img.active{opacity:1; border-color:var(--white);}
-.lb-hint{position:absolute; bottom:12px; left:50%; transform:translateX(-50%); color:rgba(255,255,255,.45); font-size:11px;}
-</style>
+        /* =========================================================
+           LIGHT SWITCH
+           
+           IMPORTANT:
+           This control is INSIDE .fullscreen-stage.
+           Therefore it remains available when that element enters
+           fullscreen.
+        ========================================================= */
+
+        .light-control {
+            position: relative;
+
+            display: flex;
+            align-items: center;
+            gap: 10px;
+
+            padding: 7px 10px;
+
+            border: 1px solid rgba(255,255,255,.25);
+            border-radius: 100px;
+
+            background: rgba(10,10,10,.55);
+            backdrop-filter: blur(14px);
+
+            cursor: pointer;
+
+            color: #fff;
+
+            transition:
+                background .35s ease,
+                border-color .35s ease;
+        }
+
+        .light-control:hover {
+            background: rgba(255,255,255,.12);
+            border-color: rgba(255,255,255,.5);
+        }
+
+        .light-label {
+            min-width: 42px;
+
+            font-size: 9px;
+            letter-spacing: .15em;
+            text-transform: uppercase;
+
+            text-align: center;
+        }
+
+        .switch {
+            position: relative;
+
+            width: 42px;
+            height: 22px;
+
+            border-radius: 100px;
+
+            background: #555;
+
+            transition: background .4s ease;
+        }
+
+        .switch::after {
+            content: "";
+
+            position: absolute;
+
+            top: 3px;
+            left: 3px;
+
+            width: 16px;
+            height: 16px;
+
+            border-radius: 50%;
+
+            background: #fff;
+
+            transition:
+                transform .45s cubic-bezier(.2,.8,.2,1);
+        }
+
+        .light-control.is-night .switch {
+            background: #d6a95d;
+        }
+
+        .light-control.is-night .switch::after {
+            transform: translateX(20px);
+        }
+
+        /* =========================================================
+           FULLSCREEN BUTTON
+        ========================================================= */
+
+        .fullscreen-button {
+            width: 38px;
+            height: 38px;
+
+            display: grid;
+            place-items: center;
+
+            border: 1px solid rgba(255,255,255,.25);
+            border-radius: 50%;
+
+            background: rgba(10,10,10,.55);
+            backdrop-filter: blur(14px);
+
+            color: #fff;
+
+            cursor: pointer;
+
+            font-size: 15px;
+
+            transition:
+                background .3s ease,
+                border-color .3s ease;
+        }
+
+        .fullscreen-button:hover {
+            background: rgba(255,255,255,.12);
+            border-color: rgba(255,255,255,.5);
+        }
+
+        /* =========================================================
+           FULLSCREEN STAGE
+           
+           Everything that needs to remain accessible in fullscreen
+           is contained inside this element.
+        ========================================================= */
+
+        .fullscreen-stage {
+            position: relative;
+            width: 100%;
+        }
+
+        /* =========================================================
+           PANORAMA
+        ========================================================= */
+
+        .panorama-section {
+            position: relative;
+
+            width: 100%;
+            height: 100vh;
+            min-height: 650px;
+
+            overflow: hidden;
+
+            background: #000;
+
+            user-select: none;
+            touch-action: none;
+
+            cursor: grab;
+        }
+
+        .panorama-section.dragging {
+            cursor: grabbing;
+        }
+
+        /*
+           Panorama images are rendered as very wide strips.
+
+           JavaScript moves the strip horizontally according to
+           the user's viewing angle.
+        */
+
+        .panorama-world {
+            position: absolute;
+
+            top: 0;
+            left: 0;
+
+            height: 100%;
+            width: 200%;
+
+            transform: translate3d(0,0,0);
+
+            will-change: transform;
+        }
+
+        .panorama-layer {
+            position: absolute;
+
+            top: 0;
+            left: 0;
+
+            width: 100%;
+            height: 100%;
+
+            object-fit: cover;
+
+            /*
+               The image itself should be an equirectangular
+               panorama with a 2:1 aspect ratio.
+            */
+
+            pointer-events: none;
+
+            transition:
+                opacity .8s cubic-bezier(.2,.7,.2,1);
+        }
+
+        .panorama-layer.morning {
+            z-index: 1;
+            opacity: 1;
+        }
+
+        .panorama-layer.night {
+            z-index: 2;
+            opacity: 0;
+        }
+
+        .fullscreen-stage.night-mode
+        .panorama-layer.morning {
+            opacity: 0;
+        }
+
+        .fullscreen-stage.night-mode
+        .panorama-layer.night {
+            opacity: 1;
+        }
+
+        /* =========================================================
+           PANORAMA OVERLAY
+        ========================================================= */
+
+        .panorama-overlay {
+            position: absolute;
+            z-index: 20;
+
+            left: 32px;
+            bottom: 40px;
+
+            pointer-events: none;
+        }
+
+        .eyebrow {
+            margin-bottom: 10px;
+
+            font-size: 9px;
+            letter-spacing: .25em;
+            text-transform: uppercase;
+
+            opacity: .65;
+        }
+
+        .panorama-title {
+            font-size: clamp(32px, 5vw, 72px);
+            font-weight: 300;
+            letter-spacing: -.03em;
+        }
+
+        .panorama-hint {
+            margin-top: 15px;
+
+            font-size: 10px;
+            letter-spacing: .1em;
+            text-transform: uppercase;
+
+            opacity: .5;
+        }
+
+        /* =========================================================
+           PANORAMA VIGNETTE
+        ========================================================= */
+
+        .panorama-vignette {
+            position: absolute;
+            z-index: 10;
+            inset: 0;
+
+            pointer-events: none;
+
+            background:
+                linear-gradient(
+                    to bottom,
+                    rgba(0,0,0,.4),
+                    transparent 25%,
+                    transparent 65%,
+                    rgba(0,0,0,.5)
+                );
+        }
+
+        /* =========================================================
+           RENDER SECTION
+        ========================================================= */
+
+        .renders-section {
+            padding: 120px 32px 160px;
+
+            background: #0b0b0b;
+        }
+
+        .section-heading {
+            max-width: 700px;
+
+            margin-bottom: 70px;
+        }
+
+        .section-heading .eyebrow {
+            margin-bottom: 18px;
+        }
+
+        .section-heading h2 {
+            font-size: clamp(36px, 5vw, 70px);
+            font-weight: 300;
+            letter-spacing: -.04em;
+            line-height: .95;
+        }
+
+        .section-heading p {
+            max-width: 560px;
+
+            margin-top: 25px;
+
+            color: rgba(255,255,255,.55);
+
+            font-size: 13px;
+            line-height: 1.7;
+        }
+
+        /* =========================================================
+           RENDER GRID
+        ========================================================= */
+
+        .render-grid {
+            display: grid;
+
+            grid-template-columns:
+                repeat(2, minmax(0, 1fr));
+
+            gap: 28px;
+        }
+
+        .render-card {
+            position: relative;
+
+            overflow: hidden;
+
+            background: #111;
+
+            aspect-ratio: 16 / 10;
+        }
+
+        .render-image {
+            position: absolute;
+
+            inset: 0;
+
+            width: 100%;
+            height: 100%;
+
+            object-fit: cover;
+
+            transition:
+                opacity .8s cubic-bezier(.2,.7,.2,1),
+                transform 1.2s cubic-bezier(.2,.7,.2,1);
+        }
+
+        .render-image.morning {
+            z-index: 1;
+            opacity: 1;
+        }
+
+        .render-image.night {
+            z-index: 2;
+            opacity: 0;
+        }
+
+        .fullscreen-stage.night-mode
+        ~ .renders-section
+        .render-image.morning {
+            opacity: 0;
+        }
+
+        .fullscreen-stage.night-mode
+        ~ .renders-section
+        .render-image.night {
+            opacity: 1;
+        }
+
+        .render-card:hover .render-image {
+            transform: scale(1.025);
+        }
+
+        .render-number {
+            position: absolute;
+
+            z-index: 10;
+
+            top: 18px;
+            left: 18px;
+
+            font-size: 9px;
+            letter-spacing: .15em;
+
+            padding: 7px 9px;
+
+            background: rgba(0,0,0,.45);
+            backdrop-filter: blur(8px);
+
+            border: 1px solid rgba(255,255,255,.15);
+        }
+
+        /* =========================================================
+           FOOTER
+        ========================================================= */
+
+        .footer {
+            padding: 40px 32px;
+
+            display: flex;
+            justify-content: space-between;
+
+            border-top: 1px solid rgba(255,255,255,.08);
+
+            color: rgba(255,255,255,.4);
+
+            font-size: 9px;
+            letter-spacing: .15em;
+            text-transform: uppercase;
+        }
+
+        /* =========================================================
+           RESPONSIVE
+        ========================================================= */
+
+        @media (max-width: 800px) {
+
+            .header {
+                height: 62px;
+                padding: 0 18px;
+            }
+
+            .project-title {
+                font-size: 9px;
+            }
+
+            .panorama-section {
+                min-height: 500px;
+            }
+
+            .panorama-overlay {
+                left: 20px;
+                bottom: 25px;
+            }
+
+            .renders-section {
+                padding:
+                    80px 18px 100px;
+            }
+
+            .render-grid {
+                grid-template-columns: 1fr;
+                gap: 18px;
+            }
+
+            .footer {
+                padding: 30px 18px;
+            }
+        }
+
+        /* =========================================================
+           FULLSCREEN OVERRIDES
+        ========================================================= */
+
+        .fullscreen-stage:fullscreen {
+            width: 100vw;
+            height: 100vh;
+
+            background: #000;
+        }
+
+        .fullscreen-stage:fullscreen .panorama-section {
+            height: 100vh;
+        }
+
+        /*
+           Browser-specific fullscreen support.
+        */
+
+        .fullscreen-stage:-webkit-full-screen {
+            width: 100vw;
+            height: 100vh;
+
+            background: #000;
+        }
+
+        .fullscreen-stage:-webkit-full-screen
+        .panorama-section {
+            height: 100vh;
+        }
+    </style>
 </head>
-<body style="">
 
-<div class="topnav">
-  <div class="wrap topnav-inner">
-    <div class="topnav-id" id="navProjectName">Center of Skin Care</div>
-    <ul class="topnav-links" id="navLinks">
-      <li><a href="https://fareskahri-crypto.github.io/narcisse/#overview">Overview</a></li>
-      <li><a href="https://fareskahri-crypto.github.io/narcisse/#style-mood">Style &amp; Mood</a></li>
-      <li><a href="https://fareskahri-crypto.github.io/narcisse/#layout">Layout</a></li>
-      <li><a href="https://fareskahri-crypto.github.io/narcisse/#visualization">Visualization</a></li>
-      <li><a href="https://fareskahri-crypto.github.io/narcisse/#furniture">Furniture</a></li>
-    </ul>
-    <div style="display:flex; align-items:center; gap:14px;">
-      <div class="option-pill" id="navOptionPill"><span class="dot"></span><span id="navOptionLabel">Option 01 — Warm Minimal</span></div>
-      <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation">☰</button>
-    </div>
-  </div>
-</div>
 
-<header class="header" id="overview">
-  <div class="wrap">
-    <div class="header-top">
-      <div>
-        <div class="eyebrow" id="hdrClient">For — Tom Sahour</div>
-        <h1 class="project-title" id="hdrTitle">Center of Skin Care</h1>
-        <div class="project-meta">
-          <div><span>Type</span><span id="hdrType" style="text-transform:none;">Interior Design — Medical Retail</span></div>
-          <div style="display: none;"><span>Location</span><span id="hdrLocation" style="text-transform:none;"></span></div>
-        </div>
-      </div>
-      <div class="version-tag" id="hdrVersion">Design Proposal — Revision 01<br>24 September 2026</div>
-    </div>
-  </div>
-  <div class="wrap carousel-region">
-    <div class="eyebrow" style="margin-bottom:2px;">Design Options</div>
-    <div class="carousel-track" id="carouselTrack" tabindex="0"><div class="opt-card is-active" tabindex="0" role="button" aria-label="Select option 1"><div class="ph"><span>Missing image</span><small>o1.png</small></div><div class="opt-card-label"><div class="n">Option 01</div><div class="s">Warm Minimal</div></div></div><div class="opt-card is-side-r" tabindex="0" role="button" aria-label="Select option 2"><div class="ph"><span>Missing image</span><small>o2.png</small></div><div class="opt-card-label"><div class="n">Option 02</div><div class="s">Contemporary Stone</div></div></div></div>
-    <div class="carousel-nav" id="carouselDots"><button class="carousel-dot active" aria-label="Go to option 1"></button><button class="carousel-dot" aria-label="Go to option 2"></button></div>
-  </div>
-</header>
+<body>
 
-<!-- STYLE + MOOD — combined swipeable section -->
-<section id="style-mood">
-  <div class="wrap">
-    <div class="sm-head">
-      <div>
-        <div class="eyebrow">Design Direction &amp; Atmosphere</div>
-        <h2 class="section-title" id="smTitle">Mood</h2>
-      </div>
-      <div style="display:flex; align-items:center; gap:18px;">
-        <div class="sm-tabs">
-          <button class="sm-tab" id="smTabStyle">Style</button>
-          <button class="sm-tab active" id="smTabMood">Mood</button>
-        </div>
-        <div class="sm-arrows">
-          <button class="sm-arrow" id="smPrev" aria-label="Previous">‹</button>
-          <button class="sm-arrow" id="smNext" aria-label="Next">›</button>
-        </div>
-      </div>
-    </div>
+<main class="showcase">
 
-    <div class="sm-viewport">
-      <div class="sm-track" id="smTrack" style="transform: translateX(-50%);">
-        <div class="sm-slide">
-          <div class="direction-grid">
-            <div class="direction-media">
-              <div class="m1" id="dirImg1"><div class="ph"><span>Missing image</span><small>o1-d1.png</small></div></div>
-              <div class="m2" id="dirImg2" style="display: none;"></div>
+    <!-- =========================================================
+         FULLSCREEN STAGE
+         
+         The panorama + header controls live inside this element.
+         Therefore the light switch stays visible in fullscreen.
+    ========================================================== -->
+
+    <section
+        id="fullscreenStage"
+        class="fullscreen-stage"
+    >
+
+        <!-- HEADER -->
+
+        <header class="header">
+
+            <div class="project-title">
+                Architectural Visualization
             </div>
-            <div class="direction-text"><p id="dirText">A calm, materially honest interior built from natural oak, warm plaster, and soft indirect light. Forms stay simple and continuous so the architecture recedes and the treatment experience comes forward.</p></div>
-          </div>
+
+            <div class="header-right">
+
+                <!-- LIGHT TOGGLE -->
+
+                <button
+                    id="lightToggle"
+                    class="light-control"
+                    type="button"
+                    aria-label="Toggle lighting"
+                    aria-pressed="false"
+                >
+
+                    <span
+                        id="lightLabel"
+                        class="light-label"
+                    >
+                        Morning
+                    </span>
+
+                    <span class="switch"></span>
+
+                </button>
+
+
+                <!-- FULLSCREEN -->
+
+                <button
+                    id="fullscreenButton"
+                    class="fullscreen-button"
+                    type="button"
+                    aria-label="Enter fullscreen"
+                >
+                    ⛶
+                </button>
+
+            </div>
+
+        </header>
+
+
+        <!-- =====================================================
+             PANORAMA VIEWER
+        ====================================================== -->
+
+        <div
+            id="panorama"
+            class="panorama-section"
+        >
+
+            <div
+                id="panoramaWorld"
+                class="panorama-world"
+            >
+
+                <!-- MORNING = LIGHTS OFF -->
+
+                <img
+                    id="panoramaMorning"
+                    class="panorama-layer morning"
+                    src="o1-p1-morning.png"
+                    alt="Panorama morning lighting"
+                    draggable="false"
+                >
+
+                <!-- NIGHT = LIGHTS ON -->
+
+                <img
+                    id="panoramaNight"
+                    class="panorama-layer night"
+                    src="o1-p1-night.png"
+                    alt="Panorama night lighting"
+                    draggable="false"
+                >
+
+            </div>
+
+
+            <div class="panorama-vignette"></div>
+
+
+            <div class="panorama-overlay">
+
+                <div class="eyebrow">
+                    Option 01 / Panorama 01
+                </div>
+
+                <h1 class="panorama-title">
+                    The Interior
+                </h1>
+
+                <div class="panorama-hint">
+                    Drag to explore 360°
+                </div>
+
+            </div>
+
         </div>
-        <div class="sm-slide">
-          <div class="mood-single">
-            <div class="mood-img" id="moodImg"><div class="ph"><span>Missing image</span><small>o1-m1.png</small></div></div>
-            <p class="mood-caption" id="moodCaption">A restrained material palette — oak, limewash plaster, and honed stone — chosen for a sense of warmth, cleanliness, and quiet professionalism.</p>
-          </div>
+
+    </section>
+
+
+    <!-- =========================================================
+         RENDERS
+    ====================================================== -->
+
+    <section class="renders-section">
+
+        <div class="section-heading">
+
+            <div class="eyebrow">
+                Architectural Visualization
+            </div>
+
+            <h2>
+                A study in light.
+            </h2>
+
+            <p>
+                Explore the same architectural spaces through
+                two lighting conditions. The transition between
+                morning and night is continuous and cinematic.
+            </p>
+
         </div>
-      </div>
-    </div>
-  </div>
-</section>
 
-<!-- LAYOUT -->
-<section id="layout" style="display: none;">
-  <div class="wrap">
-    <div class="section-head">
-      <div>
-        <div class="eyebrow">Spatial Organization</div>
-        <h2 class="section-title">Layout</h2>
-      </div>
-    </div>
-    <div class="layout-tabs" id="layoutTabs" style="display: none;"></div>
-    <div class="plan-frame" id="planFrame" style="margin-bottom:40px;"></div>
-    <div id="elevationsWrap">
-      <div class="tech-group-title">Elevations &amp; Details</div>
-      <div class="tech-row" id="elevRow"></div>
-    </div>
-  </div>
-</section>
 
-<!-- VISUALIZATION -->
-<section id="visualization" style="">
-  <div class="wrap">
-    <div class="section-head">
-      <div>
-        <div class="eyebrow">3D Visualization</div>
-        <h2 class="section-title">Renders &amp; Panorama</h2>
-      </div>
-    </div>
-    <div class="viz-controls">
-      <div class="viz-toggle">
-        <button id="btnRenders" class="active">Renders</button>
-        <button id="btnPanorama" style="">Panorama</button>
-      </div>
-      <div class="tod-toggle" id="todToggle" style="">
-        <button id="todMorning" class="active">☀ Morning</button>
-        <button id="todNight" class="">☾ Night</button>
-      </div>
-    </div>
+        <div class="render-grid">
 
-    <div id="rendersView"><div class="render-grid" id="renderGrid"><a href="javascript:void(0)"><img src="./001 Project Presentation_files/o1-r1-morning.png" alt="" loading="lazy"><div class="render-cap">Render 01 — Morning</div></a><a href="javascript:void(0)"><img src="./001 Project Presentation_files/o1-r2-morning.png" alt="" loading="lazy"><div class="render-cap">Render 02 — Morning</div></a><a href="javascript:void(0)"><img src="./001 Project Presentation_files/o1-r3-morning.png" alt="" loading="lazy"><div class="render-cap">Render 03 — Morning</div></a><a href="javascript:void(0)"><img src="./001 Project Presentation_files/o1-r4-morning.png" alt="" loading="lazy"><div class="render-cap">Render 04 — Morning</div></a><a href="javascript:void(0)"><img src="./001 Project Presentation_files/o1-r5-night.png" alt="" loading="lazy"><div class="render-cap">Render 05</div></a><a href="javascript:void(0)"><img src="./001 Project Presentation_files/o1-r6-night.png" alt="" loading="lazy"><div class="render-cap">Render 06</div></a></div></div>
+            <!-- RENDER 01 -->
 
-    <div id="panoramaView" style="display:none;">
-      <div class="pano-stage" id="panoStage">
-        <div class="pano-img-track" id="panoTrack" style="display: none;"></div>
-        <canvas id="panoCanvas" style="display: block;" width="240" height="120"></canvas>
-        <div class="pano-label"><div class="eyebrow">360° View</div><div class="name" id="panoName">Location 01</div></div>
-        <div class="pano-loading" id="panoLoading">Loading panorama…</div>
-        <div class="pano-hint" id="panoHint">Drag to look around · Scroll to zoom</div>
-      </div>
-      <div class="pano-locations" id="panoLocations"><button class="pano-loc active"><img src="./001 Project Presentation_files/o1-p1-morning.png" alt="" loading="lazy"><span>Location 01</span></button></div>
-    </div>
-  </div>
-</section>
+            <article class="render-card">
 
-<!-- FURNITURE -->
-<section id="furniture" style="display: none;">
-  <div class="wrap">
-    <div class="section-head"><div><div class="eyebrow">Furniture</div><h2 class="section-title">Furniture Selection</h2></div></div>
-    <div class="grid-4" id="furnitureGrid"></div>
-  </div>
-</section>
+                <span class="render-number">
+                    R01
+                </span>
 
-<!-- MATERIALS -->
-<section id="materials" style="display: none;">
-  <div class="wrap">
-    <div class="section-head"><div><div class="eyebrow">Material Specification</div><h2 class="section-title">Materials</h2></div></div>
-    <div class="grid-4" id="materialsGrid"></div>
-  </div>
-</section>
+                <img
+                    class="render-image morning"
+                    src="o1-r1-morning.png"
+                    alt="Render 01 morning"
+                    loading="lazy"
+                >
 
-<!-- DOCUMENTS -->
-<section id="documents" style="display: none;">
-  <div class="wrap">
-    <div class="section-head"><div><div class="eyebrow">Documentation</div><h2 class="section-title">Project Documents</h2></div></div>
-    <div class="doc-list" id="docList"></div>
-  </div>
-</section>
+                <img
+                    class="render-image night"
+                    src="o1-r1-night.png"
+                    alt="Render 01 night"
+                    loading="lazy"
+                >
 
-<footer class="wrap">
-  <div id="footVersion">Design Proposal — Revision 01 — 24 September 2026</div>
-  <div>Prepared for client review</div>
-</footer>
+            </article>
 
-<div class="lightbox" id="lightbox" role="dialog" aria-modal="true">
-  <div class="lb-top">
-    <div class="lb-title"><span id="lbTitle">Render 01</span><span class="sub" id="lbSub">Render · 1 / 6</span></div>
-    <button class="lb-close" id="lbClose" aria-label="Close">✕</button>
-  </div>
-  <div class="lb-body" id="lbBody">
-    <button class="lb-arrow prev" id="lbPrev" aria-label="Previous">‹</button>
-    <img id="lbImg" src="./001 Project Presentation_files/o1-r1-morning.png" alt="Render 01" style="transform: translate(0px, 0px) scale(1);">
-    <button class="lb-arrow next" id="lbNext" aria-label="Next">›</button>
-    <div class="lb-hint">Scroll or pinch to zoom · drag to pan</div>
-  </div>
-  <div class="lb-thumbs" id="lbThumbs"><img src="./001 Project Presentation_files/o1-r1-morning.png" alt="" class="active"><img src="./001 Project Presentation_files/o1-r2-morning.png" alt=""><img src="./001 Project Presentation_files/o1-r3-morning.png" alt=""><img src="./001 Project Presentation_files/o1-r4-morning.png" alt=""><img src="./001 Project Presentation_files/o1-r5-night.png" alt=""><img src="./001 Project Presentation_files/o1-r6-night.png" alt=""></div>
-</div>
 
-<!-- =========================================================================
-     TEXT CONTENT — edit this. Images are handled separately by filename
-     probing further down; this object only holds copy and per-item labels.
-     ========================================================================= -->
-<script id="config">
-const PROJECT_CONFIG = {
-  name: "Center of Skin Care",
-  client: "Tom Sahour",
-  type: "Interior Design — Medical Retail",
-  location: "",
-  version: "Design Proposal — Revision 01",
-  date: "24 September 2026",
+            <!-- RENDER 02 -->
 
-  // one entry per option, in order: option 1, option 2, ...
-  options: [
-    {
-      styleName: "Warm Minimal",
-      directionText: "A calm, materially honest interior built from natural oak, warm plaster, and soft indirect light. Forms stay simple and continuous so the architecture recedes and the treatment experience comes forward.",
-      moodCaption: "A restrained material palette — oak, limewash plaster, and honed stone — chosen for a sense of warmth, cleanliness, and quiet professionalism.",
-      furniture: { 1:{name:"Reception Desk", category:"Casework", dimensions:"240 × 60 × 105 cm", material:"Oak veneer, matte lacquer"},
-                   2:{name:"Lounge Chair", category:"Seating", dimensions:"68 × 72 × 78 cm", material:"Boucle upholstery, oak legs"} },
-      materials: { 1:{name:"Natural Oak Veneer", finish:"Matte", application:"Wall paneling, casework"},
-                   2:{name:"Honed Limestone", finish:"Honed", application:"Reception counter"} },
-      documents: { 1:{label:"Technical Floor Plan — Revision 01"} }
-    },
-    {
-      styleName: "Contemporary Stone",
-      directionText: "A cooler, more architectural mood built from large-format stone, dark bronze metalwork, and sharply detailed joinery — a more sculptural, gallery-like read.",
-      moodCaption: "Stone and bronze establish a more contemporary, gallery-like identity while keeping the plan's clinical clarity.",
-      furniture: { 1:{name:"Reception Desk", category:"Casework", dimensions:"260 × 65 × 105 cm", material:"Bronze-edged stone top"} },
-      materials: { 1:{name:"Grey Travertine", finish:"Honed", application:"Reception cladding"} },
-      documents: {}
-    }
-  ]
-};
-</script>
+            <article class="render-card">
+
+                <span class="render-number">
+                    R02
+                </span>
+
+                <img
+                    class="render-image morning"
+                    src="o2-r2-morning.png"
+                    alt="Render 02 morning"
+                    loading="lazy"
+                >
+
+                <img
+                    class="render-image night"
+                    src="o2-r2-night.png"
+                    alt="Render 02 night"
+                    loading="lazy"
+                >
+
+            </article>
+
+
+            <!-- RENDER 03 -->
+
+            <article class="render-card">
+
+                <span class="render-number">
+                    R03
+                </span>
+
+                <img
+                    class="render-image morning"
+                    src="o3-r3-morning.png"
+                    alt="Render 03 morning"
+                    loading="lazy"
+                >
+
+                <img
+                    class="render-image night"
+                    src="o3-r3-night.png"
+                    alt="Render 03 night"
+                    loading="lazy"
+                >
+
+            </article>
+
+
+            <!-- RENDER 04 -->
+
+            <article class="render-card">
+
+                <span class="render-number">
+                    R04
+                </span>
+
+                <img
+                    class="render-image morning"
+                    src="o4-r4-morning.png"
+                    alt="Render 04 morning"
+                    loading="lazy"
+                >
+
+                <img
+                    class="render-image night"
+                    src="o4-r4-night.png"
+                    alt="Render 04 night"
+                    loading="lazy"
+                >
+
+            </article>
+
+
+            <!-- RENDER 05 -->
+
+            <article class="render-card">
+
+                <span class="render-number">
+                    R05
+                </span>
+
+                <img
+                    class="render-image morning"
+                    src="o5-r5-morning.png"
+                    alt="Render 05 morning"
+                    loading="lazy"
+                >
+
+                <img
+                    class="render-image night"
+                    src="o5-r5-night.png"
+                    alt="Render 05 night"
+                    loading="lazy"
+                >
+
+            </article>
+
+
+            <!-- RENDER 06 -->
+
+            <article class="render-card">
+
+                <span class="render-number">
+                    R06
+                </span>
+
+                <img
+                    class="render-image morning"
+                    src="o6-r6-morning.png"
+                    alt="Render 06 morning"
+                    loading="lazy"
+                >
+
+                <img
+                    class="render-image night"
+                    src="o6-r6-night.png"
+                    alt="Render 06 night"
+                    loading="lazy"
+                >
+
+            </article>
+
+        </div>
+
+    </section>
+
+
+    <!-- FOOTER -->
+
+    <footer class="footer">
+
+        <span>
+            Architectural Visualization
+        </span>
+
+        <span>
+            Option 01
+        </span>
+
+    </footer>
+
+</main>
+
 
 <script>
-(function(){
-  "use strict";
+/* =============================================================
+   CINEMATIC ARCHITECTURAL SHOWCASE
+   ============================================================= */
 
-  /* ==========================================================================
-     ASSET PROBING ENGINE
-     ========================================================================== */
-  const ASSET_BASE = "";      // e.g. "assets/" if you put files in a subfolder
-  const MAX_SLOTS  = 20;      // max numbered items probed per category
-  const MAX_LAYOUTS = 3;
 
-  function url(name){ return ASSET_BASE + name; }
+/* =============================================================
+   ELEMENTS
+   ============================================================= */
 
-  function probeImage(src){
-    return new Promise(resolve => {
-      const img = new Image();
-      img.onload = () => resolve(true);
-      img.onerror = () => resolve(false);
-      img.src = src;
-    });
-  }
-  async function probeFile(src){
-    try{
-      const res = await fetch(src, { method:"HEAD", cache:"no-store" });
-      return res.ok;
-    }catch(e){ return false; }
-  }
+const stage = document.getElementById("fullscreenStage");
 
-  async function probeNumberedImages(prefix, max){
-    const checks = [];
-    for(let k=1; k<=max; k++){
-      const src = url(prefix + k + ".png");
-      checks.push(probeImage(src).then(ok => ok ? {k, src} : null));
+const panorama = document.getElementById("panorama");
+
+const panoramaWorld =
+    document.getElementById("panoramaWorld");
+
+const lightToggle =
+    document.getElementById("lightToggle");
+
+const lightLabel =
+    document.getElementById("lightLabel");
+
+const fullscreenButton =
+    document.getElementById("fullscreenButton");
+
+
+/* =============================================================
+   LIGHTING STATE
+   ============================================================= */
+
+/*
+   false = morning / lights off
+   true  = night / lights on
+*/
+
+let isNight = false;
+
+
+/*
+   Change lighting state.
+
+   CSS handles the actual crossfade.
+*/
+
+function setLighting(night) {
+
+    isNight = night;
+
+    stage.classList.toggle(
+        "night-mode",
+        isNight
+    );
+
+    lightToggle.classList.toggle(
+        "is-night",
+        isNight
+    );
+
+    lightToggle.setAttribute(
+        "aria-pressed",
+        String(isNight)
+    );
+
+    lightLabel.textContent =
+        isNight ? "Night" : "Morning";
+}
+
+
+/* =============================================================
+   LIGHT TOGGLE
+   ============================================================= */
+
+lightToggle.addEventListener(
+    "click",
+    () => {
+
+        setLighting(!isNight);
+
     }
-    return (await Promise.all(checks)).filter(Boolean);
-  }
+);
 
-  async function probeNumberedFiles(prefix, max, ext){
-    const checks = [];
-    for(let k=1; k<=max; k++){
-      const src = url(prefix + k + "." + ext);
-      checks.push(probeFile(src).then(ok => ok ? {k, src} : null));
-    }
-    return (await Promise.all(checks)).filter(Boolean);
-  }
 
-  async function probeDayNightSeries(prefix, max){
-    const checks = [];
-    for(let k=1; k<=max; k++){
-      checks.push(Promise.all([
-        probeImage(url(prefix + k + "-morning.png")),
-        probeImage(url(prefix + k + "-night.png"))
-      ]).then(([m,n]) => (m||n) ? {
-        k,
-        morning: m ? url(prefix + k + "-morning.png") : null,
-        night:   n ? url(prefix + k + "-night.png")   : null
-      } : null));
-    }
-    return (await Promise.all(checks)).filter(Boolean);
-  }
+/* =============================================================
+   FULLSCREEN
+   ============================================================= */
 
-  /* Resolve every asset for one option (n is 1-based option number). */
-  async function resolveOption(n){
-    const p = "o" + n;
+fullscreenButton.addEventListener(
+    "click",
+    async () => {
 
-    const [cover, d1, d2] = await Promise.all([
-      probeImage(url(p + ".png")).then(ok => ok ? url(p + ".png") : null),
-      probeImage(url(p + "-d1.png")).then(ok => ok ? url(p + "-d1.png") : null),
-      probeImage(url(p + "-d2.png")).then(ok => ok ? url(p + "-d2.png") : null),
-    ]);
-    const mood = await probeImage(url(p + "-m1.png")).then(ok => ok ? url(p + "-m1.png") : null);
+        try {
 
-    // layouts: try l1, l2, l3 — each with its own elevation series
-    const layouts = [];
-    for(let L=1; L<=MAX_LAYOUTS; L++){
-      const planUrl = url(p + "-l" + L + ".png");
-      const exists = await probeImage(planUrl);
-      if(!exists) continue;
-      const elevations = await probeNumberedImages(p + "-l" + L + "-e", MAX_SLOTS);
-      layouts.push({ n:L, image:planUrl, elevations });
-    }
+            if (!document.fullscreenElement) {
 
-    const renders = await probeDayNightSeries(p + "-r", MAX_SLOTS);
-    const panoramas = await probeDayNightSeries(p + "-p", MAX_SLOTS);
-    const furnitureImgs = await probeNumberedImages(p + "-f", MAX_SLOTS);
-    const materialImgs = await probeNumberedImages(p + "-ma", MAX_SLOTS);
-    const docFiles = await probeNumberedFiles(p + "-pdf", MAX_SLOTS, "pdf");
+                await stage.requestFullscreen();
 
-    return { cover, d1, d2, mood, layouts, renders, panoramas, furnitureImgs, materialImgs, docFiles };
-  }
+            } else {
 
-  /* ==========================================================================
-     RENDER HELPERS
-     ========================================================================== */
-  function el(tag, cls, html){
-    const e = document.createElement(tag);
-    if(cls) e.className = cls;
-    if(html != null) e.innerHTML = html;
-    return e;
-  }
-  function clear(node){ while(node.firstChild) node.removeChild(node.firstChild); }
-  function escapeHtml(s){
-    return String(s == null ? "" : s).replace(/[&<>"']/g, c => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;" }[c]));
-  }
-  function skeleton(){ return el("div","skeleton-tile"); }
-  function placeholder(label){
-    const d = el("div","ph");
-    d.innerHTML = '<span>Missing image</span><small>'+escapeHtml(label)+'</small>';
-    return d;
-  }
-  function imageOrPlaceholder(src, label, alt){
-    if(!src) return placeholder(label);
-    const img = document.createElement("img");
-    img.src = src; img.alt = alt || ""; img.loading = "lazy";
-    return img;
-  }
+                await document.exitFullscreen();
 
-  /* ==========================================================================
-     STATE
-     ========================================================================== */
-  const state = {
-    optionIndex: 0,
-    assetCache: {},          // optionIndex -> resolved assets
-    assetPending: {},        // optionIndex -> in-flight resolve promise
-    layoutIndex: 0,
-    smSlide: 0,               // 0 = style, 1 = mood
-    vizMode: "renders",
-    tod: "morning",
-    panoIndex: 0
-  };
+            }
 
-  const els = {
-    navProjectName: document.getElementById("navProjectName"),
-    navOptionLabel: document.getElementById("navOptionLabel"),
-    hdrClient: document.getElementById("hdrClient"),
-    hdrTitle: document.getElementById("hdrTitle"),
-    hdrType: document.getElementById("hdrType"),
-    hdrLocation: document.getElementById("hdrLocation"),
-    hdrVersion: document.getElementById("hdrVersion"),
-    footVersion: document.getElementById("footVersion"),
-    carouselTrack: document.getElementById("carouselTrack"),
-    carouselDots: document.getElementById("carouselDots"),
-    smTitle: document.getElementById("smTitle"),
-    smTrack: document.getElementById("smTrack"),
-    smTabStyle: document.getElementById("smTabStyle"),
-    smTabMood: document.getElementById("smTabMood"),
-    dirImg1: document.getElementById("dirImg1"),
-    dirImg2: document.getElementById("dirImg2"),
-    dirText: document.getElementById("dirText"),
-    moodImg: document.getElementById("moodImg"),
-    moodCaption: document.getElementById("moodCaption"),
-    layoutTabs: document.getElementById("layoutTabs"),
-    planFrame: document.getElementById("planFrame"),
-    elevationsWrap: document.getElementById("elevationsWrap"),
-    elevRow: document.getElementById("elevRow"),
-    furnitureGrid: document.getElementById("furnitureGrid"),
-    materialsGrid: document.getElementById("materialsGrid"),
-    renderGrid: document.getElementById("renderGrid"),
-    panoStage: document.getElementById("panoStage"),
-    panoTrack: document.getElementById("panoTrack"),
-    panoName: document.getElementById("panoName"),
-    panoLocations: document.getElementById("panoLocations"),
-    docList: document.getElementById("docList"),
-    section_furniture: document.getElementById("furniture"),
-    section_materials: document.getElementById("materials"),
-    section_documents: document.getElementById("documents"),
-    section_layout: document.getElementById("layout"),
-  };
+        } catch (error) {
 
-  function cfg(){ return PROJECT_CONFIG.options[state.optionIndex]; }
-  function assets(){ return state.assetCache[state.optionIndex]; }
+            console.error(
+                "Fullscreen error:",
+                error
+            );
 
-  /* ==========================================================================
-     HEADER
-     ========================================================================== */
-  function renderHeader(){
-    els.navProjectName.textContent = PROJECT_CONFIG.name;
-    els.hdrClient.textContent = PROJECT_CONFIG.client ? "For — " + PROJECT_CONFIG.client : "";
-    els.hdrTitle.textContent = PROJECT_CONFIG.name;
-    els.hdrType.textContent = PROJECT_CONFIG.type || "";
-    const locWrap = els.hdrLocation.closest("div");
-    if(PROJECT_CONFIG.location){ els.hdrLocation.textContent = PROJECT_CONFIG.location; locWrap.style.display = ""; }
-    else locWrap.style.display = "none";
-    els.hdrVersion.innerHTML = escapeHtml(PROJECT_CONFIG.version||"") + (PROJECT_CONFIG.date ? "<br>"+escapeHtml(PROJECT_CONFIG.date) : "");
-    els.footVersion.textContent = [PROJECT_CONFIG.version, PROJECT_CONFIG.date].filter(Boolean).join(" — ");
-  }
-
-  /* ==========================================================================
-     OPTION CAROUSEL
-     ========================================================================== */
-  function renderCarouselShell(){
-    clear(els.carouselTrack); clear(els.carouselDots);
-    PROJECT_CONFIG.options.forEach((opt, i) => {
-      const card = el("div","opt-card");
-      card.tabIndex = 0; card.setAttribute("role","button"); card.setAttribute("aria-label","Select option " + (i+1));
-      card.appendChild(skeleton());
-      const label = el("div","opt-card-label", '<div class="n">Option '+String(i+1).padStart(2,"0")+'</div><div class="s">'+escapeHtml(opt.styleName||"")+'</div>');
-      card.appendChild(label);
-      card.addEventListener("click", () => selectOption(i));
-      card.addEventListener("keydown", e => { if(e.key==="Enter"||e.key===" "){ e.preventDefault(); selectOption(i); }});
-      els.carouselTrack.appendChild(card);
-
-      const dot = el("button","carousel-dot");
-      dot.setAttribute("aria-label","Go to option " + (i+1));
-      dot.addEventListener("click", () => selectOption(i));
-      els.carouselDots.appendChild(dot);
-    });
-    positionCarousel();
-  }
-  function fillCarouselCover(i, coverUrl){
-    const card = els.carouselTrack.children[i];
-    if(!card) return;
-    const first = card.firstChild;
-    const replacement = coverUrl ? imageOrPlaceholder(coverUrl) : placeholder("o"+(i+1)+".png");
-    card.replaceChild(replacement, first);
-  }
-  function positionCarousel(){
-    [...els.carouselTrack.children].forEach((card, i) => {
-      card.classList.remove("is-active","is-side-l","is-side-r","is-far");
-      const diff = i - state.optionIndex;
-      if(diff === 0) card.classList.add("is-active");
-      else if(diff === -1) card.classList.add("is-side-l");
-      else if(diff === 1) card.classList.add("is-side-r");
-      else card.classList.add("is-far");
-    });
-    [...els.carouselDots.children].forEach((d,i) => d.classList.toggle("active", i === state.optionIndex));
-  }
-  function selectOption(i){
-    if(i < 0 || i >= PROJECT_CONFIG.options.length) return;
-    state.optionIndex = i;
-    state.layoutIndex = 0;
-    state.smSlide = 0;
-    state.panoIndex = 0;
-    state.tod = "morning";
-    setVizMode("renders");
-    positionCarousel();
-    els.navOptionLabel.textContent = "Option " + String(i+1).padStart(2,"0") + " — " + (cfg().styleName||"");
-    loadAndRenderOption(i);
-  }
-  els.carouselTrack.addEventListener("keydown", e => {
-    if(e.key === "ArrowRight") selectOption(state.optionIndex+1);
-    if(e.key === "ArrowLeft") selectOption(state.optionIndex-1);
-  });
-  (function(){
-    let startX = null;
-    els.carouselTrack.addEventListener("pointerdown", e => { startX = e.clientX; });
-    els.carouselTrack.addEventListener("pointerup", e => {
-      if(startX == null) return;
-      const dx = e.clientX - startX;
-      if(Math.abs(dx) > 40) selectOption(state.optionIndex + (dx < 0 ? 1 : -1));
-      startX = null;
-    });
-  })();
-
-  /* ==========================================================================
-     STYLE + MOOD SLIDER
-     ========================================================================== */
-  function setSmSlide(i){
-    state.smSlide = i;
-    els.smTrack.style.transform = "translateX(-" + (i*50) + "%)";
-    els.smTabStyle.classList.toggle("active", i===0);
-    els.smTabMood.classList.toggle("active", i===1);
-    els.smTitle.textContent = i===0 ? "Style" : "Mood";
-  }
-  document.getElementById("smPrev").addEventListener("click", () => setSmSlide(state.smSlide===0 ? 1 : 0));
-  document.getElementById("smNext").addEventListener("click", () => setSmSlide(state.smSlide===0 ? 1 : 0));
-  els.smTabStyle.addEventListener("click", () => setSmSlide(0));
-  els.smTabMood.addEventListener("click", () => setSmSlide(1));
-
-  function renderStyleAndMood(){
-    const a = assets();
-    clear(els.dirImg1); clear(els.dirImg2); clear(els.moodImg);
-    els.dirImg1.appendChild(imageOrPlaceholder(a.d1, "o"+(state.optionIndex+1)+"-d1.png"));
-    if(a.d2){ els.dirImg2.style.display=""; els.dirImg2.appendChild(imageOrPlaceholder(a.d2)); }
-    else { els.dirImg2.style.display="none"; }
-    els.dirText.textContent = cfg().directionText || "";
-    els.moodImg.appendChild(imageOrPlaceholder(a.mood, "o"+(state.optionIndex+1)+"-m1.png"));
-    els.moodCaption.textContent = cfg().moodCaption || "";
-    setSmSlide(0);
-  }
-
-  /* ==========================================================================
-     LAYOUT
-     ========================================================================== */
-  function renderLayoutTabs(){
-    const a = assets();
-    clear(els.layoutTabs);
-    if(a.layouts.length <= 1){ els.layoutTabs.style.display = "none"; }
-    else {
-      els.layoutTabs.style.display = "";
-      a.layouts.forEach((layout, i) => {
-        const tab = el("button","layout-tab" + (i===state.layoutIndex ? " active" : ""), "Layout " + String(layout.n).padStart(2,"0"));
-        tab.addEventListener("click", () => { state.layoutIndex = i; renderLayoutTabs(); renderPlan(); });
-        els.layoutTabs.appendChild(tab);
-      });
-    }
-    els.section_layout.style.display = a.layouts.length ? "" : "none";
-  }
-  function renderPlan(){
-    const a = assets();
-    if(!a.layouts.length) return;
-    const layout = a.layouts[state.layoutIndex];
-    clear(els.planFrame);
-    els.planFrame.appendChild(imageOrPlaceholder(layout.image, "o"+(state.optionIndex+1)+"-l"+layout.n+".png"));
-
-    clear(els.elevRow);
-    if(!layout.elevations.length){
-      els.elevationsWrap.style.display = "none";
-    } else {
-      els.elevationsWrap.style.display = "";
-      layout.elevations.forEach((ev, idx) => {
-        const card = el("div","tech-card");
-        const thumb = el("div","thumb"); thumb.appendChild(imageOrPlaceholder(ev.src));
-        const label = el("div","label","Elevation " + String(ev.k).padStart(2,"0"));
-        card.appendChild(thumb); card.appendChild(label);
-        card.addEventListener("click", () => openLightbox(
-          layout.elevations.map(e2 => ({ image:e2.src, title:"Elevation " + String(e2.k).padStart(2,"0") })),
-          idx, "Technical Drawing"
-        ));
-        els.elevRow.appendChild(card);
-      });
-    }
-  }
-
-  /* ==========================================================================
-     FURNITURE / MATERIALS
-     ========================================================================== */
-  function renderFurniture(){
-    const a = assets(); const meta = cfg().furniture || {};
-    clear(els.furnitureGrid);
-    a.furnitureImgs.forEach(item => {
-      const m = meta[item.k] || {};
-      const card = el("div","item-card");
-      const thumb = el("div","thumb"); thumb.appendChild(imageOrPlaceholder(item.src));
-      const rows = [["Category",m.category],["Dimensions",m.dimensions],["Material",m.material],["Finish",m.finish],["Quantity",m.quantity]].filter(([,v])=>v);
-      const body = el("div","body",
-        '<h4>'+escapeHtml(m.name || ("Furniture " + String(item.k).padStart(2,"0")))+'</h4>'+
-        '<dl>'+rows.map(([l,v])=>'<dt>'+escapeHtml(l)+'</dt><dd>'+escapeHtml(v)+'</dd>').join("")+'</dl>');
-      card.appendChild(thumb); card.appendChild(body);
-      els.furnitureGrid.appendChild(card);
-    });
-    els.section_furniture.style.display = a.furnitureImgs.length ? "" : "none";
-  }
-  function renderMaterials(){
-    const a = assets(); const meta = cfg().materials || {};
-    clear(els.materialsGrid);
-    a.materialImgs.forEach(item => {
-      const m = meta[item.k] || {};
-      const card = el("div","item-card");
-      const thumb = el("div","thumb"); thumb.appendChild(imageOrPlaceholder(item.src));
-      const rows = [["Finish",m.finish],["Color",m.color],["Application",m.application],["Supplier",m.supplier]].filter(([,v])=>v);
-      const body = el("div","body",
-        '<h4>'+escapeHtml(m.name || ("Material " + String(item.k).padStart(2,"0")))+'</h4>'+
-        '<dl>'+rows.map(([l,v])=>'<dt>'+escapeHtml(l)+'</dt><dd>'+escapeHtml(v)+'</dd>').join("")+'</dl>');
-      card.appendChild(thumb); card.appendChild(body);
-      els.materialsGrid.appendChild(card);
-    });
-    els.section_materials.style.display = a.materialImgs.length ? "" : "none";
-  }
-
-  /* ==========================================================================
-     VISUALIZATION: RENDERS + PANORAMA (with morning / night toggle)
-     ========================================================================== */
-  let flatRenderList = [];
-
-  function bothTodAvailable(){
-    const a = assets(); if(!a) return false;
-    const pool = [...a.renders, ...a.panoramas];
-    return pool.some(x => x.morning) && pool.some(x => x.night);
-  }
-  function pickVariant(item){
-    // prefer the globally selected time of day; gracefully fall back
-    if(state.tod === "morning") return item.morning || item.night;
-    return item.night || item.morning;
-  }
-
-  function renderTodToggle(){
-    const show = bothTodAvailable();
-    document.getElementById("todToggle").style.display = show ? "" : "none";
-    document.getElementById("todMorning").classList.toggle("active", state.tod==="morning");
-    document.getElementById("todNight").classList.toggle("active", state.tod==="night");
-  }
-  document.getElementById("todMorning").addEventListener("click", () => { state.tod="morning"; renderTodToggle(); renderRenders(); refreshPanoramaFrame(); });
-  document.getElementById("todNight").addEventListener("click", () => { state.tod="night"; renderTodToggle(); renderRenders(); refreshPanoramaFrame(); });
-
-  function renderRenders(){
-    const a = assets();
-    clear(els.renderGrid);
-    flatRenderList = a.renders;
-    a.renders.forEach((r, idx) => {
-      const src = pickVariant(r);
-      const label = "Render " + String(r.k).padStart(2,"0") + (r.morning && r.night ? (" — " + (pickVariant(r)===r.morning ? "Morning" : "Night")) : "");
-      const a1 = document.createElement("a");
-      a1.href = "javascript:void(0)";
-      a1.appendChild(imageOrPlaceholder(src));
-      a1.appendChild(el("div","render-cap", escapeHtml(label)));
-      a1.addEventListener("click", () => openLightbox(
-        a.renders.map(r2 => ({ image: pickVariant(r2), title: "Render " + String(r2.k).padStart(2,"0") })),
-        idx, "Render"
-      ));
-      els.renderGrid.appendChild(a1);
-    });
-    document.getElementById("rendersView").style.display = state.vizMode==="renders" ? "" : "none";
-    document.getElementById("visualization").style.display = (a.renders.length || a.panoramas.length) ? "" : "none";
-  }
-
-  /* ==========================================================================
-     TRUE 360° PANORAMA VIEWER (three.js) + automatic drag-slide fallback
-     The image is mapped onto the inside of a sphere; the camera rotates
-     inside it. Non-equirectangular images (ratio < 1.8:1) trigger fallback.
-     ========================================================================== */
-  const Pano360Viewer = (function(){
-    let renderer=null, scene=null, camera=null, mesh=null, loader=null;
-    let stage=null, canvas=null;
-    let lon=0, lat=0, tLon=0, tLat=0, fov=75, tFov=75;
-    let raf=null, running=false, live=false, dead=false;
-    let currentSrc=null, lastInteract=0, pinch0=0, pinchFov0=75;
-    const pointers=new Map(), texCache=new Map(), cb={};
-    const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
-
-    function init(opts){
-      Object.assign(cb, opts); stage=opts.stage; canvas=opts.canvas;
-      if(typeof THREE==="undefined"){ fail(); return false; }
-      try{
-        renderer=new THREE.WebGLRenderer({ canvas, antialias:true });
-        renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,2));
-        renderer.setClearColor(0x0B0B0A);
-      }catch(e){ fail(); return false; }
-      scene=new THREE.Scene();
-      camera=new THREE.PerspectiveCamera(fov,1,0.1,1100);
-      const geo=new THREE.SphereGeometry(500,64,40);
-      geo.scale(-1,1,1);                       // camera sits inside the sphere
-      mesh=new THREE.Mesh(geo,new THREE.MeshBasicMaterial({ color:0x141414 }));
-      scene.add(mesh);
-      loader=new THREE.TextureLoader(); loader.setCrossOrigin("anonymous");
-
-      stage.addEventListener("pointerdown",down);
-      stage.addEventListener("pointermove",move);
-      stage.addEventListener("pointerup",up);
-      stage.addEventListener("pointercancel",up);
-      stage.addEventListener("wheel",wheel,{ passive:false });
-      if(window.ResizeObserver) new ResizeObserver(resize).observe(stage);
-      window.addEventListener("resize",resize);
-      live=true; return true;
-    }
-    function fail(src){ dead=true; stop(); if(cb.onLoading) cb.onLoading(false); if(cb.onFail) cb.onFail(src); }
-    function resize(){
-      if(!renderer||!stage) return;
-      const w=stage.clientWidth, h=stage.clientHeight; if(!w||!h) return;
-      renderer.setSize(w,h,false); camera.aspect=w/h; camera.updateProjectionMatrix();
-    }
-    function down(e){
-      if(dead||!currentSrc) return;
-      lastInteract=performance.now();
-      pointers.set(e.pointerId,{x:e.clientX,y:e.clientY});
-      try{ stage.setPointerCapture(e.pointerId); }catch(_){}
-      if(pointers.size===2){ const p=[...pointers.values()];
-        pinch0=Math.hypot(p[0].x-p[1].x,p[0].y-p[1].y); pinchFov0=tFov; }
-      e.preventDefault();
-    }
-    function move(e){
-      if(dead||!pointers.has(e.pointerId)) return;
-      lastInteract=performance.now();
-      const p=pointers.get(e.pointerId);
-      const dx=e.clientX-p.x, dy=e.clientY-p.y; p.x=e.clientX; p.y=e.clientY;
-      if(pointers.size===1){
-        const k=fov/Math.max(stage.clientHeight,1);      // deg per pixel
-        tLon-=dx*k; tLat=clamp(tLat+dy*k,-85,85);
-      }else if(pointers.size===2&&pinch0>0){
-        const q=[...pointers.values()];
-        const d=Math.hypot(q[0].x-q[1].x,q[0].y-q[1].y);
-        if(d>0) tFov=clamp(pinchFov0*pinch0/d,30,100);   // pinch zoom
-      }
-      e.preventDefault();
-    }
-    function up(e){ pointers.delete(e.pointerId); if(pointers.size<2) pinch0=0; }
-    function wheel(e){
-      if(dead||!currentSrc) return;
-      lastInteract=performance.now(); e.preventDefault();
-      tFov=clamp(tFov+e.deltaY*0.05,30,100);
-    }
-    function cacheTex(src,tex){
-      if(texCache.has(src)) return;
-      if(texCache.size>=8){ const cur=mesh.material.map;
-        texCache.forEach((t,s)=>{ if(t!==cur){ t.dispose(); texCache.delete(s); } }); }
-      texCache.set(src,tex);
-    }
-    function load(src){
-      if(dead||!renderer) return false;
-      currentSrc=src; lon=tLon; lat=tLat;                // hold view while swapping
-      if(cb.onLoading) cb.onLoading(true);
-      const apply=tex=>{
-        if(currentSrc!==src) return;
-        const img=tex.image, ratio=(img.width||2)/Math.max(img.height||1,1);
-        if(ratio<1.8){ fail(src); return; }              // not equirectangular → fallback
-        mesh.material.map=tex; mesh.material.color.set(0xffffff);
-        mesh.material.needsUpdate=true;
-        if(cb.onLoading) cb.onLoading(false);
-      };
-      if(texCache.has(src)) apply(texCache.get(src));
-      else loader.load(src,tex=>{
-        tex.anisotropy=renderer.capabilities.getMaxAnisotropy();
-        cacheTex(src,tex); apply(tex);
-      },undefined,()=>{ if(currentSrc===src) fail(src); });
-      return true;
-    }
-    function frame(){
-      if(!running) return;
-      raf=requestAnimationFrame(frame);
-      if(performance.now()-lastInteract>5000) tLon+=0.02;  // gentle idle spin
-      lon+=(tLon-lon)*0.16; lat+=(tLat-lat)*0.16; fov+=(tFov-fov)*0.16;
-      camera.fov=fov; camera.updateProjectionMatrix();
-      const phi=THREE.MathUtils.degToRad(90-lat), theta=THREE.MathUtils.degToRad(lon);
-      camera.lookAt(500*Math.sin(phi)*Math.cos(theta),500*Math.cos(phi),500*Math.sin(phi)*Math.sin(theta));
-      try{ renderer.render(scene,camera); }catch(err){ fail(currentSrc); }
-    }
-    function start(){ if(dead||!renderer||running) return; running=true; frame(); }
-    function stop(){ running=false; if(raf){ cancelAnimationFrame(raf); raf=null; } }
-    return { init, load, start, stop, resize, isAlive:()=>live&&!dead };
-  })();
-
-  function panoShowWebGL(){
-    document.getElementById("panoCanvas").style.display="block";
-    els.panoTrack.style.display="none";
-    document.getElementById("panoHint").textContent="Drag to look around · Scroll to zoom";
-  }
-  function panoShowLegacy(){
-    document.getElementById("panoCanvas").style.display="none";
-    els.panoTrack.style.display="";
-    document.getElementById("panoHint").textContent="Drag to slide";
-  }
-  const panoWebGL = Pano360Viewer.init({
-    stage: els.panoStage,
-    canvas: document.getElementById("panoCanvas"),
-    onLoading: show => document.getElementById("panoLoading").classList.toggle("show", !!show),
-    onFail: src => { panoShowLegacy(); if(src) legacyLoad(src); }
-  });
-  if(panoWebGL) panoShowWebGL(); else panoShowLegacy();
-
-  /* old slide-style viewer kept as automatic fallback */
-  const panoSlide={ active:false, startX:0, offset:0, singleWidth:0 };
-  function legacyLoad(src){
-    clear(els.panoTrack);
-    for(let k=0;k<3;k++) els.panoTrack.appendChild(imageOrPlaceholder(src));
-    requestAnimationFrame(()=>{
-      const single=els.panoTrack.children[0];
-      panoSlide.singleWidth=single?single.getBoundingClientRect().width:0;
-      panoSlide.offset=-panoSlide.singleWidth;
-      els.panoTrack.style.transform="translateX("+panoSlide.offset+"px)";
-    });
-  }
-  (function bindLegacyPano(){
-    const st=els.panoStage;
-    st.addEventListener("pointerdown",e=>{ panoSlide.active=true; panoSlide.startX=e.clientX;
-      try{ st.setPointerCapture(e.pointerId); }catch(_){} });
-    st.addEventListener("pointermove",e=>{
-      if(!panoSlide.active||Pano360Viewer.isAlive()) return;
-      const dx=e.clientX-panoSlide.startX;
-      let next=panoSlide.offset+dx; const w=panoSlide.singleWidth||1;
-      if(next>-0.02*w){ next-=w; panoSlide.startX=e.clientX; panoSlide.offset=next; }
-      if(next<-1.98*w){ next+=w; panoSlide.startX=e.clientX; panoSlide.offset=next; }
-      els.panoTrack.style.transform="translateX("+next+"px)";
-    });
-    const end=e=>{ if(!panoSlide.active) return; panoSlide.active=false; panoSlide.offset+=e.clientX-panoSlide.startX; };
-    st.addEventListener("pointerup",end); st.addEventListener("pointercancel",end);
-  })();
-
-  function renderPanoramaLocations(){
-    const a=assets();
-    clear(els.panoLocations);
-    document.getElementById("btnPanorama").style.display=a.panoramas.length?"":"none";
-    if(!a.panoramas.length){ if(state.vizMode==="panorama") setVizMode("renders"); return; }
-    a.panoramas.forEach((p,i)=>{
-      const btn=el("button","pano-loc"+(i===state.panoIndex?" active":""));
-      btn.appendChild(imageOrPlaceholder(pickVariant(p)));
-      btn.appendChild(el("span",null,"Location "+String(p.k).padStart(2,"0")));
-      btn.addEventListener("click",()=>selectPanorama(i));
-      els.panoLocations.appendChild(btn);
-    });
-    selectPanorama(Math.min(state.panoIndex,a.panoramas.length-1));
-  }
-  function selectPanorama(i){
-    const a=assets(); if(!a.panoramas.length) return;
-    state.panoIndex=Math.max(0,Math.min(i,a.panoramas.length-1));
-    const p=a.panoramas[state.panoIndex];
-    els.panoName.textContent="Location "+String(p.k).padStart(2,"0");
-    [...els.panoLocations.children].forEach((elx,idx)=>elx.classList.toggle("active",idx===state.panoIndex));
-    if(state.vizMode==="panorama") applyPanorama();
-  }
-  function applyPanorama(){
-    const a=assets(); const p=a.panoramas[state.panoIndex]; if(!p) return;
-    const src=pickVariant(p);
-    if(!(Pano360Viewer.isAlive()&&Pano360Viewer.load(src))) legacyLoad(src);
-  }
-  function refreshPanoramaFrame(){
-    const a=assets();
-    if(a && a.panoramas.length) renderPanoramaLocations(); // rebuilds thumbs for current time of day
-  }
-
-  function setVizMode(mode){
-    state.vizMode=mode;
-    document.getElementById("btnRenders").classList.toggle("active",mode==="renders");
-    document.getElementById("btnPanorama").classList.toggle("active",mode==="panorama");
-    document.getElementById("rendersView").style.display=mode==="renders"?"":"none";
-    document.getElementById("panoramaView").style.display=mode==="panorama"?"":"none";
-    if(mode==="panorama"){ applyPanorama(); Pano360Viewer.resize(); Pano360Viewer.start(); }
-    else { Pano360Viewer.stop(); }
-  }
-  document.getElementById("btnRenders").addEventListener("click", () => setVizMode("renders"));
-  document.getElementById("btnPanorama").addEventListener("click", () => setVizMode("panorama"));
-
-  /* ==========================================================================
-     DOCUMENTS
-     ========================================================================== */
-  function renderDocuments(){
-    const a = assets(); const meta = cfg().documents || {};
-    clear(els.docList);
-    els.section_documents.style.display = a.docFiles.length ? "" : "none";
-    a.docFiles.forEach(doc => {
-      const m = meta[doc.k] || {};
-      const row = el("div","doc-row");
-      const left = el("div",null,
-        '<div class="doc-name">'+escapeHtml(m.label || ("Document " + String(doc.k).padStart(2,"0")))+'</div>'+
-        '<div class="doc-file">o'+(state.optionIndex+1)+'-pdf'+doc.k+'.pdf</div>');
-      const link = document.createElement("a");
-      link.className = "doc-open"; link.textContent = "Open"; link.href = doc.src; link.target = "_blank"; link.rel = "noopener";
-      row.appendChild(left); row.appendChild(link);
-      els.docList.appendChild(row);
-    });
-  }
-
-  /* ==========================================================================
-     SHARED LIGHTBOX (with zoom / pan / thumbnails / keyboard)
-     ========================================================================== */
-  const lbEls = {
-    box: document.getElementById("lightbox"), img: document.getElementById("lbImg"),
-    title: document.getElementById("lbTitle"), sub: document.getElementById("lbSub"),
-    thumbs: document.getElementById("lbThumbs"), body: document.getElementById("lbBody")
-  };
-  let lb = { items: [], index: 0, kind: "", zoom:1, panX:0, panY:0, dragging:false, lastX:0, lastY:0 };
-  let lbMoved = false;
-
-  function openLightbox(items, index, kind){
-    lb.items = items; lb.index = index; lb.kind = kind; lbMoved = false;
-    lbEls.box.classList.add("open"); document.body.style.overflow = "hidden";
-    renderLbFrame(); renderLbThumbs();
-  }
-  function closeLightbox(){ lbEls.box.classList.remove("open"); document.body.style.overflow = ""; }
-  function applyLbTransform(){
-    lbEls.img.style.transform = "translate(" + lb.panX + "px," + lb.panY + "px) scale(" + lb.zoom + ")";
-  }
-  function renderLbFrame(){
-    const item = lb.items[lb.index];
-    if(!item) return;
-    lb.zoom=1; lb.panX=0; lb.panY=0;
-    lbEls.img.style.transform = "translate(0px,0px) scale(1)";
-    lbEls.title.textContent = item.title || "";
-    lbEls.sub.textContent = lb.kind + " · " + (lb.index+1) + " / " + lb.items.length;
-    if(item.image){ lbEls.img.style.display=""; lbEls.img.src = item.image; lbEls.img.alt = item.title||""; }
-    else { lbEls.img.style.display="none"; lbEls.img.src=""; }
-  }
-  function renderLbThumbs(){
-    clear(lbEls.thumbs);
-    lb.items.forEach((item, i) => {
-      if(!item.image) return;
-      const t = document.createElement("img");
-      t.src = item.image; t.alt = "";
-      if(i === lb.index) t.classList.add("active");
-      t.addEventListener("click", () => { lb.index = i; renderLbFrame(); renderLbThumbs(); });
-      lbEls.thumbs.appendChild(t);
-    });
-    lbEls.thumbs.style.display = lb.items.length > 1 ? "" : "none";
-  }
-  function lbGo(delta){
-    if(lb.items.length < 2) return;
-    lb.index = (lb.index + delta + lb.items.length) % lb.items.length;
-    renderLbFrame(); renderLbThumbs();
-  }
-  document.getElementById("lbClose").addEventListener("click", closeLightbox);
-  document.getElementById("lbPrev").addEventListener("click", () => lbGo(-1));
-  document.getElementById("lbNext").addEventListener("click", () => lbGo(1));
-  document.addEventListener("keydown", e => {
-    if(!lbEls.box.classList.contains("open")) return;
-    if(e.key === "Escape") closeLightbox();
-    else if(e.key === "ArrowLeft") lbGo(-1);
-    else if(e.key === "ArrowRight") lbGo(1);
-  });
-  lbEls.box.addEventListener("click", e => {
-    if(lbMoved){ lbMoved = false; return; }   // ignore the click that ends a pan/pinch
-    if(e.target === lbEls.box || e.target === lbEls.body) closeLightbox();
-  });
-  lbEls.box.addEventListener("wheel", e => {
-    if(!lbEls.box.classList.contains("open")) return;
-    e.preventDefault();
-    const prev = lb.zoom;
-    lb.zoom = Math.min(6, Math.max(1, lb.zoom * (e.deltaY < 0 ? 1.15 : 1/1.15)));
-    if(lb.zoom === 1){ lb.panX = 0; lb.panY = 0; }
-    else if(lb.zoom !== prev){
-      const r = lbEls.img.getBoundingClientRect();
-      const cx = e.clientX - (r.left + r.width/2);
-      const cy = e.clientY - (r.top + r.height/2);
-      const k = lb.zoom / prev;
-      lb.panX = cx - k*(cx - lb.panX);
-      lb.panY = cy - k*(cy - lb.panY);
-    }
-    applyLbTransform();
-  }, {passive:false});
-  (function lbPointerZoomPan(){
-    const ptrs = new Map(); let pinch0 = 0, zoom0 = 1;
-    lbEls.body.addEventListener("pointerdown", e => {
-      if(e.target.closest(".lb-arrow")) return;
-      ptrs.set(e.pointerId, {x:e.clientX, y:e.clientY});
-      try{ lbEls.body.setPointerCapture(e.pointerId); }catch(_){}
-      if(ptrs.size === 1){ lb.dragging = true; lb.lastX = e.clientX; lb.lastY = e.clientY; }
-      if(ptrs.size === 2){
-        const p = [...ptrs.values()];
-        pinch0 = Math.hypot(p[0].x-p[1].x, p[0].y-p[1].y); zoom0 = lb.zoom;
-        lb.dragging = false;
-      }
-    });
-    lbEls.body.addEventListener("pointermove", e => {
-      if(!ptrs.has(e.pointerId)) return;
-      const p = ptrs.get(e.pointerId); p.x = e.clientX; p.y = e.clientY;
-      if(ptrs.size === 1 && lb.dragging && lb.zoom > 1){
-        lb.panX += e.clientX - lb.lastX; lb.panY += e.clientY - lb.lastY;
-        lb.lastX = e.clientX; lb.lastY = e.clientY;
-        lbMoved = true;
-        applyLbTransform();
-      } else if(ptrs.size === 2 && pinch0 > 0){
-        const q = [...ptrs.values()];
-        const d = Math.hypot(q[0].x-q[1].x, q[0].y-q[1].y);
-        if(d > 0){
-          lb.zoom = Math.min(6, Math.max(1, zoom0 * d / pinch0));
-          if(lb.zoom === 1){ lb.panX = 0; lb.panY = 0; }
-          lbMoved = true;
-          applyLbTransform();
         }
-      }
-    });
-    const end = e => {
-      ptrs.delete(e.pointerId);
-      if(ptrs.size < 2) pinch0 = 0;
-      if(ptrs.size === 0) lb.dragging = false;
-      else if(ptrs.size === 1){ const p=[...ptrs.values()][0]; lb.dragging=true; lb.lastX=p.x; lb.lastY=p.y; }
-    };
-    lbEls.body.addEventListener("pointerup", end);
-    lbEls.body.addEventListener("pointercancel", end);
-  })();
 
-  /* ==========================================================================
-     BOOT — resolve assets per option, then render the active one
-     ========================================================================== */
-  function requestAssets(i){
-    if(!state.assetPending[i]){
-      state.assetPending[i] = resolveOption(i+1).then(a => {
-        state.assetCache[i] = a;
-        fillCarouselCover(i, a.cover);
-        return a;
-      });
     }
-    return state.assetPending[i];
-  }
-  async function loadAndRenderOption(i){
-    const a = await requestAssets(i);
-    if(state.optionIndex !== i) return;   // user switched options while loading
-    renderStyleAndMood();
-    renderLayoutTabs(); renderPlan();
-    renderFurniture(); renderMaterials();
-    renderTodToggle(); renderRenders(); renderPanoramaLocations();
-    renderDocuments();
-  }
+);
 
-  renderHeader();
-  renderCarouselShell();
-  selectOption(0);
-  // warm-cache the other options so their covers fill in and switching is instant
-  for(let j=1; j<PROJECT_CONFIG.options.length; j++) requestAssets(j);
 
-  /* mobile nav toggle */
-  document.getElementById("navToggle").addEventListener("click", () => {
-    document.getElementById("navLinks").classList.toggle("open");
-  });
-  document.querySelectorAll("#navLinks a").forEach(a2 => a2.addEventListener("click", () => {
-    document.getElementById("navLinks").classList.remove("open");
-  }));
-})();
+/*
+   Update fullscreen icon after the browser enters/leaves
+   fullscreen.
+*/
+
+document.addEventListener(
+    "fullscreenchange",
+    () => {
+
+        if (document.fullscreenElement) {
+
+            fullscreenButton.textContent = "×";
+
+            fullscreenButton.setAttribute(
+                "aria-label",
+                "Exit fullscreen"
+            );
+
+        } else {
+
+            fullscreenButton.textContent = "⛶";
+
+            fullscreenButton.setAttribute(
+                "aria-label",
+                "Enter fullscreen"
+            );
+
+        }
+
+    }
+);
+
+
+/* =============================================================
+   360° PANORAMA CONTROLLER
+   ============================================================= */
+
+/*
+   This is a lightweight equirectangular panorama viewer.
+
+   The panorama image must be a normal 2:1 equirectangular
+   panorama:
+
+       360° horizontal
+       180° vertical
+
+   The user can drag horizontally to rotate around the room.
+*/
+
+
+let rotation = 0;
+
+let targetRotation = 0;
+
+let isDragging = false;
+
+let startX = 0;
+
+let startRotation = 0;
+
+
+/*
+   Amount of rotation produced by mouse movement.
+*/
+
+const dragSensitivity = 0.18;
+
+
+/*
+   Keep angle between 0 and 360 degrees.
+*/
+
+function normalizeAngle(angle) {
+
+    angle %= 360;
+
+    if (angle < 0) {
+        angle += 360;
+    }
+
+    return angle;
+}
+
+
+/*
+   Convert viewing angle into horizontal translation.
+*/
+
+function updatePanorama() {
+
+    const viewportWidth =
+        panorama.clientWidth;
+
+    /*
+       The panorama world is twice the viewport width.
+       This allows us to move through the image while keeping
+       the panorama visually continuous.
+    */
+
+    const worldWidth =
+        panoramaWorld.scrollWidth;
+
+    const maxOffset =
+        worldWidth - viewportWidth;
+
+    const normalized =
+        normalizeAngle(targetRotation) / 360;
+
+    const offset =
+        normalized * maxOffset;
+
+    panoramaWorld.style.transform =
+        `translate3d(${-offset}px, 0, 0)`;
+
+}
+
+
+/*
+   Smooth interpolation.
+
+   This makes the panorama movement less mechanical.
+*/
+
+function animationLoop() {
+
+    let difference =
+        targetRotation - rotation;
+
+    /*
+       Handle shortest path around 360 degrees.
+    */
+
+    if (difference > 180) {
+        difference -= 360;
+    }
+
+    if (difference < -180) {
+        difference += 360;
+    }
+
+    rotation += difference * 0.12;
+
+    updatePanorama();
+
+    requestAnimationFrame(
+        animationLoop
+    );
+
+}
+
+animationLoop();
+
+
+/* =============================================================
+   POINTER / MOUSE DRAG
+   ============================================================= */
+
+panorama.addEventListener(
+    "pointerdown",
+    event => {
+
+        isDragging = true;
+
+        startX = event.clientX;
+
+        startRotation =
+            targetRotation;
+
+        panorama.classList.add(
+            "dragging"
+        );
+
+        panorama.setPointerCapture(
+            event.pointerId
+        );
+
+    }
+);
+
+
+panorama.addEventListener(
+    "pointermove",
+    event => {
+
+        if (!isDragging) {
+            return;
+        }
+
+        const distance =
+            event.clientX - startX;
+
+        targetRotation =
+            startRotation -
+            distance * dragSensitivity;
+
+    }
+);
+
+
+function stopDragging() {
+
+    isDragging = false;
+
+    panorama.classList.remove(
+        "dragging"
+    );
+
+}
+
+
+panorama.addEventListener(
+    "pointerup",
+    stopDragging
+);
+
+panorama.addEventListener(
+    "pointercancel",
+    stopDragging
+);
+
+
+/* =============================================================
+   MOUSE WHEEL
+   ============================================================= */
+
+/*
+   Optional small horizontal rotation using the mouse wheel.
+*/
+
+panorama.addEventListener(
+    "wheel",
+    event => {
+
+        event.preventDefault();
+
+        targetRotation +=
+            event.deltaY * 0.08;
+
+    },
+    {
+        passive: false
+    }
+);
+
+
+/* =============================================================
+   RESIZE
+   ============================================================= */
+
+window.addEventListener(
+    "resize",
+    updatePanorama
+);
+
+
+/* =============================================================
+   INITIAL STATE
+   ============================================================= */
+
+setLighting(false);
+
+updatePanorama();
+
 </script>
 
-
-</body></html>
+</body>
+</html>
