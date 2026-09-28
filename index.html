@@ -1049,7 +1049,7 @@
 
                 <img
                     class="render-image morning"
-                    src="o2-r2-morning.png"
+                    src="o1-r2-morning.png"
                     alt="Render 02 morning"
                     loading="lazy"
                 >
@@ -1057,7 +1057,7 @@
 
                 <img
                     class="render-image night"
-                    src="o2-r2-night.png"
+                    src="o1-r2-night.png"
                     alt="Render 02 night"
                     loading="lazy"
                 >
@@ -1084,7 +1084,7 @@
 
                 <img
                     class="render-image morning"
-                    src="o3-r3-morning.png"
+                    src="o1-r3-morning.png"
                     alt="Render 03 morning"
                     loading="lazy"
                 >
@@ -1092,7 +1092,7 @@
 
                 <img
                     class="render-image night"
-                    src="o3-r3-night.png"
+                    src="o1-r3-night.png"
                     alt="Render 03 night"
                     loading="lazy"
                 >
@@ -1119,7 +1119,7 @@
 
                 <img
                     class="render-image morning"
-                    src="o4-r4-morning.png"
+                    src="o1-r4-morning.png"
                     alt="Render 04 morning"
                     loading="lazy"
                 >
@@ -1127,7 +1127,7 @@
 
                 <img
                     class="render-image night"
-                    src="o4-r4-night.png"
+                    src="o1-r4-night.png"
                     alt="Render 04 night"
                     loading="lazy"
                 >
@@ -1154,7 +1154,7 @@
 
                 <img
                     class="render-image morning"
-                    src="o5-r5-morning.png"
+                    src="o1-r5-morning.png"
                     alt="Render 05 morning"
                     loading="lazy"
                 >
@@ -1162,7 +1162,7 @@
 
                 <img
                     class="render-image night"
-                    src="o5-r5-night.png"
+                    src="o1-r5-night.png"
                     alt="Render 05 night"
                     loading="lazy"
                 >
@@ -1189,7 +1189,7 @@
 
                 <img
                     class="render-image morning"
-                    src="o6-r6-morning.png"
+                    src="o1-r6-morning.png"
                     alt="Render 06 morning"
                     loading="lazy"
                 >
@@ -1197,7 +1197,7 @@
 
                 <img
                     class="render-image night"
-                    src="o6-r6-night.png"
+                    src="o1-r6-night.png"
                     alt="Render 06 night"
                     loading="lazy"
                 >
@@ -1616,7 +1616,7 @@ panorama.addEventListener(
         */
 
         targetLatitude =
-            startLatitude -
+            startLatitude +
             deltaY * 0.12;
 
 
@@ -1666,10 +1666,17 @@ panorama.addEventListener(
 
 
 /* =============================================================
-   MOUSE WHEEL
+   MOUSE WHEEL ZOOM
 
-   Small horizontal rotation.
-============================================================== */
+   Scroll up   → zoom in
+   Scroll down → zoom out
+   ============================================================== */
+
+const MIN_FOV = 35;
+const MAX_FOV = 90;
+
+let targetFOV = 75;
+let currentFOV = 75;
 
 panorama.addEventListener(
     "wheel",
@@ -1677,12 +1684,18 @@ panorama.addEventListener(
 
         event.preventDefault();
 
+        targetFOV += event.deltaY * 0.045;
 
-        targetLongitude +=
-            event.deltaY * 0.15;
+        targetFOV =
+            Math.max(
+                MIN_FOV,
+                Math.min(
+                    MAX_FOV,
+                    targetFOV
+                )
+            );
 
     },
-
     {
         passive: false
     }
@@ -1947,6 +1960,19 @@ document.addEventListener(
 ============================================================== */
 
 function updateCamera() {
+
+    /*
+       Smooth zoom.
+    */
+
+    currentFOV +=
+        (
+            targetFOV -
+            currentFOV
+        ) * 0.12;
+
+    camera.fov = currentFOV;
+    camera.updateProjectionMatrix();
 
     /*
        Smooth horizontal movement.
