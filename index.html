@@ -1,15 +1,43 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Architectural Visualization — Cinematic Showcase</title>
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        Architectural Visualization
+    </title>
+
+
+    <!-- =========================================================
+         THREE.JS IMPORT MAP
+    ========================================================== -->
+
+    <script type="importmap">
+    {
+        "imports": {
+            "three": "https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js"
+        }
+    }
+    </script>
+
+
+    <!-- =========================================================
+         CSS
+    ========================================================== -->
 
     <style>
-        /* =========================================================
-           RESET / BASE
-        ========================================================= */
+
+        /* =====================================================
+           RESET
+        ====================================================== */
 
         * {
             box-sizing: border-box;
@@ -17,47 +45,74 @@
             padding: 0;
         }
 
+
         html,
         body {
+
             width: 100%;
             min-height: 100%;
+
             background: #080808;
-            color: #fff;
-            font-family: Arial, Helvetica, sans-serif;
+            color: #ffffff;
+
+            font-family:
+                Arial,
+                Helvetica,
+                sans-serif;
         }
+
 
         body {
             overflow-x: hidden;
         }
 
+
         button {
             font: inherit;
         }
 
-        /* =========================================================
+
+        /* =====================================================
            MAIN SHOWCASE
-        ========================================================= */
+
+           IMPORTANT:
+           The ENTIRE showcase enters fullscreen.
+           Therefore the light control remains available
+           during fullscreen.
+        ====================================================== */
 
         .showcase {
+
+            position: relative;
+
             width: 100%;
             min-height: 100vh;
+
             background: #080808;
         }
 
-        /* =========================================================
+
+        /* =====================================================
            HEADER
-        ========================================================= */
+
+           The header is inside .showcase, so it remains
+           visible in fullscreen.
+        ====================================================== */
 
         .header {
-            position: fixed;
+
+            position: absolute;
+
             z-index: 1000;
+
             top: 0;
             left: 0;
 
             width: 100%;
-            height: 72px;
+            height: 80px;
 
             display: flex;
+
             align-items: center;
             justify-content: space-between;
 
@@ -65,80 +120,110 @@
 
             pointer-events: none;
 
-            background: linear-gradient(
-                to bottom,
-                rgba(0,0,0,.55),
-                rgba(0,0,0,0)
-            );
+            background:
+                linear-gradient(
+                    to bottom,
+                    rgba(0, 0, 0, .55),
+                    transparent
+                );
         }
 
-        .project-title,
+
+        .project-title {
+
+            pointer-events: auto;
+
+            font-size: 10px;
+
+            letter-spacing: .2em;
+
+            text-transform: uppercase;
+
+            opacity: .75;
+        }
+
+
         .header-right {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 10px;
+
             pointer-events: auto;
         }
 
-        .project-title {
-            font-size: 12px;
-            letter-spacing: .18em;
-            text-transform: uppercase;
-            opacity: .85;
-        }
 
-        .header-right {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        /* =========================================================
-           LIGHT SWITCH
-           
-           IMPORTANT:
-           This control is INSIDE .fullscreen-stage.
-           Therefore it remains available when that element enters
-           fullscreen.
-        ========================================================= */
+        /* =====================================================
+           LIGHT ON / OFF CONTROL
+        ====================================================== */
 
         .light-control {
-            position: relative;
 
             display: flex;
+
             align-items: center;
+
             gap: 10px;
 
-            padding: 7px 10px;
+            height: 38px;
 
-            border: 1px solid rgba(255,255,255,.25);
+            padding: 0 11px;
+
+            border:
+                1px solid
+                rgba(255,255,255,.25);
+
             border-radius: 100px;
 
-            background: rgba(10,10,10,.55);
-            backdrop-filter: blur(14px);
+            background:
+                rgba(10,10,10,.55);
 
-            cursor: pointer;
+            backdrop-filter:
+                blur(14px);
+
+            -webkit-backdrop-filter:
+                blur(14px);
 
             color: #fff;
+
+            cursor: pointer;
 
             transition:
                 background .35s ease,
                 border-color .35s ease;
         }
 
+
         .light-control:hover {
-            background: rgba(255,255,255,.12);
-            border-color: rgba(255,255,255,.5);
+
+            background:
+                rgba(255,255,255,.12);
+
+            border-color:
+                rgba(255,255,255,.45);
         }
+
 
         .light-label {
-            min-width: 42px;
+
+            min-width: 48px;
 
             font-size: 9px;
-            letter-spacing: .15em;
-            text-transform: uppercase;
 
             text-align: center;
+
+            text-transform: uppercase;
+
+            letter-spacing: .14em;
         }
 
+
+        /* Toggle track */
+
         .switch {
+
             position: relative;
 
             width: 42px;
@@ -146,12 +231,17 @@
 
             border-radius: 100px;
 
-            background: #555;
+            background: #4d4d4d;
 
-            transition: background .4s ease;
+            transition:
+                background .4s ease;
         }
 
+
+        /* Toggle circle */
+
         .switch::after {
+
             content: "";
 
             position: absolute;
@@ -164,74 +254,92 @@
 
             border-radius: 50%;
 
-            background: #fff;
+            background: #ffffff;
 
             transition:
-                transform .45s cubic-bezier(.2,.8,.2,1);
+                transform .45s
+                cubic-bezier(.2,.8,.2,1);
         }
 
-        .light-control.is-night .switch {
-            background: #d6a95d;
+
+        /* NIGHT / ON */
+
+        .light-control.is-night
+        .switch {
+
+            background: #c79b55;
         }
 
-        .light-control.is-night .switch::after {
-            transform: translateX(20px);
+
+        .light-control.is-night
+        .switch::after {
+
+            transform:
+                translateX(20px);
         }
 
-        /* =========================================================
+
+        /* =====================================================
            FULLSCREEN BUTTON
-        ========================================================= */
+        ====================================================== */
 
         .fullscreen-button {
+
             width: 38px;
             height: 38px;
 
             display: grid;
+
             place-items: center;
 
-            border: 1px solid rgba(255,255,255,.25);
+            border:
+                1px solid
+                rgba(255,255,255,.25);
+
             border-radius: 50%;
 
-            background: rgba(10,10,10,.55);
-            backdrop-filter: blur(14px);
+            background:
+                rgba(10,10,10,.55);
 
-            color: #fff;
+            backdrop-filter:
+                blur(14px);
+
+            -webkit-backdrop-filter:
+                blur(14px);
+
+            color: white;
 
             cursor: pointer;
 
-            font-size: 15px;
+            font-size: 16px;
 
             transition:
                 background .3s ease,
                 border-color .3s ease;
         }
 
+
         .fullscreen-button:hover {
-            background: rgba(255,255,255,.12);
-            border-color: rgba(255,255,255,.5);
+
+            background:
+                rgba(255,255,255,.12);
+
+            border-color:
+                rgba(255,255,255,.5);
         }
 
-        /* =========================================================
-           FULLSCREEN STAGE
-           
-           Everything that needs to remain accessible in fullscreen
-           is contained inside this element.
-        ========================================================= */
 
-        .fullscreen-stage {
-            position: relative;
-            width: 100%;
-        }
-
-        /* =========================================================
+        /* =====================================================
            PANORAMA
-        ========================================================= */
+        ====================================================== */
 
         .panorama-section {
+
             position: relative;
 
             width: 100%;
             height: 100vh;
+
             min-height: 650px;
 
             overflow: hidden;
@@ -239,201 +347,218 @@
             background: #000;
 
             user-select: none;
+
             touch-action: none;
 
             cursor: grab;
         }
 
+
         .panorama-section.dragging {
+
             cursor: grabbing;
         }
 
-        /*
-           Panorama images are rendered as very wide strips.
 
-           JavaScript moves the strip horizontally according to
-           the user's viewing angle.
-        */
+        #panoramaViewer {
 
-        .panorama-world {
             position: absolute;
 
-            top: 0;
-            left: 0;
-
-            height: 100%;
-            width: 200%;
-
-            transform: translate3d(0,0,0);
-
-            will-change: transform;
-        }
-
-        .panorama-layer {
-            position: absolute;
-
-            top: 0;
-            left: 0;
+            inset: 0;
 
             width: 100%;
             height: 100%;
 
-            object-fit: cover;
-
-            /*
-               The image itself should be an equirectangular
-               panorama with a 2:1 aspect ratio.
-            */
-
-            pointer-events: none;
-
-            transition:
-                opacity .8s cubic-bezier(.2,.7,.2,1);
-        }
-
-        .panorama-layer.morning {
             z-index: 1;
-            opacity: 1;
         }
 
-        .panorama-layer.night {
-            z-index: 2;
-            opacity: 0;
+
+        #panoramaViewer canvas {
+
+            display: block;
+
+            width: 100%;
+            height: 100%;
         }
 
-        .fullscreen-stage.night-mode
-        .panorama-layer.morning {
-            opacity: 0;
-        }
 
-        .fullscreen-stage.night-mode
-        .panorama-layer.night {
-            opacity: 1;
-        }
-
-        /* =========================================================
-           PANORAMA OVERLAY
-        ========================================================= */
-
-        .panorama-overlay {
-            position: absolute;
-            z-index: 20;
-
-            left: 32px;
-            bottom: 40px;
-
-            pointer-events: none;
-        }
-
-        .eyebrow {
-            margin-bottom: 10px;
-
-            font-size: 9px;
-            letter-spacing: .25em;
-            text-transform: uppercase;
-
-            opacity: .65;
-        }
-
-        .panorama-title {
-            font-size: clamp(32px, 5vw, 72px);
-            font-weight: 300;
-            letter-spacing: -.03em;
-        }
-
-        .panorama-hint {
-            margin-top: 15px;
-
-            font-size: 10px;
-            letter-spacing: .1em;
-            text-transform: uppercase;
-
-            opacity: .5;
-        }
-
-        /* =========================================================
+        /* =====================================================
            PANORAMA VIGNETTE
-        ========================================================= */
+        ====================================================== */
 
         .panorama-vignette {
+
             position: absolute;
+
             z-index: 10;
+
             inset: 0;
 
             pointer-events: none;
 
             background:
+
                 linear-gradient(
                     to bottom,
-                    rgba(0,0,0,.4),
-                    transparent 25%,
-                    transparent 65%,
-                    rgba(0,0,0,.5)
+                    rgba(0,0,0,.42),
+                    transparent 24%,
+                    transparent 68%,
+                    rgba(0,0,0,.52)
                 );
         }
 
-        /* =========================================================
-           RENDER SECTION
-        ========================================================= */
 
-        .renders-section {
-            padding: 120px 32px 160px;
+        /* =====================================================
+           PANORAMA TEXT
+        ====================================================== */
 
-            background: #0b0b0b;
+        .panorama-overlay {
+
+            position: absolute;
+
+            z-index: 20;
+
+            left: 32px;
+            bottom: 42px;
+
+            pointer-events: none;
         }
 
+
+        .eyebrow {
+
+            margin-bottom: 12px;
+
+            font-size: 9px;
+
+            letter-spacing: .24em;
+
+            text-transform: uppercase;
+
+            opacity: .65;
+        }
+
+
+        .panorama-title {
+
+            font-size:
+                clamp(
+                    38px,
+                    5vw,
+                    76px
+                );
+
+            font-weight: 300;
+
+            line-height: .95;
+
+            letter-spacing: -.04em;
+        }
+
+
+        .panorama-hint {
+
+            margin-top: 16px;
+
+            font-size: 9px;
+
+            letter-spacing: .16em;
+
+            text-transform: uppercase;
+
+            opacity: .5;
+        }
+
+
+        /* =====================================================
+           RENDER SECTION
+        ====================================================== */
+
+        .renders-section {
+
+            padding:
+                120px
+                32px
+                150px;
+
+            background: #0a0a0a;
+        }
+
+
         .section-heading {
-            max-width: 700px;
+
+            max-width: 720px;
 
             margin-bottom: 70px;
         }
 
-        .section-heading .eyebrow {
-            margin-bottom: 18px;
-        }
 
         .section-heading h2 {
-            font-size: clamp(36px, 5vw, 70px);
+
+            font-size:
+                clamp(
+                    38px,
+                    5vw,
+                    72px
+                );
+
             font-weight: 300;
-            letter-spacing: -.04em;
+
             line-height: .95;
+
+            letter-spacing: -.045em;
         }
 
+
         .section-heading p {
+
             max-width: 560px;
 
             margin-top: 25px;
 
-            color: rgba(255,255,255,.55);
+            color:
+                rgba(255,255,255,.52);
 
             font-size: 13px;
-            line-height: 1.7;
+
+            line-height: 1.75;
         }
 
-        /* =========================================================
+
+        /* =====================================================
            RENDER GRID
-        ========================================================= */
+        ====================================================== */
 
         .render-grid {
+
             display: grid;
 
             grid-template-columns:
-                repeat(2, minmax(0, 1fr));
+                repeat(
+                    2,
+                    minmax(0,1fr)
+                );
 
             gap: 28px;
         }
 
+
         .render-card {
+
             position: relative;
 
             overflow: hidden;
 
-            background: #111;
-
             aspect-ratio: 16 / 10;
+
+            background: #111;
         }
 
+
+        /* Both images occupy exactly the same position. */
+
         .render-image {
+
             position: absolute;
 
             inset: 0;
@@ -444,270 +569,403 @@
             object-fit: cover;
 
             transition:
-                opacity .8s cubic-bezier(.2,.7,.2,1),
-                transform 1.2s cubic-bezier(.2,.7,.2,1);
+                opacity .9s
+                cubic-bezier(.2,.7,.2,1),
+
+                transform
+                1.2s
+                cubic-bezier(.2,.7,.2,1);
         }
 
+
+        /* MORNING = LIGHT OFF */
+
         .render-image.morning {
+
             z-index: 1;
+
             opacity: 1;
         }
 
+
+        /* NIGHT = LIGHT ON */
+
         .render-image.night {
+
             z-index: 2;
+
             opacity: 0;
         }
 
-        .fullscreen-stage.night-mode
-        ~ .renders-section
+
+        /* When night mode is active */
+
+        .showcase.night-mode
         .render-image.morning {
+
             opacity: 0;
         }
 
-        .fullscreen-stage.night-mode
-        ~ .renders-section
+
+        .showcase.night-mode
         .render-image.night {
+
             opacity: 1;
         }
 
-        .render-card:hover .render-image {
-            transform: scale(1.025);
+
+        /* Subtle cinematic hover */
+
+        .render-card:hover
+        .render-image {
+
+            transform:
+                scale(1.025);
         }
+
+
+        /* =====================================================
+           RENDER NUMBER
+        ====================================================== */
 
         .render-number {
+
             position: absolute;
 
-            z-index: 10;
+            z-index: 20;
 
             top: 18px;
             left: 18px;
 
+            padding:
+                7px
+                9px;
+
+            border:
+                1px solid
+                rgba(255,255,255,.15);
+
+            background:
+                rgba(0,0,0,.4);
+
+            backdrop-filter:
+                blur(8px);
+
             font-size: 9px;
+
             letter-spacing: .15em;
-
-            padding: 7px 9px;
-
-            background: rgba(0,0,0,.45);
-            backdrop-filter: blur(8px);
-
-            border: 1px solid rgba(255,255,255,.15);
         }
 
-        /* =========================================================
+
+        /* =====================================================
            FOOTER
-        ========================================================= */
+        ====================================================== */
 
         .footer {
-            padding: 40px 32px;
 
             display: flex;
+
+            align-items: center;
             justify-content: space-between;
 
-            border-top: 1px solid rgba(255,255,255,.08);
+            padding:
+                35px
+                32px;
 
-            color: rgba(255,255,255,.4);
+            border-top:
+                1px solid
+                rgba(255,255,255,.08);
+
+            color:
+                rgba(255,255,255,.4);
 
             font-size: 9px;
+
             letter-spacing: .15em;
+
             text-transform: uppercase;
         }
 
-        /* =========================================================
-           RESPONSIVE
-        ========================================================= */
+
+        /* =====================================================
+           FULLSCREEN
+
+           The WHOLE showcase enters fullscreen.
+           This is why the light switch remains accessible.
+        ====================================================== */
+
+        .showcase:fullscreen {
+
+            width: 100vw;
+            height: 100vh;
+
+            overflow-y: auto;
+
+            background: #080808;
+        }
+
+
+        .showcase:-webkit-full-screen {
+
+            width: 100vw;
+            height: 100vh;
+
+            overflow-y: auto;
+
+            background: #080808;
+        }
+
+
+        /* =====================================================
+           MOBILE
+        ====================================================== */
 
         @media (max-width: 800px) {
 
             .header {
-                height: 62px;
-                padding: 0 18px;
+
+                height: 65px;
+
+                padding:
+                    0
+                    18px;
             }
+
 
             .project-title {
-                font-size: 9px;
+
+                font-size: 8px;
             }
 
+
             .panorama-section {
+
                 min-height: 500px;
             }
 
+
             .panorama-overlay {
+
                 left: 20px;
-                bottom: 25px;
+
+                bottom: 28px;
             }
+
 
             .renders-section {
+
                 padding:
-                    80px 18px 100px;
+                    80px
+                    18px
+                    100px;
             }
 
+
             .render-grid {
+
                 grid-template-columns: 1fr;
+
                 gap: 18px;
             }
 
+
             .footer {
-                padding: 30px 18px;
+
+                padding:
+                    30px
+                    18px;
             }
         }
 
-        /* =========================================================
-           FULLSCREEN OVERRIDES
-        ========================================================= */
-
-        .fullscreen-stage:fullscreen {
-            width: 100vw;
-            height: 100vh;
-
-            background: #000;
-        }
-
-        .fullscreen-stage:fullscreen .panorama-section {
-            height: 100vh;
-        }
-
-        /*
-           Browser-specific fullscreen support.
-        */
-
-        .fullscreen-stage:-webkit-full-screen {
-            width: 100vw;
-            height: 100vh;
-
-            background: #000;
-        }
-
-        .fullscreen-stage:-webkit-full-screen
-        .panorama-section {
-            height: 100vh;
-        }
     </style>
+
 </head>
 
 
 <body>
 
-<main class="showcase">
+
+<!-- =============================================================
+     ENTIRE SHOWCASE
+
+     IMPORTANT:
+     This is the fullscreen target.
+     The light switch is INSIDE this element.
+============================================================== -->
+
+<main
+    id="showcase"
+    class="showcase"
+>
+
 
     <!-- =========================================================
-         FULLSCREEN STAGE
-         
-         The panorama + header controls live inside this element.
-         Therefore the light switch stays visible in fullscreen.
+         HEADER
+    ========================================================== -->
+
+    <header class="header">
+
+
+        <div class="project-title">
+
+            Architectural Visualization
+
+        </div>
+
+
+        <div class="header-right">
+
+
+            <!-- =================================================
+                 LIGHT ON / OFF
+            ================================================== -->
+
+            <button
+                id="lightToggle"
+                class="light-control"
+                type="button"
+                aria-label="Turn lights on"
+                aria-pressed="false"
+            >
+
+                <span
+                    id="lightLabel"
+                    class="light-label"
+                >
+                    Light Off
+                </span>
+
+
+                <span class="switch"></span>
+
+            </button>
+
+
+            <!-- =================================================
+                 FULLSCREEN
+            ================================================== -->
+
+            <button
+                id="fullscreenButton"
+                class="fullscreen-button"
+                type="button"
+                aria-label="Enter fullscreen"
+            >
+
+                ⛶
+
+            </button>
+
+
+        </div>
+
+    </header>
+
+
+
+    <!-- =========================================================
+         PANORAMA
     ========================================================== -->
 
     <section
-        id="fullscreenStage"
-        class="fullscreen-stage"
+        id="panorama"
+        class="panorama-section"
     >
 
-        <!-- HEADER -->
 
-        <header class="header">
+        <!-- THREE.JS 360 VIEWER -->
 
-            <div class="project-title">
-                Architectural Visualization
-            </div>
-
-            <div class="header-right">
-
-                <!-- LIGHT TOGGLE -->
-
-                <button
-                    id="lightToggle"
-                    class="light-control"
-                    type="button"
-                    aria-label="Toggle lighting"
-                    aria-pressed="false"
-                >
-
-                    <span
-                        id="lightLabel"
-                        class="light-label"
-                    >
-                        Morning
-                    </span>
-
-                    <span class="switch"></span>
-
-                </button>
+        <div
+            id="panoramaViewer"
+        ></div>
 
 
-                <!-- FULLSCREEN -->
+        <!-- DARK CINEMATIC VIGNETTE -->
 
-                <button
-                    id="fullscreenButton"
-                    class="fullscreen-button"
-                    type="button"
-                    aria-label="Enter fullscreen"
-                >
-                    ⛶
-                </button>
+        <div
+            class="panorama-vignette"
+        ></div>
+
+
+        <!-- PANORAMA INFORMATION -->
+
+        <div
+            class="panorama-overlay"
+        >
+
+            <div class="eyebrow">
+
+                Option 01 / Panorama 01
 
             </div>
 
-        </header>
+
+            <h1 class="panorama-title">
+
+                The Interior
+
+            </h1>
 
 
-        <!-- =====================================================
-             PANORAMA VIEWER
-        ====================================================== -->
+            <div class="panorama-hint">
 
-       <div id="panorama" class="panorama-section">
+                Drag to explore 360°
 
-    <div id="panoramaViewer"></div>
+            </div>
 
-    <div class="panorama-vignette"></div>
-
-    <div class="panorama-overlay">
-
-        <div class="eyebrow">
-            Option 01 / Panorama 01
         </div>
 
-        <h1 class="panorama-title">
-            The Interior
-        </h1>
-
-        <div class="panorama-hint">
-            Drag to explore 360°
-        </div>
-
-    </div>
-
-</div>
 
     </section>
 
 
+
     <!-- =========================================================
          RENDERS
-    ====================================================== -->
+    ========================================================== -->
 
-    <section class="renders-section">
+    <section
+        class="renders-section"
+    >
+
 
         <div class="section-heading">
 
+
             <div class="eyebrow">
+
                 Architectural Visualization
+
             </div>
 
+
             <h2>
+
                 A study in light.
+
             </h2>
 
+
             <p>
-                Explore the same architectural spaces through
-                two lighting conditions. The transition between
-                morning and night is continuous and cinematic.
+
+                Explore the same architectural spaces
+                through two different lighting conditions.
+                Use the light control to transition between
+                morning and night.
+
             </p>
+
 
         </div>
 
 
+
         <div class="render-grid">
 
-            <!-- RENDER 01 -->
+
+            <!-- =================================================
+                 RENDER 01
+            ================================================== -->
 
             <article class="render-card">
 
@@ -715,12 +973,14 @@
                     R01
                 </span>
 
+
                 <img
                     class="render-image morning"
                     src="o1-r1-morning.png"
                     alt="Render 01 morning"
                     loading="lazy"
                 >
+
 
                 <img
                     class="render-image night"
@@ -732,7 +992,10 @@
             </article>
 
 
-            <!-- RENDER 02 -->
+
+            <!-- =================================================
+                 RENDER 02
+            ================================================== -->
 
             <article class="render-card">
 
@@ -740,12 +1003,14 @@
                     R02
                 </span>
 
+
                 <img
                     class="render-image morning"
                     src="o2-r2-morning.png"
                     alt="Render 02 morning"
                     loading="lazy"
                 >
+
 
                 <img
                     class="render-image night"
@@ -757,7 +1022,10 @@
             </article>
 
 
-            <!-- RENDER 03 -->
+
+            <!-- =================================================
+                 RENDER 03
+            ================================================== -->
 
             <article class="render-card">
 
@@ -765,12 +1033,14 @@
                     R03
                 </span>
 
+
                 <img
                     class="render-image morning"
                     src="o3-r3-morning.png"
                     alt="Render 03 morning"
                     loading="lazy"
                 >
+
 
                 <img
                     class="render-image night"
@@ -782,7 +1052,10 @@
             </article>
 
 
-            <!-- RENDER 04 -->
+
+            <!-- =================================================
+                 RENDER 04
+            ================================================== -->
 
             <article class="render-card">
 
@@ -790,12 +1063,14 @@
                     R04
                 </span>
 
+
                 <img
                     class="render-image morning"
                     src="o4-r4-morning.png"
                     alt="Render 04 morning"
                     loading="lazy"
                 >
+
 
                 <img
                     class="render-image night"
@@ -807,7 +1082,10 @@
             </article>
 
 
-            <!-- RENDER 05 -->
+
+            <!-- =================================================
+                 RENDER 05
+            ================================================== -->
 
             <article class="render-card">
 
@@ -815,12 +1093,14 @@
                     R05
                 </span>
 
+
                 <img
                     class="render-image morning"
                     src="o5-r5-morning.png"
                     alt="Render 05 morning"
                     loading="lazy"
                 >
+
 
                 <img
                     class="render-image night"
@@ -832,7 +1112,10 @@
             </article>
 
 
-            <!-- RENDER 06 -->
+
+            <!-- =================================================
+                 RENDER 06
+            ================================================== -->
 
             <article class="render-card">
 
@@ -840,12 +1123,14 @@
                     R06
                 </span>
 
+
                 <img
                     class="render-image morning"
                     src="o6-r6-morning.png"
                     alt="Render 06 morning"
                     loading="lazy"
                 >
+
 
                 <img
                     class="render-image night"
@@ -856,12 +1141,16 @@
 
             </article>
 
+
         </div>
 
     </section>
 
 
-    <!-- FOOTER -->
+
+    <!-- =========================================================
+         FOOTER
+    ========================================================== -->
 
     <footer class="footer">
 
@@ -875,292 +1164,309 @@
 
     </footer>
 
+
 </main>
 
 
-<script>
-/* =============================================================
-   CINEMATIC ARCHITECTURAL SHOWCASE
-   ============================================================= */
+
+<!-- =============================================================
+     JAVASCRIPT
+============================================================== -->
+
+<script type="module">
+
+import * as THREE from "three";
 
 
 /* =============================================================
    ELEMENTS
-   ============================================================= */
+============================================================== */
 
-const stage = document.getElementById("fullscreenStage");
+const showcase =
+    document.getElementById(
+        "showcase"
+    );
 
-const panorama = document.getElementById("panorama");
 
-const panoramaWorld =
-    document.getElementById("panoramaWorld");
+const panorama =
+    document.getElementById(
+        "panorama"
+    );
+
+
+const viewer =
+    document.getElementById(
+        "panoramaViewer"
+    );
+
 
 const lightToggle =
-    document.getElementById("lightToggle");
+    document.getElementById(
+        "lightToggle"
+    );
+
 
 const lightLabel =
-    document.getElementById("lightLabel");
+    document.getElementById(
+        "lightLabel"
+    );
+
 
 const fullscreenButton =
-    document.getElementById("fullscreenButton");
+    document.getElementById(
+        "fullscreenButton"
+    );
 
 
 /* =============================================================
    LIGHTING STATE
-   ============================================================= */
 
-/*
-   false = morning / lights off
-   true  = night / lights on
-*/
+   false = LIGHT OFF / MORNING
+   true  = LIGHT ON / NIGHT
+============================================================== */
 
 let isNight = false;
 
 
-/*
-   Change lighting state.
+/* =============================================================
+   THREE.JS SCENE
+============================================================== */
 
-   CSS handles the actual crossfade.
-*/
-
-function setLighting(night) {
-
-    isNight = night;
-
-    stage.classList.toggle(
-        "night-mode",
-        isNight
-    );
-
-    lightToggle.classList.toggle(
-        "is-night",
-        isNight
-    );
-
-    lightToggle.setAttribute(
-        "aria-pressed",
-        String(isNight)
-    );
-
-    lightLabel.textContent =
-        isNight ? "Night" : "Morning";
-}
+const scene =
+    new THREE.Scene();
 
 
 /* =============================================================
-   LIGHT TOGGLE
-   ============================================================= */
+   CAMERA
+============================================================== */
 
-lightToggle.addEventListener(
-    "click",
-    () => {
+const camera =
+    new THREE.PerspectiveCamera(
+        75,
+        viewer.clientWidth /
+        viewer.clientHeight,
+        0.1,
+        100
+    );
 
-        setLighting(!isNight);
 
-    }
+camera.position.set(
+    0,
+    0,
+    0
 );
 
 
 /* =============================================================
-   FULLSCREEN
-   ============================================================= */
+   RENDERER
+============================================================== */
 
-fullscreenButton.addEventListener(
-    "click",
-    async () => {
+const renderer =
+    new THREE.WebGLRenderer({
 
-        try {
+        antialias: true,
 
-            if (!document.fullscreenElement) {
+        alpha: false
 
-                await stage.requestFullscreen();
+    });
 
-            } else {
 
-                await document.exitFullscreen();
-
-            }
-
-        } catch (error) {
-
-            console.error(
-                "Fullscreen error:",
-                error
-            );
-
-        }
-
-    }
+renderer.setPixelRatio(
+    Math.min(
+        window.devicePixelRatio,
+        2
+    )
 );
 
 
-/*
-   Update fullscreen icon after the browser enters/leaves
-   fullscreen.
-*/
+renderer.setSize(
+    viewer.clientWidth,
+    viewer.clientHeight
+);
 
-document.addEventListener(
-    "fullscreenchange",
-    () => {
 
-        if (document.fullscreenElement) {
+renderer.outputColorSpace =
+    THREE.SRGBColorSpace;
 
-            fullscreenButton.textContent = "×";
 
-            fullscreenButton.setAttribute(
-                "aria-label",
-                "Exit fullscreen"
-            );
-
-        } else {
-
-            fullscreenButton.textContent = "⛶";
-
-            fullscreenButton.setAttribute(
-                "aria-label",
-                "Enter fullscreen"
-            );
-
-        }
-
-    }
+viewer.appendChild(
+    renderer.domElement
 );
 
 
 /* =============================================================
-   360° PANORAMA CONTROLLER
-   ============================================================= */
+   TEXTURES
+
+   Replace ONLY these filenames if your filenames differ.
+============================================================== */
+
+const textureLoader =
+    new THREE.TextureLoader();
+
+
+const morningTexture =
+    textureLoader.load(
+        "o1-p1-morning.png"
+    );
+
+
+const nightTexture =
+    textureLoader.load(
+        "o1-p1-night.png"
+    );
+
+
+morningTexture.colorSpace =
+    THREE.SRGBColorSpace;
+
+
+nightTexture.colorSpace =
+    THREE.SRGBColorSpace;
+
+
+/* =============================================================
+   SPHERE GEOMETRY
+
+   This is the actual 360° environment.
+
+   The camera is INSIDE the sphere.
+============================================================== */
+
+const geometry =
+    new THREE.SphereGeometry(
+        50,
+        128,
+        96
+    );
+
+
+/* =============================================================
+   MORNING MATERIAL
+============================================================== */
+
+const morningMaterial =
+    new THREE.MeshBasicMaterial({
+
+        map: morningTexture,
+
+        side: THREE.BackSide,
+
+        transparent: true,
+
+        opacity: 1
+
+    });
+
+
+/* =============================================================
+   NIGHT MATERIAL
+============================================================== */
+
+const nightMaterial =
+    new THREE.MeshBasicMaterial({
+
+        map: nightTexture,
+
+        side: THREE.BackSide,
+
+        transparent: true,
+
+        opacity: 0
+
+    });
+
+
+/* =============================================================
+   SPHERES
+============================================================== */
+
+const morningSphere =
+    new THREE.Mesh(
+        geometry,
+        morningMaterial
+    );
+
+
+const nightSphere =
+    new THREE.Mesh(
+        geometry.clone(),
+        nightMaterial
+    );
+
+
+scene.add(
+    morningSphere
+);
+
+
+scene.add(
+    nightSphere
+);
+
+
+/* =============================================================
+   PANORAMA ROTATION
+============================================================== */
+
+let longitude = 0;
+
+let latitude = 0;
+
+let targetLongitude = 0;
+
+let targetLatitude = 0;
+
 
 /*
-   This is a lightweight equirectangular panorama viewer.
-
-   The panorama image must be a normal 2:1 equirectangular
-   panorama:
-
-       360° horizontal
-       180° vertical
-
-   The user can drag horizontally to rotate around the room.
+   Prevent the camera from flipping upside down.
 */
 
+const MIN_LATITUDE = -85;
 
-let rotation = 0;
+const MAX_LATITUDE = 85;
 
-let targetRotation = 0;
 
-let isDragging = false;
+/* =============================================================
+   DRAGGING
+============================================================== */
+
+let dragging = false;
 
 let startX = 0;
 
-let startRotation = 0;
+let startY = 0;
 
+let startLongitude = 0;
 
-/*
-   Amount of rotation produced by mouse movement.
-*/
-
-const dragSensitivity = 0.18;
-
-
-/*
-   Keep angle between 0 and 360 degrees.
-*/
-
-function normalizeAngle(angle) {
-
-    angle %= 360;
-
-    if (angle < 0) {
-        angle += 360;
-    }
-
-    return angle;
-}
-
-
-/*
-   Convert viewing angle into horizontal translation.
-*/
-
-function updatePanorama() {
-
-    const viewportWidth =
-        panorama.clientWidth;
-
-    /*
-       The panorama world is twice the viewport width.
-       This allows us to move through the image while keeping
-       the panorama visually continuous.
-    */
-
-    const worldWidth =
-        panoramaWorld.scrollWidth;
-
-    const maxOffset =
-        worldWidth - viewportWidth;
-
-    const normalized =
-        normalizeAngle(targetRotation) / 360;
-
-    const offset =
-        normalized * maxOffset;
-
-    panoramaWorld.style.transform =
-        `translate3d(${-offset}px, 0, 0)`;
-
-}
-
-
-/*
-   Smooth interpolation.
-
-   This makes the panorama movement less mechanical.
-*/
-
-function animationLoop() {
-
-    let difference =
-        targetRotation - rotation;
-
-    /*
-       Handle shortest path around 360 degrees.
-    */
-
-    if (difference > 180) {
-        difference -= 360;
-    }
-
-    if (difference < -180) {
-        difference += 360;
-    }
-
-    rotation += difference * 0.12;
-
-    updatePanorama();
-
-    requestAnimationFrame(
-        animationLoop
-    );
-
-}
-
-animationLoop();
+let startLatitude = 0;
 
 
 /* =============================================================
-   POINTER / MOUSE DRAG
-   ============================================================= */
+   POINTER DOWN
+
+   Works with:
+   - Mouse
+   - Touch
+   - Pen
+============================================================== */
 
 panorama.addEventListener(
     "pointerdown",
     event => {
 
-        isDragging = true;
+        dragging = true;
 
-        startX = event.clientX;
+        startX =
+            event.clientX;
 
-        startRotation =
-            targetRotation;
+        startY =
+            event.clientY;
+
+        startLongitude =
+            targetLongitude;
+
+        startLatitude =
+            targetLatitude;
 
         panorama.classList.add(
             "dragging"
@@ -1174,28 +1480,67 @@ panorama.addEventListener(
 );
 
 
+/* =============================================================
+   POINTER MOVE
+============================================================== */
+
 panorama.addEventListener(
     "pointermove",
     event => {
 
-        if (!isDragging) {
+        if (!dragging) {
             return;
         }
 
-        const distance =
-            event.clientX - startX;
 
-        targetRotation =
-            startRotation -
-            distance * dragSensitivity;
+        const deltaX =
+            event.clientX -
+            startX;
+
+
+        const deltaY =
+            event.clientY -
+            startY;
+
+
+        /*
+           Horizontal = 360° rotation
+        */
+
+        targetLongitude =
+            startLongitude -
+            deltaX * 0.12;
+
+
+        /*
+           Vertical = looking up/down
+        */
+
+        targetLatitude =
+            startLatitude +
+            deltaY * 0.12;
+
+
+        targetLatitude =
+            Math.max(
+                MIN_LATITUDE,
+                Math.min(
+                    MAX_LATITUDE,
+                    targetLatitude
+                )
+            );
 
     }
 );
 
 
+/* =============================================================
+   STOP DRAGGING
+============================================================== */
+
 function stopDragging() {
 
-    isDragging = false;
+    dragging = false;
 
     panorama.classList.remove(
         "dragging"
@@ -1209,6 +1554,7 @@ panorama.addEventListener(
     stopDragging
 );
 
+
 panorama.addEventListener(
     "pointercancel",
     stopDragging
@@ -1217,11 +1563,7 @@ panorama.addEventListener(
 
 /* =============================================================
    MOUSE WHEEL
-   ============================================================= */
-
-/*
-   Optional small horizontal rotation using the mouse wheel.
-*/
+============================================================== */
 
 panorama.addEventListener(
     "wheel",
@@ -1229,8 +1571,8 @@ panorama.addEventListener(
 
         event.preventDefault();
 
-        targetRotation +=
-            event.deltaY * 0.08;
+        targetLongitude +=
+            event.deltaY * 0.15;
 
     },
     {
@@ -1240,24 +1582,393 @@ panorama.addEventListener(
 
 
 /* =============================================================
-   RESIZE
-   ============================================================= */
+   LIGHTING CROSSFADE
+============================================================== */
+
+let targetLightOpacity = 0;
+
+let currentLightOpacity = 0;
+
+
+/* =============================================================
+   SET LIGHTING
+============================================================== */
+
+function setLighting(
+    night
+) {
+
+    isNight = night;
+
+
+    /*
+       Update the global showcase class.
+
+       This controls all six render crossfades.
+    */
+
+    showcase.classList.toggle(
+        "night-mode",
+        isNight
+    );
+
+
+    /*
+       Update the switch appearance.
+    */
+
+    lightToggle.classList.toggle(
+        "is-night",
+        isNight
+    );
+
+
+    /*
+       Update accessibility state.
+    */
+
+    lightToggle.setAttribute(
+        "aria-pressed",
+        String(isNight)
+    );
+
+
+    /*
+       Update text.
+    */
+
+    lightLabel.textContent =
+        isNight
+            ? "Light On"
+            : "Light Off";
+
+
+    lightToggle.setAttribute(
+        "aria-label",
+        isNight
+            ? "Turn lights off"
+            : "Turn lights on"
+    );
+
+
+    /*
+       Tell the panorama to crossfade.
+    */
+
+    targetLightOpacity =
+        isNight
+            ? 1
+            : 0;
+}
+
+
+/* =============================================================
+   LIGHT BUTTON
+============================================================== */
+
+lightToggle.addEventListener(
+    "click",
+    () => {
+
+        setLighting(
+            !isNight
+        );
+
+    }
+);
+
+
+/* =============================================================
+   FULLSCREEN
+============================================================== */
+
+/*
+   IMPORTANT:
+
+   We request fullscreen on #showcase, NOT on the panorama.
+
+   Therefore:
+
+       Header
+       Light switch
+       Fullscreen button
+       Panorama
+       Renders
+
+   all remain inside the fullscreen document.
+*/
+
+fullscreenButton.addEventListener(
+    "click",
+    async () => {
+
+        try {
+
+            if (
+                !document.fullscreenElement
+            ) {
+
+                await showcase.requestFullscreen();
+
+            } else {
+
+                await document.exitFullscreen();
+
+            }
+
+        }
+
+        catch (error) {
+
+            console.error(
+                "Fullscreen error:",
+                error
+            );
+
+        }
+
+    }
+);
+
+
+/* =============================================================
+   FULLSCREEN STATE
+============================================================== */
+
+document.addEventListener(
+    "fullscreenchange",
+    () => {
+
+        if (
+            document.fullscreenElement
+        ) {
+
+            fullscreenButton.textContent =
+                "×";
+
+
+            fullscreenButton.setAttribute(
+                "aria-label",
+                "Exit fullscreen"
+            );
+
+        }
+
+        else {
+
+            fullscreenButton.textContent =
+                "⛶";
+
+
+            fullscreenButton.setAttribute(
+                "aria-label",
+                "Enter fullscreen"
+            );
+
+        }
+
+
+        /*
+           Recalculate the panorama after entering/leaving
+           fullscreen.
+        */
+
+        setTimeout(
+            resizeViewer,
+            100
+        );
+
+    }
+);
+
+
+/* =============================================================
+   CAMERA ANIMATION
+============================================================== */
+
+function updateCamera() {
+
+    /*
+       Smooth horizontal rotation.
+    */
+
+    longitude +=
+        (
+            targetLongitude -
+            longitude
+        ) * 0.12;
+
+
+    /*
+       Smooth vertical rotation.
+    */
+
+    latitude +=
+        (
+            targetLatitude -
+            latitude
+        ) * 0.12;
+
+
+    /*
+       Convert longitude / latitude into
+       spherical coordinates.
+    */
+
+    const phi =
+        THREE.MathUtils.degToRad(
+            90 - latitude
+        );
+
+
+    const theta =
+        THREE.MathUtils.degToRad(
+            longitude
+        );
+
+
+    const target =
+        new THREE.Vector3();
+
+
+    target.x =
+        Math.sin(phi) *
+        Math.cos(theta);
+
+
+    target.y =
+        Math.cos(phi);
+
+
+    target.z =
+        Math.sin(phi) *
+        Math.sin(theta);
+
+
+    camera.lookAt(
+        target
+    );
+
+}
+
+
+/* =============================================================
+   CINEMATIC LIGHTING ANIMATION
+============================================================== */
+
+function updateLighting() {
+
+    /*
+       Smooth crossfade.
+
+       Night:
+           morning 1 → 0
+           night   0 → 1
+
+       Morning:
+           morning 0 → 1
+           night   1 → 0
+    */
+
+    currentLightOpacity +=
+        (
+            targetLightOpacity -
+            currentLightOpacity
+        ) * 0.08;
+
+
+    nightMaterial.opacity =
+        currentLightOpacity;
+
+
+    morningMaterial.opacity =
+        1 -
+        currentLightOpacity;
+
+}
+
+
+/* =============================================================
+   MAIN ANIMATION LOOP
+============================================================== */
+
+function animate() {
+
+    requestAnimationFrame(
+        animate
+    );
+
+
+    updateCamera();
+
+    updateLighting();
+
+
+    renderer.render(
+        scene,
+        camera
+    );
+
+}
+
+
+animate();
+
+
+/* =============================================================
+   RESPONSIVE VIEWER
+============================================================== */
+
+function resizeViewer() {
+
+    const width =
+        viewer.clientWidth;
+
+
+    const height =
+        viewer.clientHeight;
+
+
+    if (
+        width === 0 ||
+        height === 0
+    ) {
+        return;
+    }
+
+
+    camera.aspect =
+        width / height;
+
+
+    camera.updateProjectionMatrix();
+
+
+    renderer.setSize(
+        width,
+        height
+    );
+
+}
+
 
 window.addEventListener(
     "resize",
-    updatePanorama
+    resizeViewer
 );
 
 
 /* =============================================================
    INITIAL STATE
-   ============================================================= */
+============================================================== */
 
 setLighting(false);
 
-updatePanorama();
+resizeViewer();
 
 </script>
 
 </body>
+
 </html>
+```
