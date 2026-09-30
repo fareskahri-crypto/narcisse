@@ -1,15 +1,10 @@
-
 <!DOCTYPE html>
-<html lang="en">
+<!-- saved from url=(0045)https://fareskahri-crypto.github.io/narcisse/ -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
-<head>
+    
 
-    <meta charset="UTF-8">
-
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>
         Architectural Visualization
@@ -283,57 +278,6 @@
                 translateX(20px);
         }
 
-
-
-        /* =====================================================
-           OPTION CONTROL
-        ====================================================== */
-
-        .option-control {
-            display: flex;
-            align-items: center;
-            gap: 4px;
-            height: 38px;
-            padding: 3px;
-            border: 1px solid rgba(255,255,255,.25);
-            border-radius: 100px;
-            background: rgba(10,10,10,.55);
-            backdrop-filter: blur(14px);
-            -webkit-backdrop-filter: blur(14px);
-        }
-
-        .option-button {
-            min-width: 34px;
-            height: 30px;
-            padding: 0 9px;
-            border: 0;
-            border-radius: 100px;
-            background: transparent;
-            color: rgba(255,255,255,.55);
-            font-size: 9px;
-            letter-spacing: .12em;
-            text-transform: uppercase;
-            cursor: pointer;
-            transition: background .3s ease, color .3s ease;
-        }
-
-        .option-button:hover {
-            color: #ffffff;
-            background: rgba(255,255,255,.10);
-        }
-
-        .option-button.is-active {
-            background: rgba(255,255,255,.16);
-            color: #ffffff;
-        }
-
-        @media (max-width: 800px) {
-            .header-right { gap: 6px; }
-            .option-control { height: 34px; }
-            .option-button { min-width: 30px; padding: 0 7px; }
-            .light-control { height: 34px; }
-            .fullscreen-button { width: 34px; height: 34px; }
-        }
 
         /* =====================================================
            FULLSCREEN BUTTON
@@ -869,10 +813,7 @@
      The entire element is used as the fullscreen target.
 ============================================================== -->
 
-<main
-    id="showcase"
-    class="showcase"
->
+<main id="showcase" class="showcase night-mode">
 
 
     <!-- =========================================================
@@ -893,39 +834,15 @@
 
 
             <!-- =================================================
-                 OPTION SELECTOR
-            ================================================== -->
-
-            <div
-                id="optionControl"
-                class="option-control"
-                aria-label="Choose project option"
-            ></div>
-
-
-            <!-- =================================================
                  LIGHT ON / OFF
             ================================================== -->
 
-            <button
-                id="lightToggle"
-                class="light-control"
-                type="button"
-                aria-label="Turn lights on"
-                aria-pressed="false"
-            >
+            <button id="lightToggle" class="light-control is-night" type="button" aria-label="Turn lights off" aria-pressed="true">
 
-                <span
-                    id="lightLabel"
-                    class="light-label"
-                >
-                    Light Off
-                </span>
+                <span id="lightLabel" class="light-label">Light On</span>
 
 
-                <span
-                    class="switch"
-                ></span>
+                <span class="switch"></span>
 
             </button>
 
@@ -934,16 +851,7 @@
                  FULLSCREEN
             ================================================== -->
 
-            <button
-                id="fullscreenButton"
-                class="fullscreen-button"
-                type="button"
-                aria-label="Enter fullscreen"
-            >
-
-                ⛶
-
-            </button>
+            <button id="fullscreenButton" class="fullscreen-button" type="button" aria-label="Enter fullscreen">⛶</button>
 
 
         </div>
@@ -956,41 +864,32 @@
          PANORAMA
     ========================================================== -->
 
-    <section
-        id="panorama"
-        class="panorama-section"
-    >
+    <section id="panorama" class="panorama-section">
 
 
         <!-- =====================================================
              THREE.JS 360 VIEWER
         ====================================================== -->
 
-        <div
-            id="panoramaViewer"
-        ></div>
+        <div id="panoramaViewer"><canvas data-engine="three.js r180" width="4920" height="2590" style="display: block; width: 3749px; height: 1974px;"></canvas></div>
 
 
         <!-- =====================================================
              CINEMATIC VIGNETTE
         ====================================================== -->
 
-        <div
-            class="panorama-vignette"
-        ></div>
+        <div class="panorama-vignette"></div>
 
 
         <!-- =====================================================
              PANORAMA INFORMATION
         ====================================================== -->
 
-        <div
-            class="panorama-overlay"
-        >
+        <div class="panorama-overlay">
 
             <div class="eyebrow">
 
-                <span id="panoramaOptionLabel">Option 01</span> / Panorama 01
+                Option 01 / Panorama 01
 
             </div>
 
@@ -1019,9 +918,7 @@
          RENDERS
     ========================================================== -->
 
-    <section
-        class="renders-section"
-    >
+    <section class="renders-section">
 
 
         <div class="section-heading">
@@ -1045,9 +942,8 @@
 
                 Explore the same architectural spaces
                 through two different lighting conditions.
-                Use the option buttons to switch between
-                design options. Click any render to change
-                the lighting state.
+                Click any render to activate the night
+                lighting.
 
             </p>
 
@@ -1063,10 +959,7 @@
                  RENDER 01
             ================================================== -->
 
-            <article
-                class="render-card"
-                data-render="1"
-            >
+            <article class="render-card" data-render="1">
 
                 <span class="render-number">
 
@@ -1075,20 +968,10 @@
                 </span>
 
 
-                <img
-                    class="render-image morning"
-                    src="" data-render-file="r1"
-                    alt="Render 01 morning"
-                    loading="lazy"
-                >
+                <img class="render-image morning" src="./Architectural Visualization 1_files/o1-r1-morning.png" alt="Render 01 morning" loading="lazy">
 
 
-                <img
-                    class="render-image night"
-                    src="" data-render-file="r1"
-                    alt="Render 01 night"
-                    loading="lazy"
-                >
+                <img class="render-image night" src="./Architectural Visualization 1_files/o1-r1-night.png" alt="Render 01 night" loading="lazy">
 
             </article>
 
@@ -1098,10 +981,7 @@
                  RENDER 02
             ================================================== -->
 
-            <article
-                class="render-card"
-                data-render="2"
-            >
+            <article class="render-card" data-render="2">
 
                 <span class="render-number">
 
@@ -1110,20 +990,10 @@
                 </span>
 
 
-                <img
-                    class="render-image morning"
-                    src="" data-render-file="r2"
-                    alt="Render 02 morning"
-                    loading="lazy"
-                >
+                <img class="render-image morning" src="./Architectural Visualization 1_files/o1-r2-morning.png" alt="Render 02 morning" loading="lazy">
 
 
-                <img
-                    class="render-image night"
-                    src="" data-render-file="r2"
-                    alt="Render 02 night"
-                    loading="lazy"
-                >
+                <img class="render-image night" src="./Architectural Visualization 1_files/o1-r2-night.png" alt="Render 02 night" loading="lazy">
 
             </article>
 
@@ -1133,10 +1003,7 @@
                  RENDER 03
             ================================================== -->
 
-            <article
-                class="render-card"
-                data-render="3"
-            >
+            <article class="render-card" data-render="3">
 
                 <span class="render-number">
 
@@ -1145,20 +1012,10 @@
                 </span>
 
 
-                <img
-                    class="render-image morning"
-                    src="" data-render-file="r3"
-                    alt="Render 03 morning"
-                    loading="lazy"
-                >
+                <img class="render-image morning" src="./Architectural Visualization 1_files/o1-r3-morning.png" alt="Render 03 morning" loading="lazy">
 
 
-                <img
-                    class="render-image night"
-                    src="" data-render-file="r3"
-                    alt="Render 03 night"
-                    loading="lazy"
-                >
+                <img class="render-image night" src="./Architectural Visualization 1_files/o1-r3-night.png" alt="Render 03 night" loading="lazy">
 
             </article>
 
@@ -1168,10 +1025,7 @@
                  RENDER 04
             ================================================== -->
 
-            <article
-                class="render-card"
-                data-render="4"
-            >
+            <article class="render-card" data-render="4">
 
                 <span class="render-number">
 
@@ -1180,20 +1034,10 @@
                 </span>
 
 
-                <img
-                    class="render-image morning"
-                    src="" data-render-file="r4"
-                    alt="Render 04 morning"
-                    loading="lazy"
-                >
+                <img class="render-image morning" src="./Architectural Visualization 1_files/o1-r4-morning.png" alt="Render 04 morning" loading="lazy">
 
 
-                <img
-                    class="render-image night"
-                    src="" data-render-file="r4"
-                    alt="Render 04 night"
-                    loading="lazy"
-                >
+                <img class="render-image night" src="./Architectural Visualization 1_files/o1-r4-night.png" alt="Render 04 night" loading="lazy">
 
             </article>
 
@@ -1203,10 +1047,7 @@
                  RENDER 05
             ================================================== -->
 
-            <article
-                class="render-card"
-                data-render="5"
-            >
+            <article class="render-card" data-render="5">
 
                 <span class="render-number">
 
@@ -1215,20 +1056,10 @@
                 </span>
 
 
-                <img
-                    class="render-image morning"
-                    src="" data-render-file="r5"
-                    alt="Render 05 morning"
-                    loading="lazy"
-                >
+                <img class="render-image morning" src="./Architectural Visualization 1_files/o1-r5-morning.png" alt="Render 05 morning" loading="lazy">
 
 
-                <img
-                    class="render-image night"
-                    src="" data-render-file="r5"
-                    alt="Render 05 night"
-                    loading="lazy"
-                >
+                <img class="render-image night" src="./Architectural Visualization 1_files/o1-r5-night.png" alt="Render 05 night" loading="lazy">
 
             </article>
 
@@ -1238,10 +1069,7 @@
                  RENDER 06
             ================================================== -->
 
-            <article
-                class="render-card"
-                data-render="6"
-            >
+            <article class="render-card" data-render="6">
 
                 <span class="render-number">
 
@@ -1250,20 +1078,10 @@
                 </span>
 
 
-                <img
-                    class="render-image morning"
-                    src="" data-render-file="r6"
-                    alt="Render 06 morning"
-                    loading="lazy"
-                >
+                <img class="render-image morning" src="./Architectural Visualization 1_files/o1-r6-morning.png" alt="Render 06 morning" loading="lazy">
 
 
-                <img
-                    class="render-image night"
-                    src="" data-render-file="r6"
-                    alt="Render 06 night"
-                    loading="lazy"
-                >
+                <img class="render-image night" src="./Architectural Visualization 1_files/o1-r6-night.png" alt="Render 06 night" loading="lazy">
 
             </article>
 
@@ -1349,80 +1167,6 @@ const fullscreenButton =
     );
 
 
-const optionControl =
-    document.getElementById(
-        "optionControl"
-    );
-
-
-const panoramaOptionLabel =
-    document.getElementById(
-        "panoramaOptionLabel"
-    );
-
-
-const footerOptionLabel =
-    document.getElementById(
-        "footerOptionLabel"
-    );
-
-
-function buildOptionButtons() {
-
-    optionControl.innerHTML = "";
-
-    OPTIONS.forEach(optionNumber => {
-
-        const button =
-            document.createElement("button");
-
-        button.type = "button";
-        button.className = "option-button";
-        button.dataset.option = String(optionNumber);
-        button.textContent =
-            `O${String(optionNumber).padStart(2, "0")}`;
-
-        button.setAttribute(
-            "aria-label",
-            `Select Option ${optionNumber}`
-        );
-
-        button.addEventListener(
-            "click",
-            () => setOption(optionNumber)
-        );
-
-        optionControl.appendChild(button);
-    });
-}
-
-
-function updateOptionButtons() {
-
-    optionControl
-        .querySelectorAll(".option-button")
-        .forEach(button => {
-
-            const active =
-                Number(button.dataset.option) === currentOption;
-
-            button.classList.toggle("is-active", active);
-            button.setAttribute("aria-pressed", String(active));
-        });
-}
-
-
-function updateOptionLabels() {
-
-    const label =
-        OPTION_LABELS[currentOption] ||
-        `Option ${String(currentOption).padStart(2, "0")}`;
-
-    panoramaOptionLabel.textContent = label;
-    footerOptionLabel.textContent = label;
-}
-
-
 /* =============================================================
    LIGHTING STATE
 
@@ -1435,84 +1179,6 @@ let isNight = false;
 let targetLightOpacity = 0;
 
 let currentLightOpacity = 0;
-
-
-function loadTextureInto(texture, path) {
-
-    textureLoader.load(
-        path,
-        loadedTexture => {
-
-            loadedTexture.colorSpace =
-                THREE.SRGBColorSpace;
-
-            texture.image = loadedTexture.image;
-            texture.needsUpdate = true;
-        },
-        undefined,
-        error => {
-            console.error(
-                `Could not load option asset: ${path}`,
-                error
-            );
-        }
-    );
-}
-
-
-function updateRenderAssets() {
-
-    renderCards.forEach(card => {
-
-        const renderNumber =
-            Number(card.dataset.render);
-
-        const morningImage =
-            card.querySelector(".render-image.morning");
-
-        const nightImage =
-            card.querySelector(".render-image.night");
-
-        morningImage.src =
-            renderPath(currentOption, renderNumber, "morning");
-
-        nightImage.src =
-            renderPath(currentOption, renderNumber, "night");
-
-        morningImage.alt =
-            `Option ${currentOption} Render ${renderNumber} morning`;
-
-        nightImage.alt =
-            `Option ${currentOption} Render ${renderNumber} night`;
-    });
-}
-
-
-function setOption(optionNumber) {
-
-    if (!OPTIONS.includes(optionNumber)) {
-        return;
-    }
-
-    currentOption = optionNumber;
-
-    loadTextureInto(
-        morningTexture,
-        panoramaPath(currentOption, "morning")
-    );
-
-    loadTextureInto(
-        nightTexture,
-        panoramaPath(currentOption, "night")
-    );
-
-    updateRenderAssets();
-    updateOptionButtons();
-    updateOptionLabels();
-
-    /* Preserve the current Light On / Light Off state. */
-    setLighting(isNight);
-}
 
 
 /* =============================================================
@@ -1592,47 +1258,15 @@ const textureLoader =
     new THREE.TextureLoader();
 
 
-/* =============================================================
-   OPTION / ASSET CONFIGURATION
-
-   Option 1 files use the o1- prefix.
-   Option 2 files use the o2- prefix.
-   The rest of every filename stays identical.
-
-   To add another option later, add its number to OPTIONS.
-============================================================= */
-
-const OPTIONS = [1, 2];
-
-const OPTION_LABELS = {
-    1: "Option 01",
-    2: "Option 02"
-};
-
-let currentOption = 1;
-
-function optionPrefix(optionNumber) {
-    return `o${optionNumber}`;
-}
-
-function panoramaPath(optionNumber, state) {
-    return `${optionPrefix(optionNumber)}-p1-${state}.png`;
-}
-
-function renderPath(optionNumber, renderNumber, state) {
-    return `${optionPrefix(optionNumber)}-r${renderNumber}-${state}.png`;
-}
-
-
 const morningTexture =
     textureLoader.load(
-        panoramaPath(currentOption, "morning")
+        "o1-p1-morning.png"
     );
 
 
 const nightTexture =
     textureLoader.load(
-        panoramaPath(currentOption, "night")
+        "o1-p1-night.png"
     );
 
 
@@ -2399,10 +2033,6 @@ window.addEventListener(
    INITIAL STATE
 ============================================================== */
 
-buildOptionButtons();
-
-setOption(1);
-
 setLighting(false);
 
 resizeViewer();
@@ -2410,8 +2040,9 @@ resizeViewer();
 </script>
 
 
-</body>
 
-</html>
+
+
 
 ```
+</body></html>
