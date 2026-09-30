@@ -284,6 +284,57 @@
         }
 
 
+
+        /* =====================================================
+           OPTION CONTROL
+        ====================================================== */
+
+        .option-control {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            height: 38px;
+            padding: 3px;
+            border: 1px solid rgba(255,255,255,.25);
+            border-radius: 100px;
+            background: rgba(10,10,10,.55);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+        }
+
+        .option-button {
+            min-width: 34px;
+            height: 30px;
+            padding: 0 9px;
+            border: 0;
+            border-radius: 100px;
+            background: transparent;
+            color: rgba(255,255,255,.55);
+            font-size: 9px;
+            letter-spacing: .12em;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: background .3s ease, color .3s ease;
+        }
+
+        .option-button:hover {
+            color: #ffffff;
+            background: rgba(255,255,255,.10);
+        }
+
+        .option-button.is-active {
+            background: rgba(255,255,255,.16);
+            color: #ffffff;
+        }
+
+        @media (max-width: 800px) {
+            .header-right { gap: 6px; }
+            .option-control { height: 34px; }
+            .option-button { min-width: 30px; padding: 0 7px; }
+            .light-control { height: 34px; }
+            .fullscreen-button { width: 34px; height: 34px; }
+        }
+
         /* =====================================================
            FULLSCREEN BUTTON
         ====================================================== */
@@ -842,6 +893,17 @@
 
 
             <!-- =================================================
+                 OPTION SELECTOR
+            ================================================== -->
+
+            <div
+                id="optionControl"
+                class="option-control"
+                aria-label="Choose project option"
+            ></div>
+
+
+            <!-- =================================================
                  LIGHT ON / OFF
             ================================================== -->
 
@@ -928,7 +990,7 @@
 
             <div class="eyebrow">
 
-                Option 01 / Panorama 01
+                <span id="panoramaOptionLabel">Option 01</span> / Panorama 01
 
             </div>
 
@@ -983,8 +1045,9 @@
 
                 Explore the same architectural spaces
                 through two different lighting conditions.
-                Click any render to activate the night
-                lighting.
+                Use the option buttons to switch between
+                design options. Click any render to change
+                the lighting state.
 
             </p>
 
@@ -1014,7 +1077,7 @@
 
                 <img
                     class="render-image morning"
-                    src="o1-r1-morning.png"
+                    src="" data-render-file="r1"
                     alt="Render 01 morning"
                     loading="lazy"
                 >
@@ -1022,7 +1085,7 @@
 
                 <img
                     class="render-image night"
-                    src="o1-r1-night.png"
+                    src="" data-render-file="r1"
                     alt="Render 01 night"
                     loading="lazy"
                 >
@@ -1049,7 +1112,7 @@
 
                 <img
                     class="render-image morning"
-                    src="o1-r2-morning.png"
+                    src="" data-render-file="r2"
                     alt="Render 02 morning"
                     loading="lazy"
                 >
@@ -1057,7 +1120,7 @@
 
                 <img
                     class="render-image night"
-                    src="o1-r2-night.png"
+                    src="" data-render-file="r2"
                     alt="Render 02 night"
                     loading="lazy"
                 >
@@ -1084,7 +1147,7 @@
 
                 <img
                     class="render-image morning"
-                    src="o1-r3-morning.png"
+                    src="" data-render-file="r3"
                     alt="Render 03 morning"
                     loading="lazy"
                 >
@@ -1092,7 +1155,7 @@
 
                 <img
                     class="render-image night"
-                    src="o1-r3-night.png"
+                    src="" data-render-file="r3"
                     alt="Render 03 night"
                     loading="lazy"
                 >
@@ -1119,7 +1182,7 @@
 
                 <img
                     class="render-image morning"
-                    src="o1-r4-morning.png"
+                    src="" data-render-file="r4"
                     alt="Render 04 morning"
                     loading="lazy"
                 >
@@ -1127,7 +1190,7 @@
 
                 <img
                     class="render-image night"
-                    src="o1-r4-night.png"
+                    src="" data-render-file="r4"
                     alt="Render 04 night"
                     loading="lazy"
                 >
@@ -1154,7 +1217,7 @@
 
                 <img
                     class="render-image morning"
-                    src="o1-r5-morning.png"
+                    src="" data-render-file="r5"
                     alt="Render 05 morning"
                     loading="lazy"
                 >
@@ -1162,7 +1225,7 @@
 
                 <img
                     class="render-image night"
-                    src="o1-r5-night.png"
+                    src="" data-render-file="r5"
                     alt="Render 05 night"
                     loading="lazy"
                 >
@@ -1189,7 +1252,7 @@
 
                 <img
                     class="render-image morning"
-                    src="o1-r6-morning.png"
+                    src="" data-render-file="r6"
                     alt="Render 06 morning"
                     loading="lazy"
                 >
@@ -1197,7 +1260,7 @@
 
                 <img
                     class="render-image night"
-                    src="o1-r6-night.png"
+                    src="" data-render-file="r6"
                     alt="Render 06 night"
                     loading="lazy"
                 >
@@ -1286,6 +1349,80 @@ const fullscreenButton =
     );
 
 
+const optionControl =
+    document.getElementById(
+        "optionControl"
+    );
+
+
+const panoramaOptionLabel =
+    document.getElementById(
+        "panoramaOptionLabel"
+    );
+
+
+const footerOptionLabel =
+    document.getElementById(
+        "footerOptionLabel"
+    );
+
+
+function buildOptionButtons() {
+
+    optionControl.innerHTML = "";
+
+    OPTIONS.forEach(optionNumber => {
+
+        const button =
+            document.createElement("button");
+
+        button.type = "button";
+        button.className = "option-button";
+        button.dataset.option = String(optionNumber);
+        button.textContent =
+            `O${String(optionNumber).padStart(2, "0")}`;
+
+        button.setAttribute(
+            "aria-label",
+            `Select Option ${optionNumber}`
+        );
+
+        button.addEventListener(
+            "click",
+            () => setOption(optionNumber)
+        );
+
+        optionControl.appendChild(button);
+    });
+}
+
+
+function updateOptionButtons() {
+
+    optionControl
+        .querySelectorAll(".option-button")
+        .forEach(button => {
+
+            const active =
+                Number(button.dataset.option) === currentOption;
+
+            button.classList.toggle("is-active", active);
+            button.setAttribute("aria-pressed", String(active));
+        });
+}
+
+
+function updateOptionLabels() {
+
+    const label =
+        OPTION_LABELS[currentOption] ||
+        `Option ${String(currentOption).padStart(2, "0")}`;
+
+    panoramaOptionLabel.textContent = label;
+    footerOptionLabel.textContent = label;
+}
+
+
 /* =============================================================
    LIGHTING STATE
 
@@ -1298,6 +1435,84 @@ let isNight = false;
 let targetLightOpacity = 0;
 
 let currentLightOpacity = 0;
+
+
+function loadTextureInto(texture, path) {
+
+    textureLoader.load(
+        path,
+        loadedTexture => {
+
+            loadedTexture.colorSpace =
+                THREE.SRGBColorSpace;
+
+            texture.image = loadedTexture.image;
+            texture.needsUpdate = true;
+        },
+        undefined,
+        error => {
+            console.error(
+                `Could not load option asset: ${path}`,
+                error
+            );
+        }
+    );
+}
+
+
+function updateRenderAssets() {
+
+    renderCards.forEach(card => {
+
+        const renderNumber =
+            Number(card.dataset.render);
+
+        const morningImage =
+            card.querySelector(".render-image.morning");
+
+        const nightImage =
+            card.querySelector(".render-image.night");
+
+        morningImage.src =
+            renderPath(currentOption, renderNumber, "morning");
+
+        nightImage.src =
+            renderPath(currentOption, renderNumber, "night");
+
+        morningImage.alt =
+            `Option ${currentOption} Render ${renderNumber} morning`;
+
+        nightImage.alt =
+            `Option ${currentOption} Render ${renderNumber} night`;
+    });
+}
+
+
+function setOption(optionNumber) {
+
+    if (!OPTIONS.includes(optionNumber)) {
+        return;
+    }
+
+    currentOption = optionNumber;
+
+    loadTextureInto(
+        morningTexture,
+        panoramaPath(currentOption, "morning")
+    );
+
+    loadTextureInto(
+        nightTexture,
+        panoramaPath(currentOption, "night")
+    );
+
+    updateRenderAssets();
+    updateOptionButtons();
+    updateOptionLabels();
+
+    /* Preserve the current Light On / Light Off state. */
+    setLighting(isNight);
+}
 
 
 /* =============================================================
@@ -1377,15 +1592,47 @@ const textureLoader =
     new THREE.TextureLoader();
 
 
+/* =============================================================
+   OPTION / ASSET CONFIGURATION
+
+   Option 1 files use the o1- prefix.
+   Option 2 files use the o2- prefix.
+   The rest of every filename stays identical.
+
+   To add another option later, add its number to OPTIONS.
+============================================================= */
+
+const OPTIONS = [1, 2];
+
+const OPTION_LABELS = {
+    1: "Option 01",
+    2: "Option 02"
+};
+
+let currentOption = 1;
+
+function optionPrefix(optionNumber) {
+    return `o${optionNumber}`;
+}
+
+function panoramaPath(optionNumber, state) {
+    return `${optionPrefix(optionNumber)}-p1-${state}.png`;
+}
+
+function renderPath(optionNumber, renderNumber, state) {
+    return `${optionPrefix(optionNumber)}-r${renderNumber}-${state}.png`;
+}
+
+
 const morningTexture =
     textureLoader.load(
-        "o1-p1-morning.png"
+        panoramaPath(currentOption, "morning")
     );
 
 
 const nightTexture =
     textureLoader.load(
-        "o1-p1-night.png"
+        panoramaPath(currentOption, "night")
     );
 
 
@@ -2151,6 +2398,10 @@ window.addEventListener(
 /* =============================================================
    INITIAL STATE
 ============================================================== */
+
+buildOptionButtons();
+
+setOption(1);
 
 setLighting(false);
 
